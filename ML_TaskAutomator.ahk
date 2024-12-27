@@ -6,7 +6,7 @@ Global IconLib := A_ScriptDir . "\Icons"
 , HotkeyGuide := "https://mean-littles-app.gitbook.io/mean-littles-app-docs/ml-task-automator/how-does-it-work"
 , IniFile := A_ScriptDir . "\ML_TaskAutomator.ini"
 , LicenseFile := A_ScriptDir . "\LicenseKey.ini"
-, CurrentVersion := "1.0", FlagMissingIcons := 0, FlagMissingImage := 0
+, CurrentVersion := "1.1", FlagMissingIcons := 0, FlagMissingImage := 0
 , AppName := "ML Task Automator", BlueFont := "c0x70A0FA", BackgroundDarkGrey := "Background2F2F2F"
 ;----------------------------------------------------
 ; GUI Properties
@@ -18,7 +18,6 @@ try {
 	GameToolGui.Add("Picture", "x-16 y0 w304 h712", ImageLib . "\MLTABackground.png")
 }
 catch {
-	FlagMissingImage := 1
 }
 ;----------------------------------------------------
 ; Read ini Modules
@@ -146,7 +145,6 @@ try {
 	FileMenu.SetIcon("&Exit`tCtrl+K",IconLib . "\exit.ico")
 }
 catch {
-	FlagMissingIcons := 1
 }
 OptionsMenu := Menu()
 MenuBar_Storage.Add("&Options", OptionsMenu)
@@ -164,7 +162,6 @@ try {
 	OptionsMenu.SetIcon("Switch &Clicker", IconLib . "\auto.ico")
 }
 catch {
-	FlagMissingIcons := 1
 }
 HelpMenu := Menu()
 MenuBar_Storage.Add("&Help", HelpMenu)
@@ -179,7 +176,6 @@ try {
 	HelpMenu.SetIcon("About", IconLib . "\info.ico")
 }
 catch {
-	FlagMissingIcons := 1
 }
 GameToolGui.MenuBar := MenuBar_Storage
 ;----------------------------------------------------
@@ -192,7 +188,6 @@ if SecureMode == true {
 		OptionsMenu.SetIcon("Secure &Mode: On/Off", IconLib . "\Locked.ico")
 	}
 	catch {
-		FlagMissingIcons := 1
 	}
 	StartAutoRunHotkey := GameToolGui.Add("Hotkey", "vStartAutoRunHotkey x150 y10 w74 h20 +disabled", StartAutoRunHotkey)
 	StopAutoRunHotKey := GameToolGui.Add("Hotkey", "vStopAutoRunHotKey x150 y35 w74 h20 +disabled", StopAutoRunHotKey)
@@ -201,7 +196,6 @@ if SecureMode == true {
 		OptionsMenu.SetIcon("Secure &Mode: On/Off", IconLib . "\Unlocked.ico")
 	}
 	catch {
-		FlagMissingIcons := 1
 	}
 	StartAutoRunHotkey := GameToolGui.Add("Hotkey", "vStartAutoRunHotkey x150 y10 w74 h20", StartAutoRunHotkey).OnEvent("Change", SubmitAutoRunHotkey)
 	StopAutoRunHotKey := GameToolGui.Add("Hotkey", "vStopAutoRunHotKey x150 y35 w74 h20", StopAutoRunHotKey).OnEvent("Change", SubmitAutoRunHotkey)
@@ -245,7 +239,6 @@ case SwitchJumps:
 		OptionsMenu.SetIcon("Switch &Clicker", IconLib . "\Switch2.ico")
 	}
 	catch {
-		FlagMissingIcons := 1
 	}
 	GameToolGui.Add("Text", "x05 y226 h20 +0x200", " Verify Num Lock key is ON for Numpad keys ")
 	GameToolGui.Add("GroupBox", "x10 y250 w229 h150", "Jumps")
@@ -279,7 +272,6 @@ case SwitchClicker:
 		OptionsMenu.SetIcon("Switch &Jumps", IconLib . "\Switch2.ico")
 	}
 	catch {
-		FlagMissingIcons := 1
 	}
 	GameToolGui.Add("Text","x48 y226 h20 +0x200", " Auto Clicker - Toggle Key ")
 	
@@ -299,7 +291,6 @@ case SwitchClicker:
 			OptionsMenu.SetIcon("Secure Edit &Boxes: On/Off", IconLib . "\EditBox1.ico")
 		}
 		catch {
-			FlagMissingIcons := 1
 		}
 		EditPatternClicker := GameToolGui.Add("Edit", "vClickInterval x60 y251 w50 h20 +Number +Disabled")
 		EditPatternClickerOffset := GameToolGui.Add("Edit", "vRandomOffset x190 y251 w50 h20 +Number +Disabled")
@@ -705,40 +696,14 @@ catch as e {
 	; License file is missing
 	ExitApp(3)
 }
+
 Switch true {
 case LicenseKeyInFile == "":
-	try {
-		LicenseKeyInAuxFile := IniRead(TempFile, "AuxData", "LicenseKey")
-		if (LicenseKeyInAuxFile != LicenseKeyInFile) {
-			ExitApp(2)
-		}
-	}
-	catch as e {
-		; No license key on TempFile yet
-		IniWrite LicenseKey, LicenseFile, "Data", "LicenseKey"
-		IniWrite LicenseKey, TempFile, "AuxData", "LicenseKey"
-	}
+	IniWrite LicenseKey, LicenseFile, "Data", "LicenseKey"
 case LicenseKeyInFile == LicenseKey:
-	IniWrite LicenseKey, TempFile, "AuxData", "LicenseKey"
 case LicenseKeyInFile != LicenseKey:
-	IniWrite LicenseKey, TempFile, "AuxData", "LicenseKey"
 	; Invalid License
 	ExitApp(2)
-}
-;----------------------------------------------------
-FirstRun := IniRead(IniFile, "Properties", "FirstRun")
-if FirstRun == true {
-	AntivirusMsg
-	FirstRun := 0
-	IniWrite FirstRun, IniFile, "Properties", "FirstRun"
-}
-;----------------------------------------------------
- if FlagMissingIcons == true {
-	IconsFolderMissingMsg
- }
-;----------------------------------------------------
-if FlagMissingImage == true {
-	ImageFolderMissingMsg
 }
 ;----------------------------------------------------
 Hotkey Saved.StartAutoRunHotkey, (ThisHotkey) => ProcessRunWalkHotkey(RunSelected := true, ThisHotkey)
@@ -760,15 +725,9 @@ ExitMsg(*){
 		Exitmsg.BackColor := "0x2F2F2F"
 		try {
 			Exitmsg.Add("Picture", "x-32 y0 w712 h300", ImageLib . "\MLTABackground2.png")
-		}
-		catch {
-			FlagMissingImage := 1
-		}
-		try {
 			Exitmsg.Add("Picture", "x9 y14 w64 h64", IconLib . "\ML-TA.ico")
 		}
 		catch {
-			FlagMissingIcons := 1
 		}
 		Exitmsg.SetFont("s20 W700 Q4 cLime", "Georgia")
 		Exitmsg.Add("Text", "x80 y8", "ML Task Automator")
@@ -786,133 +745,13 @@ ExitMsg(*){
 		Exitmsg.SetFont()
 		Exitmsg.SetFont("s9 cLime", "Comic Sans MS")
 		Exitmsg.Add("Text", "x0 y180 w470 h1 +0x5")
-		Exitmsg.Add("Text", "x100 y203", "Made with AutoHotkey V" A_AhkVersion . " " . (1 ? "Unicode" : "ANSI") . " " . (A_PtrSize == 8 ? "64-bit" : "32-bit"))
+		Exitmsg.Add("Text", "x100 y190", "Copyright 2024 FDJ-Dash. All Rights Reserved.")
+		Exitmsg.SetFont()
+		Exitmsg.SetFont("s8 cLime", "Comic Sans MS")
+		Exitmsg.Add("Text", "x120 y212", "Made with AutoHotkey V" A_AhkVersion . " " . (1 ? "Unicode" : "ANSI") . " " . (A_PtrSize == 8 ? "64-bit" : "32-bit"))
         Exitmsg.Title := "Goodbye!"
         Exitmsg.Show("w470 h240")
         Exitmsg.Opt("+LastFound")
-    Return
-}
-;----------------------------------------------------
-AntivirusMsg(*){
-	ShowAntivirusMsg:
-        AntivMsg := Gui("+AlwaysOnTop")
-		AntivMsg.BackColor := "0x2F2F2F"
-		try {
-			AntivMsg.Add("Picture", "x-32 y0 w712 h300", ImageLib . "\MLTABackground2.png")
-		}
-		catch {
-			FlagMissingImage := 1
-		}
-		try {
-			AntivMsg.Add("Picture", "x9 y14 w64 h64", IconLib . "\ML-TA.ico")
-		}
-		catch {
-			FlagMissingIcons := 1
-		}
-		AntivMsg.SetFont("s20 W700 Q4 cLime", "Georgia")
-        AntivMsg.Add("Text", "x80 y8", AppName)
-		AntivMsg.SetFont("s9 cLime", "Comic Sans MS")
-		AntivMsg.Add("Text", "x80 y45", "Mean Little's Task Automator v" CurrentVersion)
-		AntivMsg.Add("Text", "x80 y65", "License key: ")
-		AntivMsg.SetFont()
-		AntivMsg.SetFont("s7 Bold " . BlueFont . "", "Comic Sans MS")
-		AntivMsg.Add("Text", "x160 y68", LicenseKey)
-		AntivMsg.Add("Text", "x0 y90 w470 h1 +0x5")
-		AntivMsg.SetFont()
-		AntivMsg.SetFont("s11 cLime", "Comic Sans MS")
-		AntivMsg.Add("Text", "x112 y100", "Welcome! This is the initial Check.")
-		AntivMsg.Add("Text", "x112 y125", "Your antivirus may check the app.")
-        AntivMsg.Add("Text", "x100 y150", "Once done the app will load properly")
-		AntivMsg.SetFont()
-		AntivMsg.SetFont("s9 cLime", "Comic Sans MS")
-		AntivMsg.Add("Text", "x0 y180 w470 h1 +0x5")
-		AntivMsg.Add("Text", "x25 y203", "Made with AutoHotkey V" A_AhkVersion . " " . (1 ? "Unicode" : "ANSI") . " " . (A_PtrSize == 8 ? "64-bit" : "32-bit"))
-        ogcButtonOK := AntivMsg.Add("Button", "x370 y200 w80 h24", "OK")
-		ogcButtonOK.OnEvent("Click", Destroy)
-		AntivMsg.Title := "Initial load.."
-        AntivMsg.Show("w470 h240")
-        AntivMsg.Opt("+LastFound")
-    Return
-	Destroy(*){
-		AntivMsg.Destroy()
-	}
-}
-;----------------------------------------------------
-ImageFolderMissingMsg(*){
-	ShowImageFolderMissing:
-        ImgMissingMsg := Gui("+AlwaysOnTop")
-		ImgMissingMsg.BackColor := "0x2F2F2F"
-		try {
-			ImgMissingMsg.Add("Picture", "x-32 y0 w712 h300", ImageLib . "\MLTABackground2.png")
-		}
-		catch {
-			FlagMissingImage := 1
-		}
-		try {
-			ImgMissingMsg.Add("Picture", "x9 y14 w64 h64", IconLib . "\ML-TA.ico")
-		}
-		catch {
-			FlagMissingIcons := 1
-		}
-		ImgMissingMsg.SetFont("s20 W700 Q4 cLime", "Georgia")
-        ImgMissingMsg.Add("Text", "x80 y8", AppName)
-		ImgMissingMsg.SetFont("s9 cLime", "Comic Sans MS")
-		ImgMissingMsg.Add("Text", "x80 y45", "Mean Little's Task Automator v" CurrentVersion)
-		ImgMissingMsg.Add("Text", "x80 y65", "License key: ")
-		ImgMissingMsg.SetFont()
-		ImgMissingMsg.SetFont("s7 Bold " . BlueFont . "", "Comic Sans MS")
-		ImgMissingMsg.Add("Text", "x160 y68", LicenseKey)
-		ImgMissingMsg.Add("Text", "x0 y90 w470 h1 +0x5")
-		ImgMissingMsg.SetFont()
-		ImgMissingMsg.SetFont("s12 cRed", "Comic Sans MS")
-		ImgMissingMsg.Add("Text", "x70 y110", "Image folder probably missing. Please check..")
-        ImgMissingMsg.Add("Text", "x85 y140", "You can still run the app like this though..")
-		ImgMissingMsg.SetFont()
-		ImgMissingMsg.SetFont("s9 cLime", "Comic Sans MS")
-		ImgMissingMsg.Add("Text", "x0 y180 w470 h1 +0x5")
-		ImgMissingMsg.Add("Text", "x100 y203", "Made with AutoHotkey V" A_AhkVersion . " " . (1 ? "Unicode" : "ANSI") . " " . (A_PtrSize == 8 ? "64-bit" : "32-bit"))
-        ImgMissingMsg.Title := "Image Folder Missing!"
-        ImgMissingMsg.Show("w470 h240")
-        ImgMissingMsg.Opt("+LastFound")
-    Return
-}
-;----------------------------------------------------
-IconsFolderMissingMsg(*){
-	ShowIconFolderMissing:
-        IconMissingMsg := Gui("+AlwaysOnTop")
-		IconMissingMsg.BackColor := "0x2F2F2F"
-		try {
-			IconMissingMsg.Add("Picture", "x-32 y0 w712 h300", ImageLib . "\MLTABackground2.png")
-		}
-		catch {
-			FlagMissingImage := 1
-		}
-		try {
-			IconMissingMsg.Add("Picture", "x9 y14 w64 h64", IconLib . "\ML-TA.ico")
-		}
-		catch {
-			FlagMissingIcons := 1
-		}
-		IconMissingMsg.SetFont("s20 W700 Q4 cLime", "Georgia")
-        IconMissingMsg.Add("Text", "x80 y8", AppName)
-		IconMissingMsg.SetFont("s9 cLime", "Comic Sans MS")
-		IconMissingMsg.Add("Text", "x80 y45", "Mean Little's Task Automator v" CurrentVersion)
-		IconMissingMsg.Add("Text", "x80 y65", "License key: ")
-		IconMissingMsg.SetFont()
-		IconMissingMsg.SetFont("s7 Bold " . BlueFont . "", "Comic Sans MS")
-		IconMissingMsg.Add("Text", "x160 y68", LicenseKey)
-		IconMissingMsg.Add("Text", "x0 y90 w470 h1 +0x5")
-		IconMissingMsg.SetFont()
-		IconMissingMsg.SetFont("s12 cRed", "Comic Sans MS")
-		IconMissingMsg.Add("Text", "x70 y110", "Icons folder probably missing. Please check..")
-        IconMissingMsg.Add("Text", "x85 y140", "You can still run the app like this though..")
-		IconMissingMsg.SetFont()
-		IconMissingMsg.SetFont("s9 cLime", "Comic Sans MS")
-		IconMissingMsg.Add("Text", "x0 y180 w470 h1 +0x5")
-		IconMissingMsg.Add("Text", "x100 y203", "Made with AutoHotkey V" A_AhkVersion . " " . (1 ? "Unicode" : "ANSI") . " " . (A_PtrSize == 8 ? "64-bit" : "32-bit"))
-        IconMissingMsg.Title := "Icons Folder Missing?"
-        IconMissingMsg.Show("w470 h240")
-        IconMissingMsg.Opt("+LastFound")
     Return
 }
 ;----------------------------------------------------
@@ -922,15 +761,9 @@ InvalidLicenseMsg(*){
 		InvLicMsg.BackColor := "0x2F2F2F"
 		try {
 			InvLicMsg.Add("Picture", "x-32 y0 w712 h300", ImageLib . "\MLTABackground2.png")
-		}
-		catch {
-			FlagMissingImage := 1
-		}
-		try {
 			InvLicMsg.Add("Picture", "x9 y14 w64 h64", IconLib . "\ML-TA.ico")
 		}
 		catch {
-			FlagMissingIcons := 1
 		}
 		InvLicMsg.SetFont("s20 W700 Q4 cLime", "Georgia")
         InvLicMsg.Add("Text", "x80 y8", AppName)
@@ -943,12 +776,15 @@ InvalidLicenseMsg(*){
 		InvLicMsg.Add("Text", "x0 y90 w470 h1 +0x5")
 		InvLicMsg.SetFont()
 		InvLicMsg.SetFont("s12 cRed", "Comic Sans MS")
-		InvLicMsg.Add("Text", "x175 y110", "Invalid License Key")
+		InvLicMsg.Add("Text", "x167 y110", "Invalid License Key")
         InvLicMsg.Add("Text", "x80 y140", "ML Task Automator will close in " ExitMessageTimeWait / 1000 " seconds")
 		InvLicMsg.SetFont()
 		InvLicMsg.SetFont("s9 cLime", "Comic Sans MS")
 		InvLicMsg.Add("Text", "x0 y180 w470 h1 +0x5")
-		InvLicMsg.Add("Text", "x100 y203", "Made with AutoHotkey V" A_AhkVersion . " " . (1 ? "Unicode" : "ANSI") . " " . (A_PtrSize == 8 ? "64-bit" : "32-bit"))
+		InvLicMsg.Add("Text", "x100 y190", "Copyright 2024 FDJ-Dash. All Rights Reserved.")
+		InvLicMsg.SetFont()
+		InvLicMsg.SetFont("s8 cLime", "Comic Sans MS")
+		InvLicMsg.Add("Text", "x120 y212", "Made with AutoHotkey V" A_AhkVersion . " " . (1 ? "Unicode" : "ANSI") . " " . (A_PtrSize == 8 ? "64-bit" : "32-bit"))
         InvLicMsg.Title := "Invalid License Key!"
         InvLicMsg.Show("w470 h240")
         InvLicMsg.Opt("+LastFound")
@@ -961,15 +797,9 @@ LicenseFileMissingMsg(*){
 		NoLicFileMsg.BackColor := "0x2F2F2F"
 		try {
 			NoLicFileMsg.Add("Picture", "x-32 y0 w712 h300", ImageLib . "\MLTABackground2.png")
-		}
-		catch {
-			FlagMissingImage := 1
-		}
-		try {
 			NoLicFileMsg.Add("Picture", "x9 y14 w64 h64", IconLib . "\ML-TA.ico")
 		}
 		catch {
-			FlagMissingIcons := 1
 		}
 		NoLicFileMsg.SetFont("s20 W700 Q4 cLime", "Georgia")
         NoLicFileMsg.Add("Text", "x80 y8", AppName)
@@ -982,12 +812,15 @@ LicenseFileMissingMsg(*){
 		NoLicFileMsg.Add("Text", "x0 y90 w470 h1 +0x5")
 		NoLicFileMsg.SetFont()
 		NoLicFileMsg.SetFont("s12 cRed", "Comic Sans MS")
-		NoLicFileMsg.Add("Text", "x170 y110", "License file not found")
+		NoLicFileMsg.Add("Text", "x160 y110", "License file not found")
         NoLicFileMsg.Add("Text", "x80 y140", "ML Task Automator will close in " ExitMessageTimeWait / 1000 " seconds")
 		NoLicFileMsg.SetFont()
 		NoLicFileMsg.SetFont("s9 cLime", "Comic Sans MS")
 		NoLicFileMsg.Add("Text", "x0 y180 w470 h1 +0x5")
-		NoLicFileMsg.Add("Text", "x100 y203", "Made with AutoHotkey V" A_AhkVersion . " " . (1 ? "Unicode" : "ANSI") . " " . (A_PtrSize == 8 ? "64-bit" : "32-bit"))
+		NoLicFileMsg.Add("Text", "x100 y190", "Copyright 2024 FDJ-Dash. All Rights Reserved.")
+		NoLicFileMsg.SetFont()
+		NoLicFileMsg.SetFont("s8 cLime", "Comic Sans MS")
+		NoLicFileMsg.Add("Text", "x120 y212", "Made with AutoHotkey V" A_AhkVersion . " " . (1 ? "Unicode" : "ANSI") . " " . (A_PtrSize == 8 ? "64-bit" : "32-bit"))
         NoLicFileMsg.Title := "Invalid License Key!"
         NoLicFileMsg.Show("w470 h240")
         NoLicFileMsg.Opt("+LastFound")
@@ -1000,15 +833,9 @@ SaveMsg(*){
 		Savemsg.BackColor := "0x2F2F2F"
 		try {
 			Savemsg.Add("Picture", "x-32 y0 w712 h300", ImageLib . "\MLTABackground2.png")
-		}
-		catch {
-			FlagMissingImage := 1
-		}
-		try {
 			Savemsg.Add("Picture", "x9 y14 w64 h64", IconLib . "\ML-TA.ico")
 		}
 		catch {
-			FlagMissingIcons := 1
 		}
 		Savemsg.SetFont("s20 W700 Q4 cLime", "Georgia")
         Savemsg.Add("Text", "x80 y8", AppName)
@@ -1025,7 +852,10 @@ SaveMsg(*){
 		Savemsg.SetFont()
 		Savemsg.SetFont("s9 cLime", "Comic Sans MS")
 		Savemsg.Add("Text", "x0 y180 w470 h1 +0x5")
-		Savemsg.Add("Text", "x25 y203", "Made with AutoHotkey V" A_AhkVersion . " " . (1 ? "Unicode" : "ANSI") . " " . (A_PtrSize == 8 ? "64-bit" : "32-bit"))
+		Savemsg.Add("Text", "x25 y190", "Copyright 2024 FDJ-Dash. All Rights Reserved.")
+		Savemsg.SetFont()
+		Savemsg.SetFont("s8 cLime", "Comic Sans MS")
+		Savemsg.Add("Text", "x25 y212", "Made with AutoHotkey V" A_AhkVersion . " " . (1 ? "Unicode" : "ANSI") . " " . (A_PtrSize == 8 ? "64-bit" : "32-bit"))
         ogcButtonOK := Savemsg.Add("Button", "x370 y200 w80 h24", "OK")
 		ogcButtonOK.OnEvent("Click", Destroy)
 		Savemsg.Title := "Save Successful!"
@@ -1044,15 +874,9 @@ SecureModeOff(*){
 		SecModeOff.BackColor := "0x2F2F2F"
 		try {
 			SecModeOff.Add("Picture", "x-32 y0 w712 h300", ImageLib . "\MLTABackground2.png")
-		}
-		catch {
-			FlagMissingImage := 1
-		}
-		try {
 			SecModeOff.Add("Picture", "x9 y14 w64 h64", IconLib . "\ML-TA.ico")
 		}
 		catch {
-			FlagMissingIcons := 1
 		}
 		SecModeOff.SetFont("s20 W700 Q4 cLime", "Georgia")
         SecModeOff.Add("Text", "x80 y8", AppName)
@@ -1070,7 +894,10 @@ SecureModeOff(*){
 		SecModeOff.SetFont()
 		SecModeOff.SetFont("s9 cLime", "Comic Sans MS")
 		SecModeOff.Add("Text", "x0 y180 w470 h1 +0x5")
-		SecModeOff.Add("Text", "x25 y203", "Made with AutoHotkey V" A_AhkVersion . " " . (1 ? "Unicode" : "ANSI") . " " . (A_PtrSize == 8 ? "64-bit" : "32-bit"))
+		SecModeOff.Add("Text", "x25 y190", "Copyright 2024 FDJ-Dash. All Rights Reserved.")
+		SecModeOff.SetFont()
+		SecModeOff.SetFont("s8 cLime", "Comic Sans MS")
+		SecModeOff.Add("Text", "x25 y212", "Made with AutoHotkey V" A_AhkVersion . " " . (1 ? "Unicode" : "ANSI") . " " . (A_PtrSize == 8 ? "64-bit" : "32-bit"))
         ogcButtonOK := SecModeOff.Add("Button", "x370 y200 w80 h24", "OK")
 		ogcButtonOK.OnEvent("Click", Destroy)
         SecModeOff.Title := "Secure Mode Off"
@@ -1090,15 +917,9 @@ MenuHandlerAbout(*)
 		About.BackColor := "0x2F2F2F"
 		try {
 			About.Add("Picture", "x-32 y0 w712 h300", ImageLib . "\MLTABackground2.png")
-		}
-		catch {
-			FlagMissingImage := 1
-		}
-		try {
 			About.Add("Picture", "x9 y14 w64 h64", IconLib . "\ML-TA.ico")
 		}
 		catch {
-			FlagMissingIcons := 1
 		}
 		About.SetFont("s20 W700 Q4 cLime", "Georgia")
         About.Add("Text", "x80 y8", AppName)
@@ -1107,19 +928,19 @@ MenuHandlerAbout(*)
 		About.Add("Text", "x80 y65", "License key: ")
 		About.SetFont()
 		About.SetFont("s7 Bold " . BlueFont . "", "Comic Sans MS")
-		EditLicAbout := About.Add("Edit", "x160 y65 h20 +Readonly", LicenseKey)
-		EditLicAbout.Opt("" . BackgroundDarkGrey . "")
+		About.Add("Text", "x160 y68", LicenseKey)
 		About.Add("Text", "x0 y90 w470 h1 +0x5")
 		About.SetFont()
 		About.SetFont("s12 cLime", "Comic Sans MS")
-		About.Add("Text", "x80 y125", "Programmed and designed by:")
-		About.Add("Link", "x310 y125", "<a href=`"https://github.com/FDJ-Dash`">FDJ-Dash</a>")
+		About.Add("Text", "x80 y115", "Programmed and designed by:")
+		About.Add("Link", "x310 y115", "<a href=`"https://github.com/FDJ-Dash`">FDJ-Dash</a>")
 		About.SetFont()
 		About.SetFont("s9 cLime", "Comic Sans MS")
+		About.Add("Text", "x105 y155", "Support mail: mean.little.software@gmail.com")
 		About.Add("Text", "x0 y180 w470 h1 +0x5")
-        About.Add("Text", "x25 y190", "Support mail:")
-		EditAbout := About.Add("Edit", "x105 y187 h20 +Readonly", "mean.little.software@gmail.com")
-		EditAbout.Opt("" . BackgroundDarkGrey . "")
+        About.Add("Text", "x25 y190", "Copyright 2024 FDJ-Dash. All Rights Reserved.")
+		About.SetFont()
+		About.SetFont("s8 cLime", "Comic Sans MS")
 		About.Add("Text", "x25 y212", "Made with AutoHotkey V" A_AhkVersion . " " . (1 ? "Unicode" : "ANSI") . " " . (A_PtrSize == 8 ? "64-bit" : "32-bit"))
 		ogcButtonOK := About.Add("Button", "x370 y200 w80 h24", "OK")
 		ogcButtonOK.OnEvent("Click", Destroy)
@@ -1139,15 +960,9 @@ MenuHandlerGuide(*) {
 		GuideMsg.BackColor := "0x2F2F2F"
 		try {
 			GuideMsg.Add("Picture", "x-32 y0 w712 h300", ImageLib . "\MLTABackground2.png")
-		}
-		catch {
-			FlagMissingImage := 1
-		}
-		try {
 			GuideMsg.Add("Picture", "x9 y14 w64 h64", IconLib . "\ML-TA.ico")
 		}
 		catch {
-			FlagMissingIcons := 1
 		}
 		GuideMsg.SetFont("s20 W700 Q4 cLime", "Georgia")
         GuideMsg.Add("Text", "x80 y8", AppName)
@@ -1165,7 +980,10 @@ MenuHandlerGuide(*) {
 		GuideMsg.SetFont()
 		GuideMsg.SetFont("s9 cLime", "Comic Sans MS")
 		GuideMsg.Add("Text", "x0 y180 w470 h1 +0x5")
-		GuideMsg.Add("Text", "x25 y203", "Made with AutoHotkey V" A_AhkVersion . " " . (1 ? "Unicode" : "ANSI") . " " . (A_PtrSize == 8 ? "64-bit" : "32-bit"))
+		GuideMsg.Add("Text", "x25 y190", "Copyright 2024 FDJ-Dash. All Rights Reserved.")
+		GuideMsg.SetFont()
+		GuideMsg.SetFont("s8 cLime", "Comic Sans MS")
+		GuideMsg.Add("Text", "x25 y212", "Made with AutoHotkey V" A_AhkVersion . " " . (1 ? "Unicode" : "ANSI") . " " . (A_PtrSize == 8 ? "64-bit" : "32-bit"))
         ogcButtonOK := GuideMsg.Add("Button", "x370 y200 w80 h24 Default", "OK")
 		ogcButtonOK.OnEvent("Click", Destroy)
         GuideMsg.Title := "Guide"
