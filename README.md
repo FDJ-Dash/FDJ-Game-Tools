@@ -9,3 +9,6 @@
 ------------------------------------------
 ## Guide Link
 [ML Task Automator](https://mean-littles-app.gitbook.io/mean-littles-app-docs/ml-task-automator/how-does-it-work)
+## Support Mail
+- mean.little.software@gmail.com
+
