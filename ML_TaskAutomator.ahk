@@ -6,16 +6,18 @@ Global IconLib := A_ScriptDir . "\Icons"
 , HotkeyGuide := "https://mean-littles-app.gitbook.io/mean-littles-app-docs/ml-task-automator/how-does-it-work"
 , IniFile := A_ScriptDir . "\ML_TaskAutomator.ini"
 , LicenseFile := A_ScriptDir . "\LicenseKey.ini"
-, CurrentVersion := "1.1", FlagMissingIcons := 0, FlagMissingImage := 0
-, AppName := "ML Task Automator", BlueFont := "c0x70A0FA", BackgroundDarkGrey := "Background2F2F2F"
+, CurrentVersion := "1.1"
+, AppName := "ML Task Automator"
+, BlueFont := "c0x70A0FA"
+, BackgroundDarkGrey := "Background2F2F2F"
 ;----------------------------------------------------
 ; GUI Properties
-GameToolGui := Gui("+AlwaysOnTop")
-GameToolGui.Opt("+MinimizeBox +OwnDialogs -Theme")
-GameToolGui.SetFont("Bold cLime", "Comic Sans MS")
-GameToolGui.BackColor := "0x2F2F2F"
+TaskAutomatorGui := Gui("+AlwaysOnTop")
+TaskAutomatorGui.Opt("+MinimizeBox +OwnDialogs -Theme")
+TaskAutomatorGui.SetFont("Bold cLime", "Comic Sans MS")
+TaskAutomatorGui.BackColor := "0x2F2F2F"
 try {
-	GameToolGui.Add("Picture", "x-16 y0 w304 h712", ImageLib . "\MLTABackground.png")
+	TaskAutomatorGui.Add("Picture", "x-16 y0 w304 h712", ImageLib . "\MLTABackground.png")
 }
 catch {
 }
@@ -177,59 +179,59 @@ try {
 }
 catch {
 }
-GameToolGui.MenuBar := MenuBar_Storage
+TaskAutomatorGui.MenuBar := MenuBar_Storage
 ;----------------------------------------------------
 ; Keyboard AutoRun
-GameToolGui.Add("Text", "x10 y10 h20 +0x200", " Auto Run ")
-TextOnOff1 := GameToolGui.Add("Text","x105 y10 h20 +0x200", " OFF ")
-GameToolGui.Add("Text", "x10 y35 h20 +0x200", " Stop Auto Run ")
+TaskAutomatorGui.Add("Text", "x10 y10 h20 +0x200", " Auto Run ")
+TextOnOff1 := TaskAutomatorGui.Add("Text","x105 y10 h20 +0x200", " OFF ")
+TaskAutomatorGui.Add("Text", "x10 y35 h20 +0x200", " Stop Auto Run ")
 if SecureMode == true {
 	try {
 		OptionsMenu.SetIcon("Secure &Mode: On/Off", IconLib . "\Locked.ico")
 	}
 	catch {
 	}
-	StartAutoRunHotkey := GameToolGui.Add("Hotkey", "vStartAutoRunHotkey x150 y10 w74 h20 +disabled", StartAutoRunHotkey)
-	StopAutoRunHotKey := GameToolGui.Add("Hotkey", "vStopAutoRunHotKey x150 y35 w74 h20 +disabled", StopAutoRunHotKey)
+	StartAutoRunHotkey := TaskAutomatorGui.Add("Hotkey", "vStartAutoRunHotkey x150 y10 w74 h20 +disabled", StartAutoRunHotkey)
+	StopAutoRunHotKey := TaskAutomatorGui.Add("Hotkey", "vStopAutoRunHotKey x150 y35 w74 h20 +disabled", StopAutoRunHotKey)
 } else {
 	try {
 		OptionsMenu.SetIcon("Secure &Mode: On/Off", IconLib . "\Unlocked.ico")
 	}
 	catch {
 	}
-	StartAutoRunHotkey := GameToolGui.Add("Hotkey", "vStartAutoRunHotkey x150 y10 w74 h20", StartAutoRunHotkey).OnEvent("Change", SubmitAutoRunHotkey)
-	StopAutoRunHotKey := GameToolGui.Add("Hotkey", "vStopAutoRunHotKey x150 y35 w74 h20", StopAutoRunHotKey).OnEvent("Change", SubmitAutoRunHotkey)
+	StartAutoRunHotkey := TaskAutomatorGui.Add("Hotkey", "vStartAutoRunHotkey x150 y10 w74 h20", StartAutoRunHotkey).OnEvent("Change", SubmitAutoRunHotkey)
+	StopAutoRunHotKey := TaskAutomatorGui.Add("Hotkey", "vStopAutoRunHotKey x150 y35 w74 h20", StopAutoRunHotKey).OnEvent("Change", SubmitAutoRunHotkey)
 }
 ;----------------------------------------------------
-GameToolGui.Add("Text", "x1 y60 w250 h2 +0x10") ; Separator
+TaskAutomatorGui.Add("Text", "x1 y60 w250 h2 +0x10") ; Separator
 ;----------------------------------------------------
 ; Auto Scroll Up
-TextScrlUp := GameToolGui.Add("Text","x10 y66 w110 h20 +0x200", " Auto Scroll up")
-RadioScrlUpYes := GameToolGui.Add("Radio", "x10 y91 w30 h20", "Y")
-RadioScrlUpNo := GameToolGui.Add("Radio", "x45 y91 w30 h20 +Checked", "N")
-TextOnOffScrlUp := GameToolGui.Add("Text","x90 y91 w30 h20 +0x200", " OFF")
+TextScrlUp := TaskAutomatorGui.Add("Text","x10 y66 w110 h20 +0x200", " Auto Scroll up")
+RadioScrlUpYes := TaskAutomatorGui.Add("Radio", "x10 y91 w30 h20", "Y")
+RadioScrlUpNo := TaskAutomatorGui.Add("Radio", "x45 y91 w30 h20 +Checked", "N")
+TextOnOffScrlUp := TaskAutomatorGui.Add("Text","x90 y91 w30 h20 +0x200", " OFF")
 ;----------------------------------------------------
 ; Auto Scroll Down
-TextScrlDown := GameToolGui.Add("Text","x130 y66 w110 h20 +0x200", " Auto Scroll down")
-RadioScrlDownYes := GameToolGui.Add("Radio", "x130 y91 w30 h20", "Y")
-RadioScrlDownNo := GameToolGui.Add("Radio", "x165 y91 w30 h20 +Checked", "N")
-TextOnOffScrlDown := GameToolGui.Add("Text","x210 y91 w30 h20 +0x200", " OFF")
+TextScrlDown := TaskAutomatorGui.Add("Text","x130 y66 w110 h20 +0x200", " Auto Scroll down")
+RadioScrlDownYes := TaskAutomatorGui.Add("Radio", "x130 y91 w30 h20", "Y")
+RadioScrlDownNo := TaskAutomatorGui.Add("Radio", "x165 y91 w30 h20 +Checked", "N")
+TextOnOffScrlDown := TaskAutomatorGui.Add("Text","x210 y91 w30 h20 +0x200", " OFF")
 ;----------------------------------------------------
-GameToolGui.Add("Text", "x1 y116 w250 h2 +0x10") ; Separator
+TaskAutomatorGui.Add("Text", "x1 y116 w250 h2 +0x10") ; Separator
 ;----------------------------------------------------
 ; Controller
-GameToolGui.Add("Text","x10 y122 h20 +0x200", " Controller: ")
-TextOnOffController := GameToolGui.Add("Text","x85 y122 w155 h20 +0x200", " Controller Not Found")
-ControllerName := GameToolGui.Add("Text","x10 y147 w230 h20 +0x200", " ")
+TaskAutomatorGui.Add("Text","x10 y122 h20 +0x200", " Controller: ")
+TextOnOffController := TaskAutomatorGui.Add("Text","x85 y122 w155 h20 +0x200", " Controller Not Found")
+ControllerName := TaskAutomatorGui.Add("Text","x10 y147 w230 h20 +0x200", " ")
 ;----------------------------------------------------
 ; Controller AutoRun
-GameToolGui.Add("Text","x10 y172 w110 h20 +0x200", " Controller AutoRun:")
-RadioCtrlAuRunYes := GameToolGui.Add("Radio", "x130 y172 w30 h20 +Checked", "Y")
-RadioCtrlAuRunNo := GameToolGui.Add("Radio", "x165 y172 w30 h20", "N")
-TextOnOffCtrlAuRun := GameToolGui.Add("Text","x210 y172 w30 h20 +0x200", " OFF")
-GameToolGui.Add("Text","x25 y197 w200 h20 +0x200", " Use RT / LT Keys to turn it on / off ")
+TaskAutomatorGui.Add("Text","x10 y172 w110 h20 +0x200", " Controller AutoRun:")
+RadioCtrlAuRunYes := TaskAutomatorGui.Add("Radio", "x130 y172 w30 h20 +Checked", "Y")
+RadioCtrlAuRunNo := TaskAutomatorGui.Add("Radio", "x165 y172 w30 h20", "N")
+TextOnOffCtrlAuRun := TaskAutomatorGui.Add("Text","x210 y172 w30 h20 +0x200", " OFF")
+TaskAutomatorGui.Add("Text","x25 y197 w200 h20 +0x200", " Use RT / LT Keys to turn it on / off ")
 ;----------------------------------------------------
-GameToolGui.Add("Text", "x1 y221 w250 h2 +0x10") ; Separator
+TaskAutomatorGui.Add("Text", "x1 y221 w250 h2 +0x10") ; Separator
 ;----------------------------------------------------
 ; Jumps
 Switch true {
@@ -240,31 +242,31 @@ case SwitchJumps:
 	}
 	catch {
 	}
-	GameToolGui.Add("Text", "x05 y226 h20 +0x200", " Verify Num Lock key is ON for Numpad keys ")
-	GameToolGui.Add("GroupBox", "x10 y250 w229 h150", "Jumps")
-	GameToolGui.Add("Text", "x20 y273 w95 h20 +0x200", " Very Short jump")
-	TextOnOff2 := GameToolGui.Add("Text","x120 y273 h20 +0x200", " OFF ")
-	GameToolGui.Add("Text", "x20 y298 w95 h20 +0x200", " Short jump")
-	TextOnOff3 := GameToolGui.Add("Text","x120 y298 h20 +0x200", " OFF ")
-	GameToolGui.Add("Text", "x20 y323 w95 h20 +0x200", " Normal jump")
-	TextOnOff4 := GameToolGui.Add("Text","x120 y323 h20 +0x200", " OFF ")
-	GameToolGui.Add("Text", "x20 y348 w95 h20 +0x200", " Long jump")
-	TextOnOff5 := GameToolGui.Add("Text","x120 y348 h20 +0x200", " OFF ")
-	GameToolGui.Add("Text", "x20 y373 w95 h20 +0x200", " Very Long jump")
-	TextOnOff6 := GameToolGui.Add("Text","x120 y373 h20 +0x200", " OFF ")
+	TaskAutomatorGui.Add("Text", "x05 y226 h20 +0x200", " Verify Num Lock key is ON for Numpad keys ")
+	TaskAutomatorGui.Add("GroupBox", "x10 y250 w229 h150", "Jumps")
+	TaskAutomatorGui.Add("Text", "x20 y273 w95 h20 +0x200", " Very Short jump")
+	TextOnOff2 := TaskAutomatorGui.Add("Text","x120 y273 h20 +0x200", " OFF ")
+	TaskAutomatorGui.Add("Text", "x20 y298 w95 h20 +0x200", " Short jump")
+	TextOnOff3 := TaskAutomatorGui.Add("Text","x120 y298 h20 +0x200", " OFF ")
+	TaskAutomatorGui.Add("Text", "x20 y323 w95 h20 +0x200", " Normal jump")
+	TextOnOff4 := TaskAutomatorGui.Add("Text","x120 y323 h20 +0x200", " OFF ")
+	TaskAutomatorGui.Add("Text", "x20 y348 w95 h20 +0x200", " Long jump")
+	TextOnOff5 := TaskAutomatorGui.Add("Text","x120 y348 h20 +0x200", " OFF ")
+	TaskAutomatorGui.Add("Text", "x20 y373 w95 h20 +0x200", " Very Long jump")
+	TextOnOff6 := TaskAutomatorGui.Add("Text","x120 y373 h20 +0x200", " OFF ")
 
 	if SecureMode == true {
-		JumpHotkey0 := GameToolGui.Add("Hotkey", "vJumpHotkey0 x155 y273 w74 h20 +disabled", JumpHotkey0)
-		JumpHotkey1 := GameToolGui.Add("Hotkey", "vJumpHotkey1 x155 y298 w74 h20 +disabled", JumpHotkey1)
-		JumpHotkey2 := GameToolGui.Add("Hotkey", "vJumpHotkey2 x155 y323 w74 h20 +disabled", JumpHotkey2)
-		JumpHotkey3 := GameToolGui.Add("Hotkey", "vJumpHotkey3 x155 y348 w74 h20 +disabled", JumpHotkey3)
-		JumpHotkey4 := GameToolGui.Add("Hotkey", "vJumpHotkey4 x155 y373 w74 h20 +disabled", JumpHotkey4)
+		JumpHotkey0 := TaskAutomatorGui.Add("Hotkey", "vJumpHotkey0 x155 y273 w74 h20 +disabled", JumpHotkey0)
+		JumpHotkey1 := TaskAutomatorGui.Add("Hotkey", "vJumpHotkey1 x155 y298 w74 h20 +disabled", JumpHotkey1)
+		JumpHotkey2 := TaskAutomatorGui.Add("Hotkey", "vJumpHotkey2 x155 y323 w74 h20 +disabled", JumpHotkey2)
+		JumpHotkey3 := TaskAutomatorGui.Add("Hotkey", "vJumpHotkey3 x155 y348 w74 h20 +disabled", JumpHotkey3)
+		JumpHotkey4 := TaskAutomatorGui.Add("Hotkey", "vJumpHotkey4 x155 y373 w74 h20 +disabled", JumpHotkey4)
 	} else {
-		JumpHotkey0 := GameToolGui.Add("Hotkey", "vJumpHotkey0 x155 y273 w74 h20", JumpHotkey0).OnEvent("Change", SubmitJumpHotkey)
-		JumpHotkey1 := GameToolGui.Add("Hotkey", "vJumpHotkey1 x155 y298 w74 h20", JumpHotkey1).OnEvent("Change", SubmitJumpHotkey)
-		JumpHotkey2 := GameToolGui.Add("Hotkey", "vJumpHotkey2 x155 y323 w74 h20", JumpHotkey2).OnEvent("Change", SubmitJumpHotkey)
-		JumpHotkey3 := GameToolGui.Add("Hotkey", "vJumpHotkey3 x155 y348 w74 h20", JumpHotkey3).OnEvent("Change", SubmitJumpHotkey)
-		JumpHotkey4 := GameToolGui.Add("Hotkey", "vJumpHotkey4 x155 y373 w74 h20", JumpHotkey4).OnEvent("Change", SubmitJumpHotkey)
+		JumpHotkey0 := TaskAutomatorGui.Add("Hotkey", "vJumpHotkey0 x155 y273 w74 h20", JumpHotkey0).OnEvent("Change", SubmitJumpHotkey)
+		JumpHotkey1 := TaskAutomatorGui.Add("Hotkey", "vJumpHotkey1 x155 y298 w74 h20", JumpHotkey1).OnEvent("Change", SubmitJumpHotkey)
+		JumpHotkey2 := TaskAutomatorGui.Add("Hotkey", "vJumpHotkey2 x155 y323 w74 h20", JumpHotkey2).OnEvent("Change", SubmitJumpHotkey)
+		JumpHotkey3 := TaskAutomatorGui.Add("Hotkey", "vJumpHotkey3 x155 y348 w74 h20", JumpHotkey3).OnEvent("Change", SubmitJumpHotkey)
+		JumpHotkey4 := TaskAutomatorGui.Add("Hotkey", "vJumpHotkey4 x155 y373 w74 h20", JumpHotkey4).OnEvent("Change", SubmitJumpHotkey)
 	}
 case SwitchClicker:
 	try {
@@ -273,260 +275,260 @@ case SwitchClicker:
 	}
 	catch {
 	}
-	GameToolGui.Add("Text","x48 y226 h20 +0x200", " Auto Clicker - Toggle Key ")
+	TaskAutomatorGui.Add("Text","x48 y226 h20 +0x200", " Auto Clicker - Toggle Key ")
 	
 	if SecureMode == true {
-		PatternClickerHotkey := GameToolGui.Add("Hotkey", "vPatternClickerHotkey x55 y276 w65 h20 +disabled", PatternClickerHotkey)
-		StopPatternHotkey := GameToolGui.Add("Hotkey", "vStopPatternHotkey x177 y276 w65 h20 +disabled", StopPatternHotkey)
+		PatternClickerHotkey := TaskAutomatorGui.Add("Hotkey", "vPatternClickerHotkey x55 y276 w65 h20 +disabled", PatternClickerHotkey)
+		StopPatternHotkey := TaskAutomatorGui.Add("Hotkey", "vStopPatternHotkey x177 y276 w65 h20 +disabled", StopPatternHotkey)
 	} else {
-		PatternClickerHotkey := GameToolGui.Add("Hotkey", "vPatternClickerHotkey x55 y276 w65 h20", PatternClickerHotkey).OnEvent("Change", SubmitPatternClickerHotkey)
-		StopPatternHotkey := GameToolGui.Add("Hotkey", "vStopPatternHotkey x177 y276 w65 h20", StopPatternHotkey).OnEvent("Change", SubmitPatternClickerHotkey)
+		PatternClickerHotkey := TaskAutomatorGui.Add("Hotkey", "vPatternClickerHotkey x55 y276 w65 h20", PatternClickerHotkey).OnEvent("Change", SubmitPatternClickerHotkey)
+		StopPatternHotkey := TaskAutomatorGui.Add("Hotkey", "vStopPatternHotkey x177 y276 w65 h20", StopPatternHotkey).OnEvent("Change", SubmitPatternClickerHotkey)
 	}
 	if EditBoxesAvailable == true {
 		OptionsMenu.SetIcon("Secure Edit &Boxes: On/Off", IconLib . "\EditBox2.ico")
-		EditPatternClicker := GameToolGui.Add("Edit", "vClickInterval x60 y251 w50 h20 +Number")
-		EditPatternClickerOffset := GameToolGui.Add("Edit", "vRandomOffset x190 y251 w50 h20 +Number")
+		EditPatternClicker := TaskAutomatorGui.Add("Edit", "vClickInterval x60 y251 w50 h20 +Number")
+		EditPatternClickerOffset := TaskAutomatorGui.Add("Edit", "vRandomOffset x190 y251 w50 h20 +Number")
 	} else {
 		try {
 			OptionsMenu.SetIcon("Secure Edit &Boxes: On/Off", IconLib . "\EditBox1.ico")
 		}
 		catch {
 		}
-		EditPatternClicker := GameToolGui.Add("Edit", "vClickInterval x60 y251 w50 h20 +Number +Disabled")
-		EditPatternClickerOffset := GameToolGui.Add("Edit", "vRandomOffset x190 y251 w50 h20 +Number +Disabled")
+		EditPatternClicker := TaskAutomatorGui.Add("Edit", "vClickInterval x60 y251 w50 h20 +Number +Disabled")
+		EditPatternClickerOffset := TaskAutomatorGui.Add("Edit", "vRandomOffset x190 y251 w50 h20 +Number +Disabled")
 	}
-	TextPatternClickInterval := GameToolGui.Add("Text","x10 y251 h20 +0x200", " Interval ")
-	TextPatternClickerOffset := GameToolGui.Add("Text","x120 y251 h20 +0x200", " Rnd Offset ")
-	TextToggleClicker := GameToolGui.Add("Text","x07 y276 h20 +0x200", "ON/OFF")
-	TextPosX := GameToolGui.Add("Text","x25 y301 h20 +0x200", "X")
-	TextPosY := GameToolGui.Add("Text","x80 y301 h20 +0x200", "Y")
-	TextPosInterval := GameToolGui.Add("Text","x120 y301 h20 +0x200", " Interval ")
-	TextPatternClickerOnOff := GameToolGui.Add("Text","x195 y301 h20 +0x200", " OFF ")
+	TextPatternClickInterval := TaskAutomatorGui.Add("Text","x10 y251 h20 +0x200", " Interval ")
+	TextPatternClickerOffset := TaskAutomatorGui.Add("Text","x120 y251 h20 +0x200", " Rnd Offset ")
+	TextToggleClicker := TaskAutomatorGui.Add("Text","x07 y276 h20 +0x200", "ON/OFF")
+	TextPosX := TaskAutomatorGui.Add("Text","x25 y301 h20 +0x200", "X")
+	TextPosY := TaskAutomatorGui.Add("Text","x80 y301 h20 +0x200", "Y")
+	TextPosInterval := TaskAutomatorGui.Add("Text","x120 y301 h20 +0x200", " Interval ")
+	TextPatternClickerOnOff := TaskAutomatorGui.Add("Text","x195 y301 h20 +0x200", " OFF ")
 	
-	GameToolGui.SetFont()
-	GameToolGui.SetFont("Bold " . BlueFont . "", "Comic Sans MS")
-	TextPos0Interval := GameToolGui.Add("Text","x125 y276 h20 +0x200", "Stop Ptrn")
-	GameToolGui.SetFont()
-	GameToolGui.SetFont("Bold cLime", "Comic Sans MS")
+	TaskAutomatorGui.SetFont()
+	TaskAutomatorGui.SetFont("Bold " . BlueFont . "", "Comic Sans MS")
+	TextPos0Interval := TaskAutomatorGui.Add("Text","x125 y276 h20 +0x200", "Stop Ptrn")
+	TaskAutomatorGui.SetFont()
+	TaskAutomatorGui.SetFont("Bold cLime", "Comic Sans MS")
 	EditPatternClicker.Value := ClickInterval
 	EditPatternClicker.Opt("" . BackgroundDarkGrey . "")
 	EditPatternClickerOffset.Value := RandomOffset
 	EditPatternClickerOffset.Opt("" . BackgroundDarkGrey . "")
 	;----------------------------------------------------
-	GameToolGui.SetFont()
-	GameToolGui.SetFont("Bold " . BlueFont . "", "Comic Sans MS")
+	TaskAutomatorGui.SetFont()
+	TaskAutomatorGui.SetFont("Bold " . BlueFont . "", "Comic Sans MS")
 	if EditBoxesAvailable == true {
-		EditPosX0 := GameToolGui.Add("Edit", "vCoordX0 x10 y326 w40 h20 +Number")
+		EditPosX0 := TaskAutomatorGui.Add("Edit", "vCoordX0 x10 y326 w40 h20 +Number")
 	} else {
-		EditPosX0 := GameToolGui.Add("Edit", "vCoordX0 x10 y326 w40 h20 +Number +Disabled")
+		EditPosX0 := TaskAutomatorGui.Add("Edit", "vCoordX0 x10 y326 w40 h20 +Number +Disabled")
 	}
 	EditPosX0.Opt("" . BackgroundDarkGrey . "")
-	GameToolGui.SetFont()
-	GameToolGui.SetFont("Bold cLime", "Comic Sans MS")
+	TaskAutomatorGui.SetFont()
+	TaskAutomatorGui.SetFont("Bold cLime", "Comic Sans MS")
 	EditPosX0.Value := CoordX0
-	GameToolGui.SetFont()
-	GameToolGui.SetFont("Bold " . BlueFont . "", "Comic Sans MS")
+	TaskAutomatorGui.SetFont()
+	TaskAutomatorGui.SetFont("Bold " . BlueFont . "", "Comic Sans MS")
 	if EditBoxesAvailable == true {
-		EditPosY0 := GameToolGui.Add("Edit", "vCoordY0 x65 y326 w40 h20 +Number")
+		EditPosY0 := TaskAutomatorGui.Add("Edit", "vCoordY0 x65 y326 w40 h20 +Number")
 	} else {
-		EditPosY0 := GameToolGui.Add("Edit", "vCoordY0 x65 y326 w40 h20 +Number +Disabled")
+		EditPosY0 := TaskAutomatorGui.Add("Edit", "vCoordY0 x65 y326 w40 h20 +Number +Disabled")
 	}
 	EditPosY0.Opt("" . BackgroundDarkGrey . "")
-	GameToolGui.SetFont()
-	GameToolGui.SetFont("Bold cLime", "Comic Sans MS")
+	TaskAutomatorGui.SetFont()
+	TaskAutomatorGui.SetFont("Bold cLime", "Comic Sans MS")
 	EditPosY0.Value := CoordY0
-	GameToolGui.SetFont()
-	GameToolGui.SetFont("Bold " . BlueFont . "", "Comic Sans MS")
+	TaskAutomatorGui.SetFont()
+	TaskAutomatorGui.SetFont("Bold " . BlueFont . "", "Comic Sans MS")
 	if EditBoxesAvailable == true {
-		EditPos0Interval := GameToolGui.Add("Edit", "vCoord0Interval x120 y326 w50 h20 +Number")
+		EditPos0Interval := TaskAutomatorGui.Add("Edit", "vCoord0Interval x120 y326 w50 h20 +Number")
 	} else {
-		EditPos0Interval := GameToolGui.Add("Edit", "vCoord0Interval x120 y326 w50 h20 +Number +Disabled")
+		EditPos0Interval := TaskAutomatorGui.Add("Edit", "vCoord0Interval x120 y326 w50 h20 +Number +Disabled")
 	}
 	EditPos0Interval.Opt("" . BackgroundDarkGrey . "")
-	GameToolGui.SetFont()
-	GameToolGui.SetFont("Bold cLime", "Comic Sans MS")
+	TaskAutomatorGui.SetFont()
+	TaskAutomatorGui.SetFont("Bold cLime", "Comic Sans MS")
 	EditPos0Interval.Value := Coord0Interval
 	
-	RadioPos0Yes := GameToolGui.Add("Radio", "x184 y326 h20", "Y")
-	RadioPos0No := GameToolGui.Add("Radio", "x216 y326 w30 h20 +Checked", "N")
+	RadioPos0Yes := TaskAutomatorGui.Add("Radio", "x184 y326 h20", "Y")
+	RadioPos0No := TaskAutomatorGui.Add("Radio", "x216 y326 w30 h20 +Checked", "N")
 	;----------------------------------------------------
-	GameToolGui.SetFont()
-	GameToolGui.SetFont("Bold " . BlueFont . "", "Comic Sans MS")
+	TaskAutomatorGui.SetFont()
+	TaskAutomatorGui.SetFont("Bold " . BlueFont . "", "Comic Sans MS")
 	if EditBoxesAvailable == true {
-		EditPosX1 := GameToolGui.Add("Edit", "vCoordX1 x10 y351 w40 h20 +Number")
+		EditPosX1 := TaskAutomatorGui.Add("Edit", "vCoordX1 x10 y351 w40 h20 +Number")
 	} else {
-		EditPosX1 := GameToolGui.Add("Edit", "vCoordX1 x10 y351 w40 h20 +Number +Disabled")
+		EditPosX1 := TaskAutomatorGui.Add("Edit", "vCoordX1 x10 y351 w40 h20 +Number +Disabled")
 	}
 	EditPosX1.Opt("" . BackgroundDarkGrey . "")
-	GameToolGui.SetFont()
-	GameToolGui.SetFont("Bold cLime", "Comic Sans MS")
+	TaskAutomatorGui.SetFont()
+	TaskAutomatorGui.SetFont("Bold cLime", "Comic Sans MS")
 	EditPosX1.Value := CoordX1
-	GameToolGui.SetFont()
-	GameToolGui.SetFont("Bold " . BlueFont . "", "Comic Sans MS")
+	TaskAutomatorGui.SetFont()
+	TaskAutomatorGui.SetFont("Bold " . BlueFont . "", "Comic Sans MS")
 	if EditBoxesAvailable == true {
-		EditPosY1 := GameToolGui.Add("Edit", "vCoordY1 x65 y351 w40 h20 +Number")
+		EditPosY1 := TaskAutomatorGui.Add("Edit", "vCoordY1 x65 y351 w40 h20 +Number")
 	} else {
-		EditPosY1 := GameToolGui.Add("Edit", "vCoordY1 x65 y351 w40 h20 +Number +Disabled")
+		EditPosY1 := TaskAutomatorGui.Add("Edit", "vCoordY1 x65 y351 w40 h20 +Number +Disabled")
 	}
 	EditPosY1.Opt("" . BackgroundDarkGrey . "")
-	GameToolGui.SetFont()
-	GameToolGui.SetFont("Bold cLime", "Comic Sans MS")
+	TaskAutomatorGui.SetFont()
+	TaskAutomatorGui.SetFont("Bold cLime", "Comic Sans MS")
 	EditPosY1.Value := CoordY1
-	GameToolGui.SetFont()
-	GameToolGui.SetFont("Bold " . BlueFont . "", "Comic Sans MS")
+	TaskAutomatorGui.SetFont()
+	TaskAutomatorGui.SetFont("Bold " . BlueFont . "", "Comic Sans MS")
 	if EditBoxesAvailable == true {
-		EditPos1Interval := GameToolGui.Add("Edit", "vCoord1Interval x120 y351 w50 h20 +Number")
+		EditPos1Interval := TaskAutomatorGui.Add("Edit", "vCoord1Interval x120 y351 w50 h20 +Number")
 	} else {
-		EditPos1Interval := GameToolGui.Add("Edit", "vCoord1Interval x120 y351 w50 h20 +Number +Disabled")
+		EditPos1Interval := TaskAutomatorGui.Add("Edit", "vCoord1Interval x120 y351 w50 h20 +Number +Disabled")
 	}
 	EditPos1Interval.Opt("" . BackgroundDarkGrey . "")
-	GameToolGui.SetFont()
-	GameToolGui.SetFont("Bold cLime", "Comic Sans MS")
+	TaskAutomatorGui.SetFont()
+	TaskAutomatorGui.SetFont("Bold cLime", "Comic Sans MS")
 	EditPos1Interval.Value := Coord1Interval
 	
-	RadioPos1Yes := GameToolGui.Add("Radio", "x184 y351 h20", "Y")
-	RadioPos1No := GameToolGui.Add("Radio", "x216 y351 w30 h20 +Checked", "N")
+	RadioPos1Yes := TaskAutomatorGui.Add("Radio", "x184 y351 h20", "Y")
+	RadioPos1No := TaskAutomatorGui.Add("Radio", "x216 y351 w30 h20 +Checked", "N")
 	;----------------------------------------------------
-	GameToolGui.SetFont()
-	GameToolGui.SetFont("Bold " . BlueFont . "", "Comic Sans MS")
+	TaskAutomatorGui.SetFont()
+	TaskAutomatorGui.SetFont("Bold " . BlueFont . "", "Comic Sans MS")
 	if EditBoxesAvailable == true {
-		EditPosX2 := GameToolGui.Add("Edit", "vCoordX2 x10 y376 w40 h20 +Number")
+		EditPosX2 := TaskAutomatorGui.Add("Edit", "vCoordX2 x10 y376 w40 h20 +Number")
 	} else {
-		EditPosX2 := GameToolGui.Add("Edit", "vCoordX2 x10 y376 w40 h20 +Number +Disabled")
+		EditPosX2 := TaskAutomatorGui.Add("Edit", "vCoordX2 x10 y376 w40 h20 +Number +Disabled")
 	}
 	EditPosX2.Opt("" . BackgroundDarkGrey . "")
-	GameToolGui.SetFont()
-	GameToolGui.SetFont("Bold cLime", "Comic Sans MS")
+	TaskAutomatorGui.SetFont()
+	TaskAutomatorGui.SetFont("Bold cLime", "Comic Sans MS")
 	EditPosX2.Value := CoordX2
-	GameToolGui.SetFont()
-	GameToolGui.SetFont("Bold " . BlueFont . "", "Comic Sans MS")
+	TaskAutomatorGui.SetFont()
+	TaskAutomatorGui.SetFont("Bold " . BlueFont . "", "Comic Sans MS")
 	if EditBoxesAvailable == true {
-		EditPosY2 := GameToolGui.Add("Edit", "vCoordY2 x65 y376 w40 h20 +Number")
+		EditPosY2 := TaskAutomatorGui.Add("Edit", "vCoordY2 x65 y376 w40 h20 +Number")
 	} else {
-		EditPosY2 := GameToolGui.Add("Edit", "vCoordY2 x65 y376 w40 h20 +Number +Disabled")
+		EditPosY2 := TaskAutomatorGui.Add("Edit", "vCoordY2 x65 y376 w40 h20 +Number +Disabled")
 	}
 	EditPosY2.Opt("" . BackgroundDarkGrey . "")
-	GameToolGui.SetFont()
-	GameToolGui.SetFont("Bold cLime", "Comic Sans MS")
+	TaskAutomatorGui.SetFont()
+	TaskAutomatorGui.SetFont("Bold cLime", "Comic Sans MS")
 	EditPosY2.Value := CoordY2
-	GameToolGui.SetFont()
-	GameToolGui.SetFont("Bold " . BlueFont . "", "Comic Sans MS")
+	TaskAutomatorGui.SetFont()
+	TaskAutomatorGui.SetFont("Bold " . BlueFont . "", "Comic Sans MS")
 	if EditBoxesAvailable == true {
-		EditPos2Interval := GameToolGui.Add("Edit", "vCoord2Interval x120 y376 w50 h20 +Number")
+		EditPos2Interval := TaskAutomatorGui.Add("Edit", "vCoord2Interval x120 y376 w50 h20 +Number")
 	} else {
-		EditPos2Interval := GameToolGui.Add("Edit", "vCoord2Interval x120 y376 w50 h20 +Number +Disabled")
+		EditPos2Interval := TaskAutomatorGui.Add("Edit", "vCoord2Interval x120 y376 w50 h20 +Number +Disabled")
 	}
 	EditPos2Interval.Opt("" . BackgroundDarkGrey . "")
-	GameToolGui.SetFont()
-	GameToolGui.SetFont("Bold cLime", "Comic Sans MS")
+	TaskAutomatorGui.SetFont()
+	TaskAutomatorGui.SetFont("Bold cLime", "Comic Sans MS")
 	EditPos2Interval.Value := Coord2Interval
 	
-	RadioPos2Yes := GameToolGui.Add("Radio", "x184 y376 h20", "Y")
-	RadioPos2No := GameToolGui.Add("Radio", "x216 y376 w30 h20 +Checked", "N")
+	RadioPos2Yes := TaskAutomatorGui.Add("Radio", "x184 y376 h20", "Y")
+	RadioPos2No := TaskAutomatorGui.Add("Radio", "x216 y376 w30 h20 +Checked", "N")
 	;----------------------------------------------------
-	GameToolGui.SetFont()
-	GameToolGui.SetFont("Bold " . BlueFont . "", "Comic Sans MS")
+	TaskAutomatorGui.SetFont()
+	TaskAutomatorGui.SetFont("Bold " . BlueFont . "", "Comic Sans MS")
 	if EditBoxesAvailable == true {
-		EditPosX3 := GameToolGui.Add("Edit", "vCoordX3 x10 y401 w40 h20 +Number")
+		EditPosX3 := TaskAutomatorGui.Add("Edit", "vCoordX3 x10 y401 w40 h20 +Number")
 	} else {
-		EditPosX3 := GameToolGui.Add("Edit", "vCoordX3 x10 y401 w40 h20 +Number +Disabled")
+		EditPosX3 := TaskAutomatorGui.Add("Edit", "vCoordX3 x10 y401 w40 h20 +Number +Disabled")
 	}
 	EditPosX3.Opt("" . BackgroundDarkGrey . "")
-	GameToolGui.SetFont()
-	GameToolGui.SetFont("Bold cLime", "Comic Sans MS")
+	TaskAutomatorGui.SetFont()
+	TaskAutomatorGui.SetFont("Bold cLime", "Comic Sans MS")
 	EditPosX3.Value := CoordX3
-	GameToolGui.SetFont()
-	GameToolGui.SetFont("Bold " . BlueFont . "", "Comic Sans MS")
+	TaskAutomatorGui.SetFont()
+	TaskAutomatorGui.SetFont("Bold " . BlueFont . "", "Comic Sans MS")
 	if EditBoxesAvailable == true {
-		EditPosY3 := GameToolGui.Add("Edit", "vCoordY3 x65 y401 w40 h20 +Number")
+		EditPosY3 := TaskAutomatorGui.Add("Edit", "vCoordY3 x65 y401 w40 h20 +Number")
 	} else {
-		EditPosY3 := GameToolGui.Add("Edit", "vCoordY3 x65 y401 w40 h20 +Number +Disabled")
+		EditPosY3 := TaskAutomatorGui.Add("Edit", "vCoordY3 x65 y401 w40 h20 +Number +Disabled")
 	}
 	EditPosY3.Opt("" . BackgroundDarkGrey . "")
-	GameToolGui.SetFont()
-	GameToolGui.SetFont("Bold cLime", "Comic Sans MS")
+	TaskAutomatorGui.SetFont()
+	TaskAutomatorGui.SetFont("Bold cLime", "Comic Sans MS")
 	EditPosY3.Value := CoordY3
-	GameToolGui.SetFont()
-	GameToolGui.SetFont("Bold " . BlueFont . "", "Comic Sans MS")
+	TaskAutomatorGui.SetFont()
+	TaskAutomatorGui.SetFont("Bold " . BlueFont . "", "Comic Sans MS")
 	if EditBoxesAvailable == true {
-		EditPos3Interval := GameToolGui.Add("Edit", "vCoord3Interval x120 y401 w50 h20 +Number")
+		EditPos3Interval := TaskAutomatorGui.Add("Edit", "vCoord3Interval x120 y401 w50 h20 +Number")
 	} else {
-		EditPos3Interval := GameToolGui.Add("Edit", "vCoord3Interval x120 y401 w50 h20 +Number +Disabled")
+		EditPos3Interval := TaskAutomatorGui.Add("Edit", "vCoord3Interval x120 y401 w50 h20 +Number +Disabled")
 	}
 	EditPos3Interval.Opt("" . BackgroundDarkGrey . "")
-	GameToolGui.SetFont()
-	GameToolGui.SetFont("Bold cLime", "Comic Sans MS")
+	TaskAutomatorGui.SetFont()
+	TaskAutomatorGui.SetFont("Bold cLime", "Comic Sans MS")
 	EditPos3Interval.Value := Coord3Interval
 	
-	RadioPos3Yes := GameToolGui.Add("Radio", "x184 y401 h20", "Y")
-	RadioPos3No := GameToolGui.Add("Radio", "x216 y401 w30 h20 +Checked", "N")
+	RadioPos3Yes := TaskAutomatorGui.Add("Radio", "x184 y401 h20", "Y")
+	RadioPos3No := TaskAutomatorGui.Add("Radio", "x216 y401 w30 h20 +Checked", "N")
 	;----------------------------------------------------
-	GameToolGui.SetFont()
-	GameToolGui.SetFont("Bold " . BlueFont . "", "Comic Sans MS")
+	TaskAutomatorGui.SetFont()
+	TaskAutomatorGui.SetFont("Bold " . BlueFont . "", "Comic Sans MS")
 	if EditBoxesAvailable == true {
-		EditPosX4 := GameToolGui.Add("Edit", "vCoordX4 x10 y426 w40 h20 +Number")
+		EditPosX4 := TaskAutomatorGui.Add("Edit", "vCoordX4 x10 y426 w40 h20 +Number")
 	} else {
-		EditPosX4 := GameToolGui.Add("Edit", "vCoordX4 x10 y426 w40 h20 +Number +Disabled")
+		EditPosX4 := TaskAutomatorGui.Add("Edit", "vCoordX4 x10 y426 w40 h20 +Number +Disabled")
 	}
 	EditPosX4.Opt("" . BackgroundDarkGrey . "")
-	GameToolGui.SetFont()
-	GameToolGui.SetFont("Bold cLime", "Comic Sans MS")
+	TaskAutomatorGui.SetFont()
+	TaskAutomatorGui.SetFont("Bold cLime", "Comic Sans MS")
 	EditPosX4.Value := CoordX4
-	GameToolGui.SetFont()
-	GameToolGui.SetFont("Bold " . BlueFont . "", "Comic Sans MS")
+	TaskAutomatorGui.SetFont()
+	TaskAutomatorGui.SetFont("Bold " . BlueFont . "", "Comic Sans MS")
 	if EditBoxesAvailable == true {
-		EditPosY4 := GameToolGui.Add("Edit", "vCoordY4 x65 y426 w40 h20 +Number")
+		EditPosY4 := TaskAutomatorGui.Add("Edit", "vCoordY4 x65 y426 w40 h20 +Number")
 	} else {
-		EditPosY4 := GameToolGui.Add("Edit", "vCoordY4 x65 y426 w40 h20 +Number +Disabled")
+		EditPosY4 := TaskAutomatorGui.Add("Edit", "vCoordY4 x65 y426 w40 h20 +Number +Disabled")
 	}
 	EditPosY4.Opt("" . BackgroundDarkGrey . "")
-	GameToolGui.SetFont()
-	GameToolGui.SetFont("Bold cLime", "Comic Sans MS")
+	TaskAutomatorGui.SetFont()
+	TaskAutomatorGui.SetFont("Bold cLime", "Comic Sans MS")
 	EditPosY4.Value := CoordY4
-	GameToolGui.SetFont()
-	GameToolGui.SetFont("Bold " . BlueFont . "", "Comic Sans MS")
+	TaskAutomatorGui.SetFont()
+	TaskAutomatorGui.SetFont("Bold " . BlueFont . "", "Comic Sans MS")
 	if EditBoxesAvailable == true {
-		EditPos4Interval := GameToolGui.Add("Edit", "vCoord4Interval x120 y426 w50 h20 +Number")
+		EditPos4Interval := TaskAutomatorGui.Add("Edit", "vCoord4Interval x120 y426 w50 h20 +Number")
 	} else {
-		EditPos4Interval := GameToolGui.Add("Edit", "vCoord4Interval x120 y426 w50 h20 +Number +Disabled")
+		EditPos4Interval := TaskAutomatorGui.Add("Edit", "vCoord4Interval x120 y426 w50 h20 +Number +Disabled")
 	}
 	EditPos4Interval.Opt("" . BackgroundDarkGrey . "")
-	GameToolGui.SetFont()
-	GameToolGui.SetFont("Bold cLime", "Comic Sans MS")
+	TaskAutomatorGui.SetFont()
+	TaskAutomatorGui.SetFont("Bold cLime", "Comic Sans MS")
 	EditPos4Interval.Value := Coord4Interval
 	
-	RadioPos4Yes := GameToolGui.Add("Radio", "x184 y426 h20", "Y")
-	RadioPos4No := GameToolGui.Add("Radio", "x216 y426 w30 h20 +Checked", "N")
+	RadioPos4Yes := TaskAutomatorGui.Add("Radio", "x184 y426 h20", "Y")
+	RadioPos4No := TaskAutomatorGui.Add("Radio", "x216 y426 w30 h20 +Checked", "N")
 	;----------------------------------------------------
-	TextLoop := GameToolGui.Add("Text","x10 y451 h20 +0x200", " Loop amount: ")
-	GameToolGui.SetFont()
-	GameToolGui.SetFont("Bold " . BlueFont . "", "Comic Sans MS")
+	TextLoop := TaskAutomatorGui.Add("Text","x10 y451 h20 +0x200", " Loop amount: ")
+	TaskAutomatorGui.SetFont()
+	TaskAutomatorGui.SetFont("Bold " . BlueFont . "", "Comic Sans MS")
 	if EditBoxesAvailable == true {
-		EditLoopTimes := GameToolGui.Add("Edit", "vLoopAmount x100 y451 w70 h20 +Number")
+		EditLoopTimes := TaskAutomatorGui.Add("Edit", "vLoopAmount x100 y451 w70 h20 +Number")
 	} else {
-		EditLoopTimes := GameToolGui.Add("Edit", "vLoopAmount x100 y451 w70 h20 +Number +Disabled")
+		EditLoopTimes := TaskAutomatorGui.Add("Edit", "vLoopAmount x100 y451 w70 h20 +Number +Disabled")
 	}
 	EditLoopTimes.Opt("" . BackgroundDarkGrey . "")
-	GameToolGui.SetFont()
-	GameToolGui.SetFont("Bold cLime", "Comic Sans MS")
+	TaskAutomatorGui.SetFont()
+	TaskAutomatorGui.SetFont("Bold cLime", "Comic Sans MS")
 	EditLoopTimes.Value := LoopAmount
 	
-	RadioCountLoopsYes := GameToolGui.Add("Radio", "x184 y451 h20", "Y")
-	RadioCountLoopsNo := GameToolGui.Add("Radio", "x216 y451 w30 h20 +Checked", "N")
-	GameToolGui.Add("Text","x22 y485 h20 +0x100", " Time interval in ms (1 second = 1000) ")
+	RadioCountLoopsYes := TaskAutomatorGui.Add("Radio", "x184 y451 h20", "Y")
+	RadioCountLoopsNo := TaskAutomatorGui.Add("Radio", "x216 y451 w30 h20 +Checked", "N")
+	TaskAutomatorGui.Add("Text","x22 y485 h20 +0x100", " Time interval in ms (1 second = 1000) ")
 }
 ;----------------------------------------------------
 ; Save All EditBox Values
-GameToolGui.Add("Text", "x1 y510 w250 h2 +0x10") ; Separator
-SaveButton := GameToolGui.Add("Button", "x70 y520 h20", "Save Current Values")
+TaskAutomatorGui.Add("Text", "x1 y510 w250 h2 +0x10") ; Separator
+SaveButton := TaskAutomatorGui.Add("Button", "x70 y520 h20", "Save Current Values")
 SaveButton.OnEvent("Click", SubmitValues) 
 ;----------------------------------------------------
-SB := GameToolGui.Add("StatusBar", , "Ready.")
+SB := TaskAutomatorGui.Add("StatusBar", , "Ready.")
 ;----------------------------------------------------
-GameToolGui.OnEvent('Close', (*) => ExitApp())
-GameToolGui.Title := AppName
-GameToolGui.Show("w250 h570")
-Saved := GameToolGui.Submit(false)
+TaskAutomatorGui.OnEvent('Close', (*) => ExitApp())
+TaskAutomatorGui.Title := AppName
+TaskAutomatorGui.Show("w250 h570")
+Saved := TaskAutomatorGui.Submit(false)
 CoordMode "Mouse", "Screen"
 ;----------------------------------------------------
 OnExit ExitMenu
@@ -730,7 +732,7 @@ ExitMsg(*){
 		catch {
 		}
 		Exitmsg.SetFont("s20 W700 Q4 cLime", "Georgia")
-		Exitmsg.Add("Text", "x80 y8", "ML Task Automator")
+		Exitmsg.Add("Text", "x80 y8", AppName)
 		Exitmsg.SetFont("s9 cLime", "Comic Sans MS")
 		Exitmsg.Add("Text", "x80 y45", "Mean Little's Task Automator v" CurrentVersion)
 		Exitmsg.Add("Text", "x80 y65", "License key: ")
@@ -1290,7 +1292,7 @@ ProcessJumpHotkey4(*)
 }
 ;----------------------------------------------------
 ProcessPatternClicker(*){
-	Saved := GameToolGui.Submit(false)	
+	Saved := TaskAutomatorGui.Submit(false)	
 	if SecureMode == false {
 		SecureModeOff
 		return
@@ -1523,7 +1525,7 @@ SwitchClickerHandler(*){
 }
 ;----------------------------------------------------
 SubmitJumpHotkey(*){
-	Saved := GameToolGui.Submit(false)
+	Saved := TaskAutomatorGui.Submit(false)
 	if GetKeyState("Shift", "P") {
 		return
 	}
@@ -1541,7 +1543,7 @@ SubmitJumpHotkey(*){
 }
 ;----------------------------------------------------
 SubmitAutoRunHotkey(*){
-	Saved := GameToolGui.Submit(false)
+	Saved := TaskAutomatorGui.Submit(false)
 	if GetKeyState("Shift", "P") {
 		return
 	}
@@ -1558,7 +1560,7 @@ SubmitPatternClickerHotkey(*){
 	if GetKeyState("Shift", "P") {
 		return
 	}
-	Saved := GameToolGui.Submit(false)
+	Saved := TaskAutomatorGui.Submit(false)
 	if Saved.PatternClickerHotkey == "" or Saved.StopPatternHotkey == "" {
 		return
 	}
@@ -1570,7 +1572,7 @@ SubmitPatternClickerHotkey(*){
 }
 ;----------------------------------------------------
 SubmitValues(*){
-	Saved := GameToolGui.Submit(false)
+	Saved := TaskAutomatorGui.Submit(false)
 	if SwitchClicker == true {
 		IniWrite Saved.ClickInterval, IniFile, "AutoClicker", "ClickInterval"
 		IniWrite Saved.RandomOffset, IniFile, "AutoClicker", "RandomOffset"
@@ -1600,6 +1602,7 @@ SubmitValues(*){
 }
 ;----------------------------------------------------
 CreateNewIniFile(*) {
+	FileAppend ";--------------------------------------------------`n" , IniFile
 	FileAppend "; NOTE: For all numpad keys, verify that NumLock key is activated / deactivated in order to trigger them.`n" , IniFile
 	FileAppend ";--------------------------------------------------`n" , IniFile
 	FileAppend "; HINT: If you delete this file or move it away from its forder,`n" , IniFile 
