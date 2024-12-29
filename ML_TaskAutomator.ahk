@@ -6,7 +6,7 @@ Global IconLib := A_ScriptDir . "\Icons"
 , HotkeyGuide := "https://mean-littles-app.gitbook.io/mean-littles-app-docs/ml-task-automator/how-does-it-work"
 , IniFile := A_ScriptDir . "\ML_TaskAutomator.ini"
 , LicenseFile := A_ScriptDir . "\LicenseKey.ini"
-, CurrentVersion := "1.1"
+, CurrentVersion := "1.2"
 , AppName := "ML Task Automator"
 , BlueFont := "c0x70A0FA"
 , BackgroundDarkGrey := "Background2F2F2F"
@@ -28,11 +28,15 @@ if !FileExist(IniFile) {
 }
 SwitchJumps := IniRead(IniFile, "Modules", "SwitchJumps")
 SwitchClicker := IniRead(IniFile, "Modules", "SwitchClicker")
-if SwitchJumps == SwitchClicker or SwitchJumps > 1 or SwitchJumps < 0 or SwitchClicker > 1 or SwitchClicker < 0 {
+QuickAccess := IniRead(IniFile, "Modules", "QuickAccess")
+if  SwitchJumps < 0 or SwitchJumps > 1 or
+ SwitchClicker < 0 or SwitchClicker > 1  or QuickAccess < 0 or QuickAccess > 1 {
 	SwitchJumps := false
-	SwitchClicker := true
+	SwitchClicker := false
+	QuickAccess := true
 	IniWrite SwitchJumps, IniFile, "Modules", "SwitchJumps"
-	IniWrite SwitchClicker, IniFile, "Modules", "SwitchClicker"	
+	IniWrite SwitchClicker, IniFile, "Modules", "SwitchClicker"
+	IniWrite QuickAccess, IniFile, "Modules", "QuickAccess"
 }
 ;----------------------------------------------------
 ; Read Ini Properties
@@ -79,11 +83,22 @@ StartAutoRunHotkey := IniRead(IniFile, "SavedHotkey", "StartAutoRunHotkey")
 StopAutoRunHotKey := IniRead(IniFile, "SavedHotkey", "StopAutoRunHotKey")
 PatternClickerHotkey := IniRead(IniFile, "SavedHotkey", "PatternClickerHotkey")
 StopPatternHotkey := IniRead(IniFile, "SavedHotkey", "StopPatternHotkey")
+;-------------------------------
 JumpHotkey0 := IniRead(IniFile, "SavedHotkey", "JumpHotkey0")
 JumpHotkey1 := IniRead(IniFile, "SavedHotkey", "JumpHotkey1")
 JumpHotkey2 := IniRead(IniFile, "SavedHotkey", "JumpHotkey2")
 JumpHotkey3 := IniRead(IniFile, "SavedHotkey", "JumpHotkey3")
 JumpHotkey4 := IniRead(IniFile, "SavedHotkey", "JumpHotkey4")
+;-------------------------------
+QuickAccessHk1 := IniRead(IniFile, "SavedHotkey", "QuickAccessHk1")
+QuickAccessHk2 := IniRead(IniFile, "SavedHotkey", "QuickAccessHk2")
+QuickAccessHk3 := IniRead(IniFile, "SavedHotkey", "QuickAccessHk3")
+QuickAccessHk4 := IniRead(IniFile, "SavedHotkey", "QuickAccessHk4")
+QuickAccessHk5 := IniRead(IniFile, "SavedHotkey", "QuickAccessHk5")
+QuickAccessHk6 := IniRead(IniFile, "SavedHotkey", "QuickAccessHk6")
+QuickAccessHk7 := IniRead(IniFile, "SavedHotkey", "QuickAccessHk7")
+QuickAccessHk8 := IniRead(IniFile, "SavedHotkey", "QuickAccessHk8")
+QuickAccessHk9 := IniRead(IniFile, "SavedHotkey", "QuickAccessHk9")
 ;----------------------------------------------------
 ; Read ini AutoRun
 SprintKey := IniRead(IniFile, "AutoRun", "SprintKey")
@@ -119,6 +134,28 @@ CoordX4 := IniRead(IniFile, "CursorLocationClicker", "CoordX4")
 CoordY4 := IniRead(IniFile, "CursorLocationClicker", "CoordY4")
 Coord4Interval := IniRead(IniFile, "CursorLocationClicker", "Coord4Interval")
 ;--------------------------------------------------
+; Read ini QuickAccessPath
+QuickAccess1 := IniRead(IniFile, "QuickAccessPath", "QuickAccess1")
+QuickAccess2 := IniRead(IniFile, "QuickAccessPath", "QuickAccess2")
+QuickAccess3 := IniRead(IniFile, "QuickAccessPath", "QuickAccess3")
+QuickAccess4 := IniRead(IniFile, "QuickAccessPath", "QuickAccess4")
+QuickAccess5 := IniRead(IniFile, "QuickAccessPath", "QuickAccess5")
+QuickAccess6 := IniRead(IniFile, "QuickAccessPath", "QuickAccess6")
+QuickAccess7 := IniRead(IniFile, "QuickAccessPath", "QuickAccess7")
+QuickAccess8 := IniRead(IniFile, "QuickAccessPath", "QuickAccess8")
+QuickAccess9 := IniRead(IniFile, "QuickAccessPath", "QuickAccess9")
+;--------------------------------------------------
+; Read ini QuickAccessIcons
+QuickIcon1 := IniRead(IniFile, "QuickAccessIcons", "QuickIcon1")
+QuickIcon2 := IniRead(IniFile, "QuickAccessIcons", "QuickIcon2")
+QuickIcon3 := IniRead(IniFile, "QuickAccessIcons", "QuickIcon3")
+QuickIcon4 := IniRead(IniFile, "QuickAccessIcons", "QuickIcon4")
+QuickIcon5 := IniRead(IniFile, "QuickAccessIcons", "QuickIcon5")
+QuickIcon6 := IniRead(IniFile, "QuickAccessIcons", "QuickIcon6")
+QuickIcon7 := IniRead(IniFile, "QuickAccessIcons", "QuickIcon7")
+QuickIcon8 := IniRead(IniFile, "QuickAccessIcons", "QuickIcon8")
+QuickIcon9 := IniRead(IniFile, "QuickAccessIcons", "QuickIcon9")
+;--------------------------------------------------
 ; Read ini JumpProperties
 VeryShortJumpRace := IniRead(IniFile, "JumpProperties", "VeryShortJumpRace")
 VeryShortJumpLenght := IniRead(IniFile, "JumpProperties", "VeryShortJumpLenght")
@@ -151,17 +188,19 @@ catch {
 OptionsMenu := Menu()
 MenuBar_Storage.Add("&Options", OptionsMenu)
 OptionsMenu.Add("Secure &Mode: On/Off", SecureModeHandler)
-OptionsMenu.Add("Secure Edit &Boxes: On/Off", EditBoxesHandler)
+OptionsMenu.Add("Secure Edit &Boxes && Icons: On/Off", EditBoxesHandler)
 OptionsMenu.Insert()
 OptionsMenu.Add("Edit &Ini File", EditIniFileHandler)
 OptionsMenu.Insert()
-OptionsMenu.Add("Switch &Jumps", SwitchJumpsHandler)
+OptionsMenu.Add("Quick &Access", QuickAccessHandler)
 OptionsMenu.Add("Switch &Clicker", SwitchClickerHandler)
+OptionsMenu.Add("Switch &Jumps", SwitchJumpsHandler)
 
 try {
 	OptionsMenu.SetIcon("Edit &Ini File", IconLib . "\File.ico")
-	OptionsMenu.SetIcon("Switch &Jumps", IconLib . "\Switch1.ico")
-	OptionsMenu.SetIcon("Switch &Clicker", IconLib . "\auto.ico")
+	OptionsMenu.SetIcon("Quick &Access", IconLib . "\Switch1.ico")
+	OptionsMenu.SetIcon("Switch &Clicker", IconLib . "\Switch2.ico")
+	OptionsMenu.SetIcon("Switch &Jumps", IconLib . "\Switch2.ico")
 }
 catch {
 }
@@ -239,6 +278,7 @@ case SwitchJumps:
 	try {
 		OptionsMenu.SetIcon("Switch &Jumps", IconLib . "\Switch1.ico")
 		OptionsMenu.SetIcon("Switch &Clicker", IconLib . "\Switch2.ico")
+		OptionsMenu.SetIcon("Quick &Access", IconLib . "\Switch2.ico")
 	}
 	catch {
 	}
@@ -272,6 +312,7 @@ case SwitchClicker:
 	try {
 		OptionsMenu.SetIcon("Switch &Clicker", IconLib . "\Switch1.ico")
 		OptionsMenu.SetIcon("Switch &Jumps", IconLib . "\Switch2.ico")
+		OptionsMenu.SetIcon("Quick &Access", IconLib . "\Switch2.ico")
 	}
 	catch {
 	}
@@ -285,12 +326,16 @@ case SwitchClicker:
 		StopPatternHotkey := TaskAutomatorGui.Add("Hotkey", "vStopPatternHotkey x177 y276 w65 h20", StopPatternHotkey).OnEvent("Change", SubmitPatternClickerHotkey)
 	}
 	if EditBoxesAvailable == true {
-		OptionsMenu.SetIcon("Secure Edit &Boxes: On/Off", IconLib . "\EditBox2.ico")
+		try {
+			OptionsMenu.SetIcon("Secure Edit &Boxes && Icons: On/Off", IconLib . "\EditBox2.ico")
+		}
+		catch {
+		}
 		EditPatternClicker := TaskAutomatorGui.Add("Edit", "vClickInterval x60 y251 w50 h20 +Number")
 		EditPatternClickerOffset := TaskAutomatorGui.Add("Edit", "vRandomOffset x190 y251 w50 h20 +Number")
 	} else {
 		try {
-			OptionsMenu.SetIcon("Secure Edit &Boxes: On/Off", IconLib . "\EditBox1.ico")
+			OptionsMenu.SetIcon("Secure Edit &Boxes && Icons: On/Off", IconLib . "\EditBox1.ico")
 		}
 		catch {
 		}
@@ -516,6 +561,168 @@ case SwitchClicker:
 	RadioCountLoopsYes := TaskAutomatorGui.Add("Radio", "x184 y451 h20", "Y")
 	RadioCountLoopsNo := TaskAutomatorGui.Add("Radio", "x216 y451 w30 h20 +Checked", "N")
 	TaskAutomatorGui.Add("Text","x22 y485 h20 +0x100", " Time interval in ms (1 second = 1000) ")
+case QuickAccess:
+	try {
+		OptionsMenu.SetIcon("Switch &Clicker", IconLib . "\Switch2.ico")
+		OptionsMenu.SetIcon("Switch &Jumps", IconLib . "\Switch2.ico")
+		OptionsMenu.SetIcon("Quick &Access", IconLib . "\Switch1.ico")
+	}
+	catch {
+	}
+	;----------------------------------------------------
+	TaskAutomatorGui.Add("Text", "x7 y233 h20", "1")
+	if EditBoxesAvailable == true {
+		try {
+			OptionsMenu.SetIcon("Secure Edit &Boxes && Icons: On/Off", IconLib . "\EditBox2.ico")
+		}
+		catch {
+		}
+		TaskAutomatorGui.Add("Picture", "x18 y233 w20 h20 +border", QuickIcon1).OnEvent("Click", SelectNewIcon1)
+		EditQuickAcess1 := TaskAutomatorGui.Add("Edit", "vQuickAccess1 x45 y233 w160 h20")
+	} else {
+		try {
+			OptionsMenu.SetIcon("Secure Edit &Boxes && Icons: On/Off", IconLib . "\EditBox1.ico")
+		}
+		catch {
+		}
+		TaskAutomatorGui.Add("Picture", "x18 y233 w20 h20 +border", QuickIcon1)
+		EditQuickAcess1 := TaskAutomatorGui.Add("Edit", "vQuickAccess1 x45 y233 w160 h20 +Disabled")
+	}
+	EditQuickAcess1.Opt("" . BackgroundDarkGrey . "")
+	EditQuickAcess1.Value := QuickAccess1
+	if SecureMode == true {
+		QuickAccessHk1 := TaskAutomatorGui.Add("Hotkey", "vQuickAccessHk1 x210 y233 w30 h20 +disabled", QuickAccessHk1)
+	} else {
+		QuickAccessHk1 := TaskAutomatorGui.Add("Hotkey", "vQuickAccessHk1 x210 y233 w30 h20", QuickAccessHk1).OnEvent("Change", SubmitQuickAccess)
+	}
+	;----------------------------------------------------
+	TaskAutomatorGui.Add("Text", "x7 y264 h20", "2")
+	if EditBoxesAvailable == true {
+		TaskAutomatorGui.Add("Picture", "x18 y264 w20 h20 +border", QuickIcon2).OnEvent("Click", SelectNewIcon2)
+		EditQuickAcess2 := TaskAutomatorGui.Add("Edit", "vQuickAccess2 x45 y264 w160 h20")
+	} else {
+		TaskAutomatorGui.Add("Picture", "x18 y264 w20 h20 +border", QuickIcon2)
+		EditQuickAcess2 := TaskAutomatorGui.Add("Edit", "vQuickAccess2 x45 y264 w160 h20 +Disabled")
+	}
+	EditQuickAcess2.Opt("" . BackgroundDarkGrey . "")
+	EditQuickAcess2.Value := QuickAccess2
+	if SecureMode == true {
+		QuickAccessHk2 := TaskAutomatorGui.Add("Hotkey", "vQuickAccessHk2 x210 y264 w30 h20 +disabled", QuickAccessHk2)
+	} else {
+		QuickAccessHk2 := TaskAutomatorGui.Add("Hotkey", "vQuickAccessHk2 x210 y264 w30 h20", QuickAccessHk2).OnEvent("Change", SubmitQuickAccess)
+	}
+	;----------------------------------------------------
+	TaskAutomatorGui.Add("Text", "x7 y295 h20", "3")
+	if EditBoxesAvailable == true {
+		TaskAutomatorGui.Add("Picture", "x18 y295 w20 h20 +border", QuickIcon3).OnEvent("Click", SelectNewIcon3)
+		EditQuickAcess3 := TaskAutomatorGui.Add("Edit", "vQuickAccess3 x45 y295 w160 h20")
+	} else {
+		TaskAutomatorGui.Add("Picture", "x18 y295 w20 h20 +border", QuickIcon3)
+		EditQuickAcess3 := TaskAutomatorGui.Add("Edit", "vQuickAccess3 x45 y295 w160 h20 +Disabled")
+	}
+	EditQuickAcess3.Opt("" . BackgroundDarkGrey . "")
+	EditQuickAcess3.Value := QuickAccess3
+	if SecureMode == true {
+		QuickAccessHk3 := TaskAutomatorGui.Add("Hotkey", "vQuickAccessHk3 x210 y295 w30 h20 +disabled", QuickAccessHk3)
+	} else {
+		QuickAccessHk3 := TaskAutomatorGui.Add("Hotkey", "vQuickAccessHk3 x210 y295 w30 h20", QuickAccessHk3).OnEvent("Change", SubmitQuickAccess)
+	}
+	;----------------------------------------------------
+	TaskAutomatorGui.Add("Text", "x7 y326 h20", "4")
+	if EditBoxesAvailable == true {
+		TaskAutomatorGui.Add("Picture", "x18 y326 w20 h20 +border", QuickIcon4).OnEvent("Click", SelectNewIcon4)
+		EditQuickAcess4 := TaskAutomatorGui.Add("Edit", "vQuickAccess4 x45 y326 w160 h20")
+	} else {
+		TaskAutomatorGui.Add("Picture", "x18 y326 w20 h20 +border", QuickIcon4)
+		EditQuickAcess4 := TaskAutomatorGui.Add("Edit", "vQuickAccess4 x45 y326 w160 h20 +Disabled")
+	}
+	EditQuickAcess4.Opt("" . BackgroundDarkGrey . "")
+	EditQuickAcess4.Value := QuickAccess4
+	if SecureMode == true {
+		QuickAccessHk4 := TaskAutomatorGui.Add("Hotkey", "vQuickAccessHk4 x210 y326 w30 h20 +disabled", QuickAccessHk4)
+	} else {
+		QuickAccessHk4 := TaskAutomatorGui.Add("Hotkey", "vQuickAccessHk4 x210 y326 w30 h20", QuickAccessHk4).OnEvent("Change", SubmitQuickAccess)
+	}
+	;----------------------------------------------------
+	TaskAutomatorGui.Add("Text", "x7 y357 h20", "5")
+	if EditBoxesAvailable == true {
+		TaskAutomatorGui.Add("Picture", "x18 y357 w20 h20 +border", QuickIcon5).OnEvent("Click", SelectNewIcon5)
+		EditQuickAcess5 := TaskAutomatorGui.Add("Edit", "vQuickAccess5 x45 y357 w160 h20")
+	} else {
+		TaskAutomatorGui.Add("Picture", "x18 y357 w20 h20 +border", QuickIcon5)
+		EditQuickAcess5 := TaskAutomatorGui.Add("Edit", "vQuickAccess5 x45 y357 w160 h20 +Disabled")
+	}
+	EditQuickAcess5.Opt("" . BackgroundDarkGrey . "")
+	EditQuickAcess5.Value := QuickAccess5
+	if SecureMode == true {
+		QuickAccessHk5 := TaskAutomatorGui.Add("Hotkey", "vQuickAccessHk5 x210 y357 w30 h20 +disabled", QuickAccessHk5)
+	} else {
+		QuickAccessHk5 := TaskAutomatorGui.Add("Hotkey", "vQuickAccessHk5 x210 y357 w30 h20", QuickAccessHk5).OnEvent("Change", SubmitQuickAccess)
+	}
+	;----------------------------------------------------
+	TaskAutomatorGui.Add("Text", "x7 y388 h20", "6")
+	if EditBoxesAvailable == true {
+		TaskAutomatorGui.Add("Picture", "x18 y388 w20 h20 +border", QuickIcon6).OnEvent("Click", SelectNewIcon6)
+		EditQuickAcess6 := TaskAutomatorGui.Add("Edit", "vQuickAccess6 x45 y388 w160 h20")
+	} else {
+		TaskAutomatorGui.Add("Picture", "x18 y388 w20 h20 +border", QuickIcon6)
+		EditQuickAcess6 := TaskAutomatorGui.Add("Edit", "vQuickAccess6 x45 y388 w160 h20 +Disabled")
+	}
+	EditQuickAcess6.Opt("" . BackgroundDarkGrey . "")
+	EditQuickAcess6.Value := QuickAccess6
+	if SecureMode == true {
+		QuickAccessHk6 := TaskAutomatorGui.Add("Hotkey", "vQuickAccessHk6 x210 y388 w30 h20 +disabled", QuickAccessHk6)
+	} else {
+		QuickAccessHk6 := TaskAutomatorGui.Add("Hotkey", "vQuickAccessHk6 x210 y388 w30 h20", QuickAccessHk6).OnEvent("Change", SubmitQuickAccess)
+	}
+	;----------------------------------------------------
+	TaskAutomatorGui.Add("Text", "x7 y419 h20", "7")
+	if EditBoxesAvailable == true {
+		TaskAutomatorGui.Add("Picture", "x18 y419 w20 h20 +border", QuickIcon7).OnEvent("Click", SelectNewIcon7)
+		EditQuickAcess7 := TaskAutomatorGui.Add("Edit", "vQuickAccess7 x45 y419 w160 h20")
+	} else {
+		TaskAutomatorGui.Add("Picture", "x18 y419 w20 h20 +border", QuickIcon7)
+		EditQuickAcess7 := TaskAutomatorGui.Add("Edit", "vQuickAccess7 x45 y419 w160 h20 +Disabled")
+	}
+	EditQuickAcess7.Opt("" . BackgroundDarkGrey . "")
+	EditQuickAcess7.Value := QuickAccess7
+	if SecureMode == true {
+		QuickAccessHk7 := TaskAutomatorGui.Add("Hotkey", "vQuickAccessHk7 x210 y419 w30 h20 +disabled", QuickAccessHk7)
+	} else {
+		QuickAccessHk7 := TaskAutomatorGui.Add("Hotkey", "vQuickAccessHk7 x210 y419 w30 h20", QuickAccessHk7).OnEvent("Change", SubmitQuickAccess)
+	}
+	;----------------------------------------------------
+	TaskAutomatorGui.Add("Text", "x7 y450 h20", "8")
+	if EditBoxesAvailable == true {
+		TaskAutomatorGui.Add("Picture", "x18 y450 w20 h20 +border", QuickIcon8).OnEvent("Click", SelectNewIcon8)
+		EditQuickAcess8 := TaskAutomatorGui.Add("Edit", "vQuickAccess8 x45 y450 w160 h20")
+	} else {
+		TaskAutomatorGui.Add("Picture", "x18 y450 w20 h20 +border", QuickIcon8)
+		EditQuickAcess8 := TaskAutomatorGui.Add("Edit", "vQuickAccess8 x45 y450 w160 h20 +Disabled")
+	}
+	EditQuickAcess8.Opt("" . BackgroundDarkGrey . "")
+	EditQuickAcess8.Value := QuickAccess8
+	if SecureMode == true {
+		QuickAccessHk8 := TaskAutomatorGui.Add("Hotkey", "vQuickAccessHk8 x210 y450 w30 h20 +disabled", QuickAccessHk8)
+	} else {
+		QuickAccessHk8 := TaskAutomatorGui.Add("Hotkey", "vQuickAccessHk8 x210 y450 w30 h20", QuickAccessHk8).OnEvent("Change", SubmitQuickAccess)
+	}
+	;----------------------------------------------------
+	TaskAutomatorGui.Add("Text", "x7 y481 h20", "9")
+	if EditBoxesAvailable == true {
+		TaskAutomatorGui.Add("Picture", "x18 y481 w20 h20 +border", QuickIcon9).OnEvent("Click", SelectNewIcon9)
+		EditQuickAcess9 := TaskAutomatorGui.Add("Edit", "vQuickAccess9 x45 y481 w160 h20")
+	} else {
+		TaskAutomatorGui.Add("Picture", "x18 y481 w20 h20 +border", QuickIcon9)
+		EditQuickAcess9 := TaskAutomatorGui.Add("Edit", "vQuickAccess9 x45 y481 w160 h20 +Disabled")
+	}
+	EditQuickAcess9.Opt("" . BackgroundDarkGrey . "")
+	EditQuickAcess9.Value := QuickAccess9
+	if SecureMode == true {
+		QuickAccessHk9 := TaskAutomatorGui.Add("Hotkey", "vQuickAccessHk9 x210 y481 w30 h20 +disabled", QuickAccessHk9)
+	} else {
+		QuickAccessHk9 := TaskAutomatorGui.Add("Hotkey", "vQuickAccessHk9 x210 y481 w30 h20", QuickAccessHk9).OnEvent("Change", SubmitQuickAccess)
+	}
 }
 ;----------------------------------------------------
 ; Save All EditBox Values
@@ -719,6 +926,16 @@ case SwitchJumps:
 	Hotkey Saved.JumpHotkey4, (ThisHotkey) => ProcessJumpHotkey4(ThisHotkey)
 case SwitchClicker:
 	Hotkey Saved.PatternClickerHotkey, (ThisHotkey) => ProcessPatternClicker(ThisHotkey)
+case QuickAccess:
+	Hotkey Saved.QuickAccessHk1, (ThisHotkey) => ProcessQuickAccess(ThisHotkey)
+	Hotkey Saved.QuickAccessHk2, (ThisHotkey) => ProcessQuickAccess(ThisHotkey)
+	Hotkey Saved.QuickAccessHk3, (ThisHotkey) => ProcessQuickAccess(ThisHotkey)
+	Hotkey Saved.QuickAccessHk4, (ThisHotkey) => ProcessQuickAccess(ThisHotkey)
+	Hotkey Saved.QuickAccessHk5, (ThisHotkey) => ProcessQuickAccess(ThisHotkey)
+	Hotkey Saved.QuickAccessHk6, (ThisHotkey) => ProcessQuickAccess(ThisHotkey)
+	Hotkey Saved.QuickAccessHk7, (ThisHotkey) => ProcessQuickAccess(ThisHotkey)
+	Hotkey Saved.QuickAccessHk8, (ThisHotkey) => ProcessQuickAccess(ThisHotkey)
+	Hotkey Saved.QuickAccessHk9, (ThisHotkey) => ProcessQuickAccess(ThisHotkey)
 }
 ;----------------------------------------------------
 ExitMsg(*){
@@ -727,7 +944,7 @@ ExitMsg(*){
 		Exitmsg.BackColor := "0x2F2F2F"
 		try {
 			Exitmsg.Add("Picture", "x-32 y0 w712 h300", ImageLib . "\MLTABackground2.png")
-			Exitmsg.Add("Picture", "x9 y14 w64 h64", IconLib . "\ML-TA.ico")
+			Exitmsg.Add("Picture", "x9 y14 w64 h64 +border", IconLib . "\ML-TA.ico")
 		}
 		catch {
 		}
@@ -763,7 +980,7 @@ InvalidLicenseMsg(*){
 		InvLicMsg.BackColor := "0x2F2F2F"
 		try {
 			InvLicMsg.Add("Picture", "x-32 y0 w712 h300", ImageLib . "\MLTABackground2.png")
-			InvLicMsg.Add("Picture", "x9 y14 w64 h64", IconLib . "\ML-TA.ico")
+			InvLicMsg.Add("Picture", "x9 y14 w64 h64 +border", IconLib . "\ML-TA.ico")
 		}
 		catch {
 		}
@@ -799,7 +1016,7 @@ LicenseFileMissingMsg(*){
 		NoLicFileMsg.BackColor := "0x2F2F2F"
 		try {
 			NoLicFileMsg.Add("Picture", "x-32 y0 w712 h300", ImageLib . "\MLTABackground2.png")
-			NoLicFileMsg.Add("Picture", "x9 y14 w64 h64", IconLib . "\ML-TA.ico")
+			NoLicFileMsg.Add("Picture", "x9 y14 w64 h64 +border", IconLib . "\ML-TA.ico")
 		}
 		catch {
 		}
@@ -829,13 +1046,54 @@ LicenseFileMissingMsg(*){
     Return
 }
 ;----------------------------------------------------
+InvalidPath(*){
+	ShowInvPath:
+		InvPathmsg := Gui("+AlwaysOnTop")
+		InvPathmsg.BackColor := "0x2F2F2F"
+		try {
+			InvPathmsg.Add("Picture", "x-32 y0 w712 h300", ImageLib . "\MLTABackground2.png")
+			InvPathmsg.Add("Picture", "x9 y14 w64 h64 +border", IconLib . "\ML-TA.ico")
+		}
+		catch {
+		}
+		InvPathmsg.SetFont("s20 W700 Q4 cLime", "Georgia")
+        InvPathmsg.Add("Text", "x80 y8", AppName)
+		InvPathmsg.SetFont("s9 cLime", "Comic Sans MS")
+		InvPathmsg.Add("Text", "x80 y45", "Mean Little's Task Automator v" CurrentVersion)
+		InvPathmsg.Add("Text", "x80 y65", "License key: ")
+		InvPathmsg.SetFont()
+		InvPathmsg.SetFont("s7 Bold " . BlueFont . "", "Comic Sans MS")
+		InvPathmsg.Add("Text", "x160 y68", LicenseKey)
+		InvPathmsg.Add("Text", "x0 y90 w470 h1 +0x5")
+		InvPathmsg.SetFont()
+		InvPathmsg.SetFont("s12 cLime", "Comic Sans MS")
+		InvPathmsg.Add("Text", "x145 y125", "Your path input is invalid.")
+		InvPathmsg.SetFont()
+		InvPathmsg.SetFont("s9 cLime", "Comic Sans MS")
+		InvPathmsg.Add("Text", "x0 y180 w470 h1 +0x5")
+		InvPathmsg.Add("Text", "x25 y190", "Copyright 2024 FDJ-Dash. All Rights Reserved.")
+		InvPathmsg.SetFont()
+		InvPathmsg.SetFont("s8 cLime", "Comic Sans MS")
+		InvPathmsg.Add("Text", "x25 y212", "Made with AutoHotkey V" A_AhkVersion . " " . (1 ? "Unicode" : "ANSI") . " " . (A_PtrSize == 8 ? "64-bit" : "32-bit"))
+        ogcButtonOK := InvPathmsg.Add("Button", "x370 y200 w80 h24", "OK")
+		ogcButtonOK.OnEvent("Click", Destroy)
+		InvPathmsg.Title := "Invalid path"
+        InvPathmsg.Show("w470 h240")
+		ControlFocus("Button1", "Invalid path")
+        InvPathmsg.Opt("+LastFound")
+    Return
+	Destroy(*){
+		InvPathmsg.Destroy()
+	}
+}
+;----------------------------------------------------
 SaveMsg(*){
 	ShowSave:
 		Savemsg := Gui("+AlwaysOnTop")
 		Savemsg.BackColor := "0x2F2F2F"
 		try {
 			Savemsg.Add("Picture", "x-32 y0 w712 h300", ImageLib . "\MLTABackground2.png")
-			Savemsg.Add("Picture", "x9 y14 w64 h64", IconLib . "\ML-TA.ico")
+			Savemsg.Add("Picture", "x9 y14 w64 h64 +border", IconLib . "\ML-TA.ico")
 		}
 		catch {
 		}
@@ -876,7 +1134,7 @@ SecureModeOff(*){
 		SecModeOff.BackColor := "0x2F2F2F"
 		try {
 			SecModeOff.Add("Picture", "x-32 y0 w712 h300", ImageLib . "\MLTABackground2.png")
-			SecModeOff.Add("Picture", "x9 y14 w64 h64", IconLib . "\ML-TA.ico")
+			SecModeOff.Add("Picture", "x9 y14 w64 h64 +border", IconLib . "\ML-TA.ico")
 		}
 		catch {
 		}
@@ -919,7 +1177,7 @@ MenuHandlerAbout(*)
 		About.BackColor := "0x2F2F2F"
 		try {
 			About.Add("Picture", "x-32 y0 w712 h300", ImageLib . "\MLTABackground2.png")
-			About.Add("Picture", "x9 y14 w64 h64", IconLib . "\ML-TA.ico")
+			About.Add("Picture", "x9 y14 w64 h64 +border", IconLib . "\ML-TA.ico")
 		}
 		catch {
 		}
@@ -962,7 +1220,7 @@ MenuHandlerGuide(*) {
 		GuideMsg.BackColor := "0x2F2F2F"
 		try {
 			GuideMsg.Add("Picture", "x-32 y0 w712 h300", ImageLib . "\MLTABackground2.png")
-			GuideMsg.Add("Picture", "x9 y14 w64 h64", IconLib . "\ML-TA.ico")
+			GuideMsg.Add("Picture", "x9 y14 w64 h64 +border", IconLib . "\ML-TA.ico")
 		}
 		catch {
 		}
@@ -1291,6 +1549,80 @@ ProcessJumpHotkey4(*)
 	SB.SetText("Ready")
 }
 ;----------------------------------------------------
+ProcessQuickAccess(CurrentHotkey, *) {
+	Saved := TaskAutomatorGui.Submit(false)
+	if SecureMode == false {
+		SecureModeOff
+		return
+	}
+	Switch true {
+	case CurrentHotkey == Saved.QuickAccessHk1:
+		try {
+			run "" . Saved.QuickAccess1 . ""
+		}
+		catch {
+			InvalidPath
+		}
+	case CurrentHotkey == Saved.QuickAccessHk2:
+		try {
+			run "" . Saved.QuickAccess2 . ""
+		}
+		catch {
+			InvalidPath
+		}
+	case CurrentHotkey == Saved.QuickAccessHk3:
+		try {
+			run "" . Saved.QuickAccess3 . ""
+		}
+		catch {
+			InvalidPath
+		}
+	case CurrentHotkey == Saved.QuickAccessHk4:
+		try {
+			run "" . Saved.QuickAccess4 . ""
+		}
+		catch {
+			InvalidPath
+		}
+	case CurrentHotkey == Saved.QuickAccessHk5:
+		try {
+			run "" . Saved.QuickAccess5 . ""
+		}
+		catch {
+			InvalidPath
+		}
+	case CurrentHotkey == Saved.QuickAccessHk6:
+		try {
+			run "" . Saved.QuickAccess6 . ""
+		}
+		catch {
+			InvalidPath
+		}
+	case CurrentHotkey == Saved.QuickAccessHk7:
+		try {
+			run "" . Saved.QuickAccess7 . ""
+		}
+		catch {
+			InvalidPath
+		}
+	case CurrentHotkey == Saved.QuickAccessHk8:
+		try {
+			run "" . Saved.QuickAccess8 . ""
+		}
+		catch {
+			InvalidPath
+		}
+	case CurrentHotkey == Saved.QuickAccessHk9:
+		try {
+			run "" . Saved.QuickAccess9 . ""
+		}
+		catch {
+			InvalidPath
+		}
+	}
+	
+}
+;----------------------------------------------------
 ProcessPatternClicker(*){
 	Saved := TaskAutomatorGui.Submit(false)	
 	if SecureMode == false {
@@ -1510,17 +1842,85 @@ EditBoxesHandler(*){
 ;----------------------------------------------------
 SwitchJumpsHandler(*){
 	SwitchClicker := false
+	QuickAccess := false
 	SwitchJumps := true
 	IniWrite SwitchJumps, IniFile, "Modules", "SwitchJumps"
+	IniWrite QuickAccess, IniFile, "Modules", "QuickAccess"
 	IniWrite SwitchClicker, IniFile, "Modules", "SwitchClicker"
 	Reload
 }
 ;----------------------------------------------------
 SwitchClickerHandler(*){
 	SwitchJumps := false
+	QuickAccess := false
 	SwitchClicker := true
 	IniWrite SwitchJumps, IniFile, "Modules", "SwitchJumps"
+	IniWrite QuickAccess, IniFile, "Modules", "QuickAccess"
 	IniWrite SwitchClicker, IniFile, "Modules", "SwitchClicker"
+	Reload
+}
+
+QuickAccessHandler(*) {
+	SwitchJumps := false
+	SwitchClicker := false
+	QuickAccess := true
+	IniWrite SwitchJumps, IniFile, "Modules", "SwitchJumps"
+	IniWrite SwitchClicker, IniFile, "Modules", "SwitchClicker"
+	IniWrite QuickAccess, IniFile, "Modules", "QuickAccess"
+	Reload
+}
+;----------------------------------------------------
+SelectNewIcon1(*) {
+	SelectedFile := FileSelect(3, "", "Open a file", "Text Documents (*.ico; *.png; *.jpg)")
+	IniWrite SelectedFile, IniFile, "QuickAccessIcons", "QuickIcon1"
+	Reload
+}
+;----------------------------------------------------
+SelectNewIcon2(*) {
+	SelectedFile := FileSelect(3, "", "Open a file", "Text Documents (*.ico; *.png; *.jpg)")
+	IniWrite SelectedFile, IniFile, "QuickAccessIcons", "QuickIcon2"
+	Reload
+}
+;----------------------------------------------------
+SelectNewIcon3(*) {
+	SelectedFile := FileSelect(3, "", "Open a file", "Text Documents (*.ico; *.png; *.jpg)")
+	IniWrite SelectedFile, IniFile, "QuickAccessIcons", "QuickIcon3"
+	Reload
+}
+;----------------------------------------------------
+SelectNewIcon4(*) {
+	SelectedFile := FileSelect(3, "", "Open a file", "Text Documents (*.ico; *.png; *.jpg)")
+	IniWrite SelectedFile, IniFile, "QuickAccessIcons", "QuickIcon4"
+	Reload
+}
+;----------------------------------------------------
+SelectNewIcon5(*) {
+	SelectedFile := FileSelect(3, "", "Open a file", "Text Documents (*.ico; *.png; *.jpg)")
+	IniWrite SelectedFile, IniFile, "QuickAccessIcons", "QuickIcon5"
+	Reload
+}
+;----------------------------------------------------
+SelectNewIcon6(*) {
+	SelectedFile := FileSelect(3, "", "Open a file", "Text Documents (*.ico; *.png; *.jpg)")
+	IniWrite SelectedFile, IniFile, "QuickAccessIcons", "QuickIcon6"
+	Reload
+}
+;----------------------------------------------------
+SelectNewIcon7(*) {
+	SelectedFile := FileSelect(3, "", "Open a file", "Text Documents (*.ico; *.png; *.jpg)")
+	IniWrite SelectedFile, IniFile, "QuickAccessIcons", "QuickIcon7"
+	Reload
+}
+;----------------------------------------------------
+SelectNewIcon8(*) {
+	SelectedFile := FileSelect(3, "", "Open a file", "Text Documents (*.ico; *.png; *.jpg)")
+	IniWrite SelectedFile, IniFile, "QuickAccessIcons", "QuickIcon8"
+	Reload
+}
+;----------------------------------------------------
+SelectNewIcon9(*) {
+	SelectedFile := FileSelect(3, "", "Open a file", "Text Documents (*.ico; *.png; *.jpg)")
+	IniWrite SelectedFile, IniFile, "QuickAccessIcons", "QuickIcon9"
 	Reload
 }
 ;----------------------------------------------------
@@ -1539,6 +1939,30 @@ SubmitJumpHotkey(*){
 	IniWrite Saved.JumpHotkey2, IniFile, "SavedHotkey", "JumpHotkey2"
 	IniWrite Saved.JumpHotkey3, IniFile, "SavedHotkey", "JumpHotkey3"
 	IniWrite Saved.JumpHotkey4, IniFile, "SavedHotkey", "JumpHotkey4"
+	Reload
+}
+;----------------------------------------------------
+SubmitQuickAccess(*){
+	Saved := TaskAutomatorGui.Submit(false)
+	if GetKeyState("Shift", "P") {
+		return
+	}
+	if Saved.QuickAccessHk1 == "" or Saved.QuickAccessHk2 == "" 
+		or Saved.QuickAccessHk3 == "" or Saved.QuickAccessHk4 == ""
+		or Saved.QuickAccessHk5 == "" or Saved.QuickAccessHk6 == ""
+		or Saved.QuickAccessHk7 == "" or Saved.QuickAccessHk8 == ""
+		or Saved.QuickAccessHk9 == ""{
+		return
+	}
+	IniWrite Saved.QuickAccessHk1, IniFile, "SavedHotkey", "QuickAccessHk1"
+	IniWrite Saved.QuickAccessHk2, IniFile, "SavedHotkey", "QuickAccessHk2"
+	IniWrite Saved.QuickAccessHk3, IniFile, "SavedHotkey", "QuickAccessHk3"
+	IniWrite Saved.QuickAccessHk4, IniFile, "SavedHotkey", "QuickAccessHk4"
+	IniWrite Saved.QuickAccessHk5, IniFile, "SavedHotkey", "QuickAccessHk5"
+	IniWrite Saved.QuickAccessHk6, IniFile, "SavedHotkey", "QuickAccessHk6"
+	IniWrite Saved.QuickAccessHk7, IniFile, "SavedHotkey", "QuickAccessHk7"
+	IniWrite Saved.QuickAccessHk8, IniFile, "SavedHotkey", "QuickAccessHk8"
+	IniWrite Saved.QuickAccessHk9, IniFile, "SavedHotkey", "QuickAccessHk9"
 	Reload
 }
 ;----------------------------------------------------
@@ -1599,6 +2023,18 @@ SubmitValues(*){
 		IniWrite Saved.Coord4Interval, IniFile, "CursorLocationClicker", "Coord4Interval"
 		SaveMsg
 	}
+	if QuickAccess == true {
+		IniWrite Saved.QuickAccess1, IniFile, "QuickAccessPath", "QuickAccess1"
+		IniWrite Saved.QuickAccess2, IniFile, "QuickAccessPath", "QuickAccess2"
+		IniWrite Saved.QuickAccess3, IniFile, "QuickAccessPath", "QuickAccess3"
+		IniWrite Saved.QuickAccess4, IniFile, "QuickAccessPath", "QuickAccess4"
+		IniWrite Saved.QuickAccess5, IniFile, "QuickAccessPath", "QuickAccess5"
+		IniWrite Saved.QuickAccess6, IniFile, "QuickAccessPath", "QuickAccess6"
+		IniWrite Saved.QuickAccess7, IniFile, "QuickAccessPath", "QuickAccess7"
+		IniWrite Saved.QuickAccess8, IniFile, "QuickAccessPath", "QuickAccess8"
+		IniWrite Saved.QuickAccess9, IniFile, "QuickAccessPath", "QuickAccess9"
+		SaveMsg
+	}
 }
 ;----------------------------------------------------
 CreateNewIniFile(*) {
@@ -1614,7 +2050,8 @@ CreateNewIniFile(*) {
 	FileAppend ";--------------------------------------------------`n" , IniFile
 	FileAppend "[Modules]`n" , IniFile
 	FileAppend "SwitchJumps=0`n" , IniFile
-	FileAppend "SwitchClicker=1`n" , IniFile
+	FileAppend "SwitchClicker=0`n" , IniFile
+	FileAppend "QuickAccess=1`n" , IniFile
 	FileAppend ";--------------------------------------------------`n" , IniFile
 	FileAppend "[Properties]`n" , IniFile
 	FileAppend "ExitMessageTimeWait=3000`n" , IniFile
@@ -1635,13 +2072,25 @@ CreateNewIniFile(*) {
 	FileAppend "[SavedHotkey]`n" , IniFile
 	FileAppend "StartAutoRunHotkey=r`n" , IniFile
 	FileAppend "StopAutoRunHotKey=t`n" , IniFile
+	FileAppend ";-------------------------------`n" , IniFile
 	FileAppend "PatternClickerHotkey=Numpad8`n" , IniFile
 	FileAppend "StopPatternHotkey=Numpad9`n" , IniFile
+	FileAppend ";-------------------------------`n" , IniFile
 	FileAppend "JumpHotkey0=Numpad0`n" , IniFile
 	FileAppend "JumpHotkey1=Numpad1`n" , IniFile
 	FileAppend "JumpHotkey2=Numpad2`n" , IniFile
 	FileAppend "JumpHotkey3=Numpad3`n" , IniFile
 	FileAppend "JumpHotkey4=Numpad4`n" , IniFile
+	FileAppend ";-------------------------------`n" , IniFile
+	FileAppend "QuickAccess1=`n" , IniFile
+	FileAppend "QuickAccess2=`n" , IniFile
+	FileAppend "QuickAccess3=`n" , IniFile
+	FileAppend "QuickAccess4=`n" , IniFile
+	FileAppend "QuickAccess5=`n" , IniFile
+	FileAppend "QuickAccess6=`n" , IniFile
+	FileAppend "QuickAccess7=`n" , IniFile
+	FileAppend "QuickAccess8=`n" , IniFile
+	FileAppend "QuickAccess9=`n" , IniFile
 	FileAppend ";--------------------------------------------------`n" , IniFile
 	FileAppend "[AutoRun]`n" , IniFile
 	FileAppend "SprintKey=Shift`n" , IniFile
