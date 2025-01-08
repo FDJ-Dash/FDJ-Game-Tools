@@ -3,40 +3,93 @@
 SetWorkingDir(A_ScriptDir)
 Global IconLib := A_ScriptDir . "\Icons"
 , ImageLib := A_ScriptDir . "\Images"
-, HotkeyGuide := "https://mean-littles-app.gitbook.io/mean-littles-app-docs/ml-task-automator/how-does-it-work"
+, HotkeyGuide := "https://mean-littles-app.gitbook.io/mean-littles-software"
 , IniFile := A_ScriptDir . "\ML_TaskAutomator.ini"
 , LicenseFile := A_ScriptDir . "\LicenseKey.ini"
-, CurrentVersion := "1.2"
+, VersionInfoFile := A_ScriptDir . "\VersionInfo.ini"
 , AppName := "ML Task Automator"
-, BlueFont := "c0x70A0FA"
-, BackgroundDarkGrey := "Background2F2F2F"
+, CurrentVersion := "1.3"
+, MLSoftwareIcon := "\Logo-FDJ-Dash.png"
+, DefaultMsgBackgroundImage := "\Lightning2.jpg"
 ;----------------------------------------------------
-; GUI Properties
-TaskAutomatorGui := Gui("+AlwaysOnTop")
-TaskAutomatorGui.Opt("+MinimizeBox +OwnDialogs -Theme")
-TaskAutomatorGui.SetFont("Bold cLime", "Comic Sans MS")
-TaskAutomatorGui.BackColor := "0x2F2F2F"
-try {
-	TaskAutomatorGui.Add("Picture", "x-16 y0 w304 h712", ImageLib . "\MLTABackground.png")
-}
-catch {
-}
-;----------------------------------------------------
-; Read ini Modules
+; Read ini file
 if !FileExist(IniFile) {
 	CreateNewIniFile
 }
-SwitchJumps := IniRead(IniFile, "Modules", "SwitchJumps")
+;----------------------------------------------------
+; Ini Read Font types
+MainFontType := IniRead(IniFile, "FontType", "MainFontType")
+MessageAppNameFontType := IniRead(IniFile, "FontType", "MessageAppNameFontType")
+LicenseKeyFontType := IniRead(IniFile, "FontType", "LicenseKeyFontType")
+MessageMainMsgFontType := IniRead(IniFile, "FontType", "MessageMainMsgFontType")
+MessageFontType := IniRead(IniFile, "FontType", "MessageFontType")
+;----------------------------------------------------
+; Ini Read Font Colors
+;-------------------------------
+MainFontColor := "c"
+MainFontColor .= IniRead(IniFile, "FontColors", "MainFontColor")
+;-------------------------------
+FontClickerPatternColor := "c0x"
+FontClickerPatternColor .= IniRead(IniFile, "FontColors", "FontClickerPatternColor")
+;-------------------------------
+MessageAppNameFontColor := "c"
+MessageAppNameFontColor .= IniRead(IniFile, "FontColors", "MessageAppNameFontColor")
+;-------------------------------
+MessageMainMsgFontColor := "c"
+MessageMainMsgFontColor .= IniRead(IniFile, "FontColors", "MessageMainMsgFontColor")
+;-------------------------------
+MessageFontColor := "c"
+MessageFontColor .= IniRead(IniFile, "FontColors", "MessageFontColor")
+;-------------------------------
+LicenseKeyFontColor := "c0x"
+LicenseKeyFontColor .= IniRead(IniFile, "FontColors", "LicenseKeyFontColor")
+;-------------------------------
+; Ini Read Background
+BackgroundMainColor := "Background"
+BackgroundColor := IniRead(IniFile, "Background", "BackgroundColor")
+BackgroundMainColor .= BackgroundColor
+;-------------------------------
+BackgroundPicture := IniRead(IniFile, "Background", "BackgroundPicture")
+MessageBackgroundPicture := IniRead(IniFile, "Background", "MessageBackgroundPicture")
+;----------------------------------------------------
+; Ini Read Modules
+SwitchKbAutoRun := IniRead(IniFile, "Modules", "SwitchKbAutoRun")
+SwitchControllerAutoRun := IniRead(IniFile, "Modules", "SwitchControllerAutoRun")
+SwitchTopModulesOFF := IniRead(IniFile, "Modules", "SwitchTopModulesOFF")
+;-------------------------------
+SwitchQuickAccess := IniRead(IniFile, "Modules", "SwitchQuickAccess")
+QuickAccessButtons := IniRead(IniFile, "Modules", "QuickAccessButtons")
 SwitchClicker := IniRead(IniFile, "Modules", "SwitchClicker")
-QuickAccess := IniRead(IniFile, "Modules", "QuickAccess")
+SwitchJumps := IniRead(IniFile, "Modules", "SwitchJumps")
+SwitchModulesOFF := IniRead(IniFile, "Modules", "SwitchModulesOFF")
+;-------------------------------
 if  SwitchJumps < 0 or SwitchJumps > 1 or
- SwitchClicker < 0 or SwitchClicker > 1  or QuickAccess < 0 or QuickAccess > 1 {
-	SwitchJumps := false
+ SwitchClicker < 0 or SwitchClicker > 1  or SwitchQuickAccess < 0 or SwitchQuickAccess > 1 or 
+ SwitchModulesOFF < 0 or SwitchModulesOFF > 1{
+	SwitchQuickAccess := true
 	SwitchClicker := false
-	QuickAccess := true
-	IniWrite SwitchJumps, IniFile, "Modules", "SwitchJumps"
+	SwitchJumps := false
+	SwitchModulesOFF := false
+	IniWrite SwitchQuickAccess, IniFile, "Modules", "SwitchQuickAccess"
 	IniWrite SwitchClicker, IniFile, "Modules", "SwitchClicker"
-	IniWrite QuickAccess, IniFile, "Modules", "QuickAccess"
+	IniWrite SwitchJumps, IniFile, "Modules", "SwitchJumps"
+	IniWrite SwitchModulesOFF, IniFile, "Modules", "SwitchModulesOFF"
+}
+if QuickAccessButtons > 1 or QuickAccessButtons < 0 {
+	QuickAccessButtons := 1
+	IniWrite QuickAccessButtons, IniFile, "Modules", "QuickAccessButtons"
+}
+if SwitchKbAutoRun > 1 or SwitchKbAutoRun < 0 {
+	SwitchKbAutoRun := 1
+	IniWrite SwitchKbAutoRun, IniFile, "Modules", "SwitchKbAutoRun"
+}
+if SwitchControllerAutoRun > 1 or SwitchControllerAutoRun < 0 {
+	SwitchControllerAutoRun := 1
+	IniWrite SwitchControllerAutoRun, IniFile, "Modules", "SwitchControllerAutoRun"
+}
+if SwitchModulesOFF > 1 or SwitchModulesOFF < 0 {
+	SwitchModulesOFF := 1
+	IniWrite SwitchModulesOFF, IniFile, "Modules", "SwitchModulesOFF"
 }
 ;----------------------------------------------------
 ; Read Ini Properties
@@ -56,10 +109,10 @@ if SuspendHotkeys > 1 or SuspendHotkeys < 0 {
 	SuspendHotkeys := 0
 	IniWrite SuspendHotkeys, IniFile, "Properties", "SuspendHotkeys"
 }
-AutoRunLoop := IniRead(IniFile, "Properties", "AutoRunLoop")
-if AutoRunLoop < 0  {
-	AutoRunLoop := 0
-	IniWrite AutoRunLoop, IniFile, "Properties", "AutoRunLoop"
+AutoRunLoopInterval := IniRead(IniFile, "Properties", "AutoRunLoopInterval")
+if AutoRunLoopInterval < 0  {
+	AutoRunLoopInterval := 0
+	IniWrite AutoRunLoopInterval, IniFile, "Properties", "AutoRunLoopInterval"
 }
 GeneralLoopInterval := IniRead(IniFile, "Properties", "GeneralLoopInterval")
 if GeneralLoopInterval < 0  {
@@ -70,6 +123,11 @@ LoopAmount := IniRead(IniFile, "Properties", "LoopAmount")
 if LoopAmount < 0  {
 	LoopAmount := 0
 	IniWrite LoopAmount, IniFile, "Properties", "LoopAmount"
+}
+GuiPriorityAlwaysOnTop := IniRead(IniFile, "Properties", "GuiPriorityAlwaysOnTop")
+if GuiPriorityAlwaysOnTop < 0 or GuiPriorityAlwaysOnTop > 1 {
+	GuiPriorityAlwaysOnTop := 0
+	IniWrite GuiPriorityAlwaysOnTop, IniFile, "Properties", "GuiPriorityAlwaysOnTop"
 }
 ;----------------------------------------------------
 ; Read Ini PaceProperties
@@ -172,6 +230,35 @@ LongJumpLenght := IniRead(IniFile, "JumpProperties", "LongJumpLenght")
 VeryLongJumpRace := IniRead(IniFile, "JumpProperties", "VeryLongJumpRace")
 VeryLongJumpLenght := IniRead(IniFile, "JumpProperties", "VeryLongJumpLenght")
 ;----------------------------------------------------
+TopPicture := IniRead(IniFile, "Pictures", "TopPicture")
+BottomPicture := IniRead(IniFile, "Pictures", "BottomPicture")
+; ;----------------------------------------------------
+; GUI Properties
+if GuiPriorityAlwaysOnTop == true {
+	TaskAutomatorGui := Gui("+AlwaysOnTop")
+} else {
+	TaskAutomatorGui := Gui()
+}
+TaskAutomatorGui.Opt("+MinimizeBox +OwnDialogs -Theme")
+TaskAutomatorGui.SetFont("Bold " . MainFontColor, MainFontType)
+TaskAutomatorGui.BackColor := "0x" . BackgroundColor
+if BackgroundPicture == "" {
+	try {
+		TaskAutomatorGui.Add("Picture", "x-16 y0 w304 h712", ImageLib . "\Lightning1.jpg")
+	}
+	catch {
+	}
+} else {
+	try {
+		TaskAutomatorGui.Add("Picture", "x0 y0 w250 h570", BackgroundPicture)
+	}
+	catch {
+		BackgroundPicture := ""
+		IniWrite BackgroundPicture, IniFile, "Background", "BackgroundPicture"
+		Reload
+	}
+}
+;----------------------------------------------------
 ; Setup Menu
 FileMenu := Menu()
 MenuBar_Storage := MenuBar()
@@ -185,25 +272,55 @@ try {
 }
 catch {
 }
+;-------------------------------
 OptionsMenu := Menu()
 MenuBar_Storage.Add("&Options", OptionsMenu)
-OptionsMenu.Add("Secure &Mode: On/Off", SecureModeHandler)
-OptionsMenu.Add("Secure Edit &Boxes && Icons: On/Off", EditBoxesHandler)
+OptionsMenu.Add("Switch Secure &Mode: On/Off", SecureModeHandler)
+OptionsMenu.Add("Switch Secure Edit &Boxes && Icons: On/Off", EditBoxesHandler)
 OptionsMenu.Insert()
 OptionsMenu.Add("Edit &Ini File", EditIniFileHandler)
 OptionsMenu.Insert()
-OptionsMenu.Add("Quick &Access", QuickAccessHandler)
-OptionsMenu.Add("Switch &Clicker", SwitchClickerHandler)
-OptionsMenu.Add("Switch &Jumps", SwitchJumpsHandler)
-
+OptionsMenu.Add("Switch &Keyboard Autorun ON/OFF", KbAutoRunOFFHandler)
+OptionsMenu.Add("Switch Con&troller Autorun ON/OFF", ControllerAutoRunOFFHandler)
+OptionsMenu.Add("Switch Top Mod&ules OFF", SwitchTopModulesOFFHandler)
+OptionsMenu.Insert()
+OptionsMenu.Add("1. Switch Quick &Access", QuickAccessHandler)
+OptionsMenu.Add("1b. Switch &Quick Access Hotkeys/Buttons", QuickAccessButtonsHandler)
+OptionsMenu.Add("2. Switch &Clicker", SwitchClickerHandler)
+OptionsMenu.Add("3. Switch &Jumps", SwitchJumpsHandler)
+OptionsMenu.Add("4. Switch Bottom Mo&dules OFF", SwitchBottomModulesOFFHandler)
+OptionsMenu.Insert()
+OptionsMenu.Add("Change Background &Image", ChangeBackgroundHandler)
+OptionsMenu.Add("Change M&essage Background Image", ChangeMessageBackgroundHandler)
+OptionsMenu.Insert()
+OptionsMenu.Add("&Always On Top: ON/OFF", GuiPriorityAlwaysOnTopHandler)
 try {
+	if EditBoxesAvailable == true {
+		OptionsMenu.SetIcon("Switch Secure Edit &Boxes && Icons: On/Off", IconLib . "\EditBox2.ico")
+	} else {
+		OptionsMenu.SetIcon("Switch Secure Edit &Boxes && Icons: On/Off", IconLib . "\EditBox1.ico")
+	}
+	if SecureMode == true {
+		OptionsMenu.SetIcon("Switch Secure &Mode: On/Off", IconLib . "\Locked.ico")
+	} else {
+		OptionsMenu.SetIcon("Switch Secure &Mode: On/Off", IconLib . "\Unlocked.ico")
+	}
+	OptionsMenu.SetIcon("Switch &Keyboard Autorun ON/OFF", IconLib . "\Switch2.ico")
+	OptionsMenu.SetIcon("Switch Con&troller Autorun ON/OFF", IconLib . "\Switch2.ico")
+	OptionsMenu.SetIcon("Switch Top Mod&ules OFF", IconLib . "\Switch2.ico")
 	OptionsMenu.SetIcon("Edit &Ini File", IconLib . "\File.ico")
-	OptionsMenu.SetIcon("Quick &Access", IconLib . "\Switch1.ico")
-	OptionsMenu.SetIcon("Switch &Clicker", IconLib . "\Switch2.ico")
-	OptionsMenu.SetIcon("Switch &Jumps", IconLib . "\Switch2.ico")
+	OptionsMenu.SetIcon("1. Switch Quick &Access", IconLib . "\Switch2.ico")
+	OptionsMenu.SetIcon("1b. Switch &Quick Access Hotkeys/Buttons", IconLib . "\Switch2.ico")
+	OptionsMenu.SetIcon("2. Switch &Clicker", IconLib . "\Switch2.ico")
+	OptionsMenu.SetIcon("3. Switch &Jumps", IconLib . "\Switch2.ico")
+	OptionsMenu.SetIcon("4. Switch Bottom Mo&dules OFF", IconLib . "\Switch2.ico")
+	OptionsMenu.SetIcon("Change Background &Image", IconLib . "\ChangeBackground.png")
+	OptionsMenu.SetIcon("Change M&essage Background Image", IconLib . "\ChangeBackground.png")
+	OptionsMenu.SetIcon("&Always On Top: ON/OFF", IconLib . "\Switch2.ico")
 }
 catch {
 }
+;-------------------------------
 HelpMenu := Menu()
 MenuBar_Storage.Add("&Help", HelpMenu)
 HelpMenu.Add("Guide", MenuHandlerGuide)
@@ -212,7 +329,7 @@ HelpMenu.Insert()
 HelpMenu.Add("About", MenuHandlerAbout)
 
 try {
-	HelpMenu.SetIcon("Guide", IconLib . "\ML-TA.ico")
+	HelpMenu.SetIcon("Guide", IconLib . MLSoftwareIcon)
 	HelpMenu.SetIcon("Quick Fix", IconLib . "\Fix.ico")
 	HelpMenu.SetIcon("About", IconLib . "\info.ico")
 }
@@ -220,55 +337,109 @@ catch {
 }
 TaskAutomatorGui.MenuBar := MenuBar_Storage
 ;----------------------------------------------------
-; Keyboard AutoRun
-TaskAutomatorGui.Add("Text", "x10 y10 h20 +0x200", " Auto Run ")
-TextOnOff1 := TaskAutomatorGui.Add("Text","x105 y10 h20 +0x200", " OFF ")
-TaskAutomatorGui.Add("Text", "x10 y35 h20 +0x200", " Stop Auto Run ")
-if SecureMode == true {
-	try {
-		OptionsMenu.SetIcon("Secure &Mode: On/Off", IconLib . "\Locked.ico")
-	}
-	catch {
-	}
-	StartAutoRunHotkey := TaskAutomatorGui.Add("Hotkey", "vStartAutoRunHotkey x150 y10 w74 h20 +disabled", StartAutoRunHotkey)
-	StopAutoRunHotKey := TaskAutomatorGui.Add("Hotkey", "vStopAutoRunHotKey x150 y35 w74 h20 +disabled", StopAutoRunHotKey)
+if GuiPriorityAlwaysOnTop == true {
+	OptionsMenu.SetIcon("&Always On Top: ON/OFF", IconLib . "\Switch1.ico")
 } else {
-	try {
-		OptionsMenu.SetIcon("Secure &Mode: On/Off", IconLib . "\Unlocked.ico")
-	}
-	catch {
-	}
-	StartAutoRunHotkey := TaskAutomatorGui.Add("Hotkey", "vStartAutoRunHotkey x150 y10 w74 h20", StartAutoRunHotkey).OnEvent("Change", SubmitAutoRunHotkey)
-	StopAutoRunHotKey := TaskAutomatorGui.Add("Hotkey", "vStopAutoRunHotKey x150 y35 w74 h20", StopAutoRunHotKey).OnEvent("Change", SubmitAutoRunHotkey)
+	OptionsMenu.SetIcon("&Always On Top: ON/OFF", IconLib . "\Switch2.ico")
 }
 ;----------------------------------------------------
-TaskAutomatorGui.Add("Text", "x1 y60 w250 h2 +0x10") ; Separator
-;----------------------------------------------------
-; Auto Scroll Up
-TextScrlUp := TaskAutomatorGui.Add("Text","x10 y66 w110 h20 +0x200", " Auto Scroll up")
-RadioScrlUpYes := TaskAutomatorGui.Add("Radio", "x10 y91 w30 h20", "Y")
-RadioScrlUpNo := TaskAutomatorGui.Add("Radio", "x45 y91 w30 h20 +Checked", "N")
-TextOnOffScrlUp := TaskAutomatorGui.Add("Text","x90 y91 w30 h20 +0x200", " OFF")
-;----------------------------------------------------
-; Auto Scroll Down
-TextScrlDown := TaskAutomatorGui.Add("Text","x130 y66 w110 h20 +0x200", " Auto Scroll down")
-RadioScrlDownYes := TaskAutomatorGui.Add("Radio", "x130 y91 w30 h20", "Y")
-RadioScrlDownNo := TaskAutomatorGui.Add("Radio", "x165 y91 w30 h20 +Checked", "N")
-TextOnOffScrlDown := TaskAutomatorGui.Add("Text","x210 y91 w30 h20 +0x200", " OFF")
-;----------------------------------------------------
-TaskAutomatorGui.Add("Text", "x1 y116 w250 h2 +0x10") ; Separator
-;----------------------------------------------------
+; Keyboard AutoRun
+if SwitchKbAutoRun == false {
+	OptionsMenu.SetIcon("Switch &Keyboard Autorun ON/OFF", IconLib . "\Switch2.ico")
+} else {
+	TaskAutomatorGui.Add("Text", "x10 y10 h20 +0x200", " Kb. AutoRun ")
+	TextOnOff1 := TaskAutomatorGui.Add("Text","x105 y10 h20 +0x200", " OFF ")
+	TaskAutomatorGui.Add("Text", "x10 y35 h20 +0x200", " Stop AutoRun ")
+	OptionsMenu.SetIcon("Switch &Keyboard Autorun ON/OFF", IconLib . "\Switch1.ico")
+	if SecureMode == true {
+		try {
+			OptionsMenu.SetIcon("Switch Secure &Mode: On/Off", IconLib . "\Locked.ico")
+		}
+		catch {
+		}
+		StartAutoRunHotkey := TaskAutomatorGui.Add("Hotkey", "vStartAutoRunHotkey x150 y10 w74 h20 +disabled", StartAutoRunHotkey)
+		StopAutoRunHotKey := TaskAutomatorGui.Add("Hotkey", "vStopAutoRunHotKey x150 y35 w74 h20 +disabled", StopAutoRunHotKey)
+	} else {
+		try {
+			OptionsMenu.SetIcon("Switch Secure &Mode: On/Off", IconLib . "\Unlocked.ico")
+		}
+		catch {
+		}
+		StartAutoRunHotkey := TaskAutomatorGui.Add("Hotkey", "vStartAutoRunHotkey x150 y10 w74 h20", StartAutoRunHotkey).OnEvent("Change", SubmitAutoRunHotkey)
+		StopAutoRunHotKey := TaskAutomatorGui.Add("Hotkey", "vStopAutoRunHotKey x150 y35 w74 h20", StopAutoRunHotKey).OnEvent("Change", SubmitAutoRunHotkey)
+	}
+}
+
+if SwitchKbAutoRun == false and SwitchControllerAutoRun == false {
+	try {
+		OptionsMenu.SetIcon("Switch Top Mod&ules OFF", IconLib . "\Switch1.ico")
+	}
+	catch {
+	}
+	if EditBoxesAvailable == true {
+		try {
+			TaskAutomatorGui.Add("Picture", "x9 y7 w230 h205 +border", TopPicture).OnEvent("Click", SelectTopPicture)
+		}
+		catch {
+			TopPicture := ""
+			IniWrite TopPicture, IniFile, "Pictures", "TopPicture"
+			Reload
+		}
+	} else {
+		try {
+			TaskAutomatorGui.Add("Picture", "x9 y7 w230 h205 +border", TopPicture)
+		}
+		catch {
+			TopPicture := ""
+			IniWrite TopPicture, IniFile, "Pictures", "TopPicture"
+			Reload
+		}
+	}
+} else {
+	try {
+		OptionsMenu.SetIcon("Switch Top Mod&ules OFF", IconLib . "\Switch2.ico")
+	}
+	catch {
+	}
+	;----------------------------------------------------
+	TaskAutomatorGui.Add("Text", "x1 y60 w250 h2 +0x10") ; Separator
+	;----------------------------------------------------
+	; Auto Scroll Up
+	TextScrlUp := TaskAutomatorGui.Add("Text","x10 y66 w110 h20 +0x200", " Auto Scroll up")
+	RadioScrlUpYes := TaskAutomatorGui.Add("Radio", "x10 y91 w30 h20", "Y")
+	RadioScrlUpNo := TaskAutomatorGui.Add("Radio", "x45 y91 w30 h20 +Checked", "N")
+	TextOnOffScrlUp := TaskAutomatorGui.Add("Text","x90 y91 w30 h20 +0x200", " OFF")
+	;----------------------------------------------------
+	; Auto Scroll Down
+	TextScrlDown := TaskAutomatorGui.Add("Text","x130 y66 w110 h20 +0x200", " Auto Scroll down")
+	RadioScrlDownYes := TaskAutomatorGui.Add("Radio", "x130 y91 w30 h20", "Y")
+	RadioScrlDownNo := TaskAutomatorGui.Add("Radio", "x165 y91 w30 h20 +Checked", "N")
+	TextOnOffScrlDown := TaskAutomatorGui.Add("Text","x210 y91 w30 h20 +0x200", " OFF")
+	
+	;----------------------------------------------------
+	TaskAutomatorGui.Add("Text", "x1 y116 w250 h2 +0x10") ; Separator
+	;----------------------------------------------------
+}
+
 ; Controller
-TaskAutomatorGui.Add("Text","x10 y122 h20 +0x200", " Controller: ")
-TextOnOffController := TaskAutomatorGui.Add("Text","x85 y122 w155 h20 +0x200", " Controller Not Found")
-ControllerName := TaskAutomatorGui.Add("Text","x10 y147 w230 h20 +0x200", " ")
-;----------------------------------------------------
-; Controller AutoRun
-TaskAutomatorGui.Add("Text","x10 y172 w110 h20 +0x200", " Controller AutoRun:")
-RadioCtrlAuRunYes := TaskAutomatorGui.Add("Radio", "x130 y172 w30 h20 +Checked", "Y")
-RadioCtrlAuRunNo := TaskAutomatorGui.Add("Radio", "x165 y172 w30 h20", "N")
-TextOnOffCtrlAuRun := TaskAutomatorGui.Add("Text","x210 y172 w30 h20 +0x200", " OFF")
-TaskAutomatorGui.Add("Text","x25 y197 w200 h20 +0x200", " Use RT / LT Keys to turn it on / off ")
+if SwitchControllerAutoRun == false {
+	OptionsMenu.SetIcon("Switch Con&troller Autorun ON/OFF", IconLib . "\Switch2.ico")
+	
+	RadioCtrlAuRunYes := false
+	RadioCtrlAuRunNo := true
+} else {
+	OptionsMenu.SetIcon("Switch Con&troller Autorun ON/OFF", IconLib . "\Switch1.ico")
+	TaskAutomatorGui.Add("Text","x10 y122 h20 +0x200", " Controller: ")
+	TextOnOffController := TaskAutomatorGui.Add("Text","x85 y122 w155 h20 +0x200", " Controller Not Found")
+	ControllerName := TaskAutomatorGui.Add("Text","x10 y147 w230 h20 +0x200", " ")
+	;----------------------------------------------------
+	; Controller AutoRun
+	TaskAutomatorGui.Add("Text","x10 y172 w110 h20 +0x200", " Controller AutoRun:")
+	RadioCtrlAuRunYes := TaskAutomatorGui.Add("Radio", "x130 y172 w30 h20 +Checked", "Y")
+	RadioCtrlAuRunNo := TaskAutomatorGui.Add("Radio", "x165 y172 w30 h20", "N")
+	TextOnOffCtrlAuRun := TaskAutomatorGui.Add("Text","x210 y172 w30 h20 +0x200", " OFF")
+	TaskAutomatorGui.Add("Text","x25 y197 w200 h20 +0x200", " Use RT / LT Keys to turn it on / off ")
+}
 ;----------------------------------------------------
 TaskAutomatorGui.Add("Text", "x1 y221 w250 h2 +0x10") ; Separator
 ;----------------------------------------------------
@@ -276,12 +447,17 @@ TaskAutomatorGui.Add("Text", "x1 y221 w250 h2 +0x10") ; Separator
 Switch true {
 case SwitchJumps:
 	try {
-		OptionsMenu.SetIcon("Switch &Jumps", IconLib . "\Switch1.ico")
-		OptionsMenu.SetIcon("Switch &Clicker", IconLib . "\Switch2.ico")
-		OptionsMenu.SetIcon("Quick &Access", IconLib . "\Switch2.ico")
+		OptionsMenu.SetIcon("3. Switch &Jumps", IconLib . "\Switch1.ico")
+		OptionsMenu.SetIcon("2. Switch &Clicker", IconLib . "\Switch2.ico")
+		OptionsMenu.SetIcon("1. Switch Quick &Access", IconLib . "\Switch2.ico")
+		OptionsMenu.SetIcon("4. Switch Bottom Mo&dules OFF", IconLib . "\Switch2.ico")
 	}
 	catch {
 	}
+	SwitchQuickAccess := 0
+	SwitchClicker := 0
+	SwitchJumps := 1
+	SwitchModulesOFF := 0
 	TaskAutomatorGui.Add("Text", "x05 y226 h20 +0x200", " Verify Num Lock key is ON for Numpad keys ")
 	TaskAutomatorGui.Add("GroupBox", "x10 y250 w229 h150", "Jumps")
 	TaskAutomatorGui.Add("Text", "x20 y273 w95 h20 +0x200", " Very Short jump")
@@ -310,12 +486,18 @@ case SwitchJumps:
 	}
 case SwitchClicker:
 	try {
-		OptionsMenu.SetIcon("Switch &Clicker", IconLib . "\Switch1.ico")
-		OptionsMenu.SetIcon("Switch &Jumps", IconLib . "\Switch2.ico")
-		OptionsMenu.SetIcon("Quick &Access", IconLib . "\Switch2.ico")
+		OptionsMenu.SetIcon("2. Switch &Clicker", IconLib . "\Switch1.ico")
+		OptionsMenu.SetIcon("3. Switch &Jumps", IconLib . "\Switch2.ico")
+		OptionsMenu.SetIcon("1. Switch Quick &Access", IconLib . "\Switch2.ico")
+		OptionsMenu.SetIcon("Switch Secure Edit &Boxes && Icons: On/Off", IconLib . "\EditBox2.ico")
+		OptionsMenu.SetIcon("4. Switch Bottom Mo&dules OFF", IconLib . "\Switch2.ico")
 	}
 	catch {
 	}
+	SwitchQuickAccess := 0
+	SwitchClicker := 1
+	SwitchJumps := 0
+	SwitchModulesOFF := 0
 	TaskAutomatorGui.Add("Text","x48 y226 h20 +0x200", " Auto Clicker - Toggle Key ")
 	
 	if SecureMode == true {
@@ -327,7 +509,7 @@ case SwitchClicker:
 	}
 	if EditBoxesAvailable == true {
 		try {
-			OptionsMenu.SetIcon("Secure Edit &Boxes && Icons: On/Off", IconLib . "\EditBox2.ico")
+			OptionsMenu.SetIcon("Switch Secure Edit &Boxes && Icons: On/Off", IconLib . "\EditBox2.ico")
 		}
 		catch {
 		}
@@ -335,7 +517,7 @@ case SwitchClicker:
 		EditPatternClickerOffset := TaskAutomatorGui.Add("Edit", "vRandomOffset x190 y251 w50 h20 +Number")
 	} else {
 		try {
-			OptionsMenu.SetIcon("Secure Edit &Boxes && Icons: On/Off", IconLib . "\EditBox1.ico")
+			OptionsMenu.SetIcon("Switch Secure Edit &Boxes && Icons: On/Off", IconLib . "\EditBox1.ico")
 		}
 		catch {
 		}
@@ -351,195 +533,195 @@ case SwitchClicker:
 	TextPatternClickerOnOff := TaskAutomatorGui.Add("Text","x195 y301 h20 +0x200", " OFF ")
 	
 	TaskAutomatorGui.SetFont()
-	TaskAutomatorGui.SetFont("Bold " . BlueFont . "", "Comic Sans MS")
+	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
 	TextPos0Interval := TaskAutomatorGui.Add("Text","x125 y276 h20 +0x200", "Stop Ptrn")
 	TaskAutomatorGui.SetFont()
-	TaskAutomatorGui.SetFont("Bold cLime", "Comic Sans MS")
+	TaskAutomatorGui.SetFont("Bold " . MainFontColor, MainFontType)
 	EditPatternClicker.Value := ClickInterval
-	EditPatternClicker.Opt("" . BackgroundDarkGrey . "")
+	EditPatternClicker.Opt("" . BackgroundMainColor . "")
 	EditPatternClickerOffset.Value := RandomOffset
-	EditPatternClickerOffset.Opt("" . BackgroundDarkGrey . "")
+	EditPatternClickerOffset.Opt("" . BackgroundMainColor . "")
 	;----------------------------------------------------
 	TaskAutomatorGui.SetFont()
-	TaskAutomatorGui.SetFont("Bold " . BlueFont . "", "Comic Sans MS")
+	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
 	if EditBoxesAvailable == true {
 		EditPosX0 := TaskAutomatorGui.Add("Edit", "vCoordX0 x10 y326 w40 h20 +Number")
 	} else {
 		EditPosX0 := TaskAutomatorGui.Add("Edit", "vCoordX0 x10 y326 w40 h20 +Number +Disabled")
 	}
-	EditPosX0.Opt("" . BackgroundDarkGrey . "")
+	EditPosX0.Opt("" . BackgroundMainColor . "")
 	TaskAutomatorGui.SetFont()
-	TaskAutomatorGui.SetFont("Bold cLime", "Comic Sans MS")
+	TaskAutomatorGui.SetFont("Bold " . MainFontColor, MainFontType)
 	EditPosX0.Value := CoordX0
 	TaskAutomatorGui.SetFont()
-	TaskAutomatorGui.SetFont("Bold " . BlueFont . "", "Comic Sans MS")
+	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
 	if EditBoxesAvailable == true {
 		EditPosY0 := TaskAutomatorGui.Add("Edit", "vCoordY0 x65 y326 w40 h20 +Number")
 	} else {
 		EditPosY0 := TaskAutomatorGui.Add("Edit", "vCoordY0 x65 y326 w40 h20 +Number +Disabled")
 	}
-	EditPosY0.Opt("" . BackgroundDarkGrey . "")
+	EditPosY0.Opt("" . BackgroundMainColor . "")
 	TaskAutomatorGui.SetFont()
-	TaskAutomatorGui.SetFont("Bold cLime", "Comic Sans MS")
+	TaskAutomatorGui.SetFont("Bold " . MainFontColor, MainFontType)
 	EditPosY0.Value := CoordY0
 	TaskAutomatorGui.SetFont()
-	TaskAutomatorGui.SetFont("Bold " . BlueFont . "", "Comic Sans MS")
+	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
 	if EditBoxesAvailable == true {
 		EditPos0Interval := TaskAutomatorGui.Add("Edit", "vCoord0Interval x120 y326 w50 h20 +Number")
 	} else {
 		EditPos0Interval := TaskAutomatorGui.Add("Edit", "vCoord0Interval x120 y326 w50 h20 +Number +Disabled")
 	}
-	EditPos0Interval.Opt("" . BackgroundDarkGrey . "")
+	EditPos0Interval.Opt("" . BackgroundMainColor . "")
 	TaskAutomatorGui.SetFont()
-	TaskAutomatorGui.SetFont("Bold cLime", "Comic Sans MS")
+	TaskAutomatorGui.SetFont("Bold " . MainFontColor, MainFontType)
 	EditPos0Interval.Value := Coord0Interval
 	
 	RadioPos0Yes := TaskAutomatorGui.Add("Radio", "x184 y326 h20", "Y")
 	RadioPos0No := TaskAutomatorGui.Add("Radio", "x216 y326 w30 h20 +Checked", "N")
 	;----------------------------------------------------
 	TaskAutomatorGui.SetFont()
-	TaskAutomatorGui.SetFont("Bold " . BlueFont . "", "Comic Sans MS")
+	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
 	if EditBoxesAvailable == true {
 		EditPosX1 := TaskAutomatorGui.Add("Edit", "vCoordX1 x10 y351 w40 h20 +Number")
 	} else {
 		EditPosX1 := TaskAutomatorGui.Add("Edit", "vCoordX1 x10 y351 w40 h20 +Number +Disabled")
 	}
-	EditPosX1.Opt("" . BackgroundDarkGrey . "")
+	EditPosX1.Opt("" . BackgroundMainColor . "")
 	TaskAutomatorGui.SetFont()
-	TaskAutomatorGui.SetFont("Bold cLime", "Comic Sans MS")
+	TaskAutomatorGui.SetFont("Bold " . MainFontColor, MainFontType)
 	EditPosX1.Value := CoordX1
 	TaskAutomatorGui.SetFont()
-	TaskAutomatorGui.SetFont("Bold " . BlueFont . "", "Comic Sans MS")
+	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
 	if EditBoxesAvailable == true {
 		EditPosY1 := TaskAutomatorGui.Add("Edit", "vCoordY1 x65 y351 w40 h20 +Number")
 	} else {
 		EditPosY1 := TaskAutomatorGui.Add("Edit", "vCoordY1 x65 y351 w40 h20 +Number +Disabled")
 	}
-	EditPosY1.Opt("" . BackgroundDarkGrey . "")
+	EditPosY1.Opt("" . BackgroundMainColor . "")
 	TaskAutomatorGui.SetFont()
-	TaskAutomatorGui.SetFont("Bold cLime", "Comic Sans MS")
+	TaskAutomatorGui.SetFont("Bold " . MainFontColor, MainFontType)
 	EditPosY1.Value := CoordY1
 	TaskAutomatorGui.SetFont()
-	TaskAutomatorGui.SetFont("Bold " . BlueFont . "", "Comic Sans MS")
+	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
 	if EditBoxesAvailable == true {
 		EditPos1Interval := TaskAutomatorGui.Add("Edit", "vCoord1Interval x120 y351 w50 h20 +Number")
 	} else {
 		EditPos1Interval := TaskAutomatorGui.Add("Edit", "vCoord1Interval x120 y351 w50 h20 +Number +Disabled")
 	}
-	EditPos1Interval.Opt("" . BackgroundDarkGrey . "")
+	EditPos1Interval.Opt("" . BackgroundMainColor . "")
 	TaskAutomatorGui.SetFont()
-	TaskAutomatorGui.SetFont("Bold cLime", "Comic Sans MS")
+	TaskAutomatorGui.SetFont("Bold " . MainFontColor, MainFontType)
 	EditPos1Interval.Value := Coord1Interval
 	
 	RadioPos1Yes := TaskAutomatorGui.Add("Radio", "x184 y351 h20", "Y")
 	RadioPos1No := TaskAutomatorGui.Add("Radio", "x216 y351 w30 h20 +Checked", "N")
 	;----------------------------------------------------
 	TaskAutomatorGui.SetFont()
-	TaskAutomatorGui.SetFont("Bold " . BlueFont . "", "Comic Sans MS")
+	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
 	if EditBoxesAvailable == true {
 		EditPosX2 := TaskAutomatorGui.Add("Edit", "vCoordX2 x10 y376 w40 h20 +Number")
 	} else {
 		EditPosX2 := TaskAutomatorGui.Add("Edit", "vCoordX2 x10 y376 w40 h20 +Number +Disabled")
 	}
-	EditPosX2.Opt("" . BackgroundDarkGrey . "")
+	EditPosX2.Opt("" . BackgroundMainColor . "")
 	TaskAutomatorGui.SetFont()
-	TaskAutomatorGui.SetFont("Bold cLime", "Comic Sans MS")
+	TaskAutomatorGui.SetFont("Bold " . MainFontColor, MainFontType)
 	EditPosX2.Value := CoordX2
 	TaskAutomatorGui.SetFont()
-	TaskAutomatorGui.SetFont("Bold " . BlueFont . "", "Comic Sans MS")
+	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
 	if EditBoxesAvailable == true {
 		EditPosY2 := TaskAutomatorGui.Add("Edit", "vCoordY2 x65 y376 w40 h20 +Number")
 	} else {
 		EditPosY2 := TaskAutomatorGui.Add("Edit", "vCoordY2 x65 y376 w40 h20 +Number +Disabled")
 	}
-	EditPosY2.Opt("" . BackgroundDarkGrey . "")
+	EditPosY2.Opt("" . BackgroundMainColor . "")
 	TaskAutomatorGui.SetFont()
-	TaskAutomatorGui.SetFont("Bold cLime", "Comic Sans MS")
+	TaskAutomatorGui.SetFont("Bold " . MainFontColor, MainFontType)
 	EditPosY2.Value := CoordY2
 	TaskAutomatorGui.SetFont()
-	TaskAutomatorGui.SetFont("Bold " . BlueFont . "", "Comic Sans MS")
+	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
 	if EditBoxesAvailable == true {
 		EditPos2Interval := TaskAutomatorGui.Add("Edit", "vCoord2Interval x120 y376 w50 h20 +Number")
 	} else {
 		EditPos2Interval := TaskAutomatorGui.Add("Edit", "vCoord2Interval x120 y376 w50 h20 +Number +Disabled")
 	}
-	EditPos2Interval.Opt("" . BackgroundDarkGrey . "")
+	EditPos2Interval.Opt("" . BackgroundMainColor . "")
 	TaskAutomatorGui.SetFont()
-	TaskAutomatorGui.SetFont("Bold cLime", "Comic Sans MS")
+	TaskAutomatorGui.SetFont("Bold " . MainFontColor, MainFontType)
 	EditPos2Interval.Value := Coord2Interval
 	
 	RadioPos2Yes := TaskAutomatorGui.Add("Radio", "x184 y376 h20", "Y")
 	RadioPos2No := TaskAutomatorGui.Add("Radio", "x216 y376 w30 h20 +Checked", "N")
 	;----------------------------------------------------
 	TaskAutomatorGui.SetFont()
-	TaskAutomatorGui.SetFont("Bold " . BlueFont . "", "Comic Sans MS")
+	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
 	if EditBoxesAvailable == true {
 		EditPosX3 := TaskAutomatorGui.Add("Edit", "vCoordX3 x10 y401 w40 h20 +Number")
 	} else {
 		EditPosX3 := TaskAutomatorGui.Add("Edit", "vCoordX3 x10 y401 w40 h20 +Number +Disabled")
 	}
-	EditPosX3.Opt("" . BackgroundDarkGrey . "")
+	EditPosX3.Opt("" . BackgroundMainColor . "")
 	TaskAutomatorGui.SetFont()
-	TaskAutomatorGui.SetFont("Bold cLime", "Comic Sans MS")
+	TaskAutomatorGui.SetFont("Bold " . MainFontColor, MainFontType)
 	EditPosX3.Value := CoordX3
 	TaskAutomatorGui.SetFont()
-	TaskAutomatorGui.SetFont("Bold " . BlueFont . "", "Comic Sans MS")
+	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
 	if EditBoxesAvailable == true {
 		EditPosY3 := TaskAutomatorGui.Add("Edit", "vCoordY3 x65 y401 w40 h20 +Number")
 	} else {
 		EditPosY3 := TaskAutomatorGui.Add("Edit", "vCoordY3 x65 y401 w40 h20 +Number +Disabled")
 	}
-	EditPosY3.Opt("" . BackgroundDarkGrey . "")
+	EditPosY3.Opt("" . BackgroundMainColor . "")
 	TaskAutomatorGui.SetFont()
-	TaskAutomatorGui.SetFont("Bold cLime", "Comic Sans MS")
+	TaskAutomatorGui.SetFont("Bold " . MainFontColor, MainFontType)
 	EditPosY3.Value := CoordY3
 	TaskAutomatorGui.SetFont()
-	TaskAutomatorGui.SetFont("Bold " . BlueFont . "", "Comic Sans MS")
+	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
 	if EditBoxesAvailable == true {
 		EditPos3Interval := TaskAutomatorGui.Add("Edit", "vCoord3Interval x120 y401 w50 h20 +Number")
 	} else {
 		EditPos3Interval := TaskAutomatorGui.Add("Edit", "vCoord3Interval x120 y401 w50 h20 +Number +Disabled")
 	}
-	EditPos3Interval.Opt("" . BackgroundDarkGrey . "")
+	EditPos3Interval.Opt("" . BackgroundMainColor . "")
 	TaskAutomatorGui.SetFont()
-	TaskAutomatorGui.SetFont("Bold cLime", "Comic Sans MS")
+	TaskAutomatorGui.SetFont("Bold " . MainFontColor, MainFontType)
 	EditPos3Interval.Value := Coord3Interval
 	
 	RadioPos3Yes := TaskAutomatorGui.Add("Radio", "x184 y401 h20", "Y")
 	RadioPos3No := TaskAutomatorGui.Add("Radio", "x216 y401 w30 h20 +Checked", "N")
 	;----------------------------------------------------
 	TaskAutomatorGui.SetFont()
-	TaskAutomatorGui.SetFont("Bold " . BlueFont . "", "Comic Sans MS")
+	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
 	if EditBoxesAvailable == true {
 		EditPosX4 := TaskAutomatorGui.Add("Edit", "vCoordX4 x10 y426 w40 h20 +Number")
 	} else {
 		EditPosX4 := TaskAutomatorGui.Add("Edit", "vCoordX4 x10 y426 w40 h20 +Number +Disabled")
 	}
-	EditPosX4.Opt("" . BackgroundDarkGrey . "")
+	EditPosX4.Opt("" . BackgroundMainColor . "")
 	TaskAutomatorGui.SetFont()
-	TaskAutomatorGui.SetFont("Bold cLime", "Comic Sans MS")
+	TaskAutomatorGui.SetFont("Bold " . MainFontColor, MainFontType)
 	EditPosX4.Value := CoordX4
 	TaskAutomatorGui.SetFont()
-	TaskAutomatorGui.SetFont("Bold " . BlueFont . "", "Comic Sans MS")
+	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
 	if EditBoxesAvailable == true {
 		EditPosY4 := TaskAutomatorGui.Add("Edit", "vCoordY4 x65 y426 w40 h20 +Number")
 	} else {
 		EditPosY4 := TaskAutomatorGui.Add("Edit", "vCoordY4 x65 y426 w40 h20 +Number +Disabled")
 	}
-	EditPosY4.Opt("" . BackgroundDarkGrey . "")
+	EditPosY4.Opt("" . BackgroundMainColor . "")
 	TaskAutomatorGui.SetFont()
-	TaskAutomatorGui.SetFont("Bold cLime", "Comic Sans MS")
+	TaskAutomatorGui.SetFont("Bold " . MainFontColor, MainFontType)
 	EditPosY4.Value := CoordY4
 	TaskAutomatorGui.SetFont()
-	TaskAutomatorGui.SetFont("Bold " . BlueFont . "", "Comic Sans MS")
+	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
 	if EditBoxesAvailable == true {
 		EditPos4Interval := TaskAutomatorGui.Add("Edit", "vCoord4Interval x120 y426 w50 h20 +Number")
 	} else {
 		EditPos4Interval := TaskAutomatorGui.Add("Edit", "vCoord4Interval x120 y426 w50 h20 +Number +Disabled")
 	}
-	EditPos4Interval.Opt("" . BackgroundDarkGrey . "")
+	EditPos4Interval.Opt("" . BackgroundMainColor . "")
 	TaskAutomatorGui.SetFont()
-	TaskAutomatorGui.SetFont("Bold cLime", "Comic Sans MS")
+	TaskAutomatorGui.SetFont("Bold " . MainFontColor, MainFontType)
 	EditPos4Interval.Value := Coord4Interval
 	
 	RadioPos4Yes := TaskAutomatorGui.Add("Radio", "x184 y426 h20", "Y")
@@ -547,181 +729,398 @@ case SwitchClicker:
 	;----------------------------------------------------
 	TextLoop := TaskAutomatorGui.Add("Text","x10 y451 h20 +0x200", " Loop amount: ")
 	TaskAutomatorGui.SetFont()
-	TaskAutomatorGui.SetFont("Bold " . BlueFont . "", "Comic Sans MS")
+	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
 	if EditBoxesAvailable == true {
 		EditLoopTimes := TaskAutomatorGui.Add("Edit", "vLoopAmount x100 y451 w70 h20 +Number")
 	} else {
 		EditLoopTimes := TaskAutomatorGui.Add("Edit", "vLoopAmount x100 y451 w70 h20 +Number +Disabled")
 	}
-	EditLoopTimes.Opt("" . BackgroundDarkGrey . "")
+	EditLoopTimes.Opt("" . BackgroundMainColor . "")
 	TaskAutomatorGui.SetFont()
-	TaskAutomatorGui.SetFont("Bold cLime", "Comic Sans MS")
+	TaskAutomatorGui.SetFont("Bold " . MainFontColor, MainFontType)
 	EditLoopTimes.Value := LoopAmount
 	
 	RadioCountLoopsYes := TaskAutomatorGui.Add("Radio", "x184 y451 h20", "Y")
 	RadioCountLoopsNo := TaskAutomatorGui.Add("Radio", "x216 y451 w30 h20 +Checked", "N")
 	TaskAutomatorGui.Add("Text","x22 y485 h20 +0x100", " Time interval in ms (1 second = 1000) ")
-case QuickAccess:
+case SwitchQuickAccess:
 	try {
-		OptionsMenu.SetIcon("Switch &Clicker", IconLib . "\Switch2.ico")
-		OptionsMenu.SetIcon("Switch &Jumps", IconLib . "\Switch2.ico")
-		OptionsMenu.SetIcon("Quick &Access", IconLib . "\Switch1.ico")
+		OptionsMenu.SetIcon("2. Switch &Clicker", IconLib . "\Switch2.ico")
+		OptionsMenu.SetIcon("3. Switch &Jumps", IconLib . "\Switch2.ico")
+		OptionsMenu.SetIcon("1. Switch Quick &Access", IconLib . "\Switch1.ico")
+		OptionsMenu.SetIcon("4. Switch Bottom Mo&dules OFF", IconLib . "\Switch2.ico")
 	}
 	catch {
 	}
+	SwitchQuickAccess := 1
+	SwitchClicker := 0
+	SwitchJumps := 0
+	SwitchModulesOFF := 0
+	FlagReload := false
 	;----------------------------------------------------
 	TaskAutomatorGui.Add("Text", "x7 y233 h20", "1")
 	if EditBoxesAvailable == true {
 		try {
-			OptionsMenu.SetIcon("Secure Edit &Boxes && Icons: On/Off", IconLib . "\EditBox2.ico")
+			OptionsMenu.SetIcon("Switch Secure Edit &Boxes && Icons: On/Off", IconLib . "\EditBox2.ico")
 		}
 		catch {
 		}
-		TaskAutomatorGui.Add("Picture", "x18 y233 w20 h20 +border", QuickIcon1).OnEvent("Click", SelectNewIcon1)
+		try {
+			TaskAutomatorGui.Add("Picture", "x18 y233 w20 h20 +border", QuickIcon1).OnEvent("Click", SelectNewIcon1)
+		}
+		catch {
+			QuickIcon1 := ""
+			IniWrite QuickIcon1, IniFile, "QuickAccessIcons", "QuickIcon1"
+			FlagReload := true
+		}
 		EditQuickAcess1 := TaskAutomatorGui.Add("Edit", "vQuickAccess1 x45 y233 w160 h20")
 	} else {
 		try {
-			OptionsMenu.SetIcon("Secure Edit &Boxes && Icons: On/Off", IconLib . "\EditBox1.ico")
+			OptionsMenu.SetIcon("Switch Secure Edit &Boxes && Icons: On/Off", IconLib . "\EditBox1.ico")
 		}
 		catch {
 		}
-		TaskAutomatorGui.Add("Picture", "x18 y233 w20 h20 +border", QuickIcon1)
+		try {
+			TaskAutomatorGui.Add("Picture", "x18 y233 w20 h20 +border", QuickIcon1)
+		}
+		catch {
+			QuickIcon1 := ""
+			IniWrite QuickIcon1, IniFile, "QuickAccessIcons", "QuickIcon1"
+			FlagReload := true
+		}
 		EditQuickAcess1 := TaskAutomatorGui.Add("Edit", "vQuickAccess1 x45 y233 w160 h20 +Disabled")
 	}
-	EditQuickAcess1.Opt("" . BackgroundDarkGrey . "")
+	EditQuickAcess1.Opt("" . BackgroundMainColor . "")
 	EditQuickAcess1.Value := QuickAccess1
-	if SecureMode == true {
-		QuickAccessHk1 := TaskAutomatorGui.Add("Hotkey", "vQuickAccessHk1 x210 y233 w30 h20 +disabled", QuickAccessHk1)
+	if QuickAccessButtons == true {
+		OptionsMenu.SetIcon("1b. Switch &Quick Access Hotkeys/Buttons", IconLib . "\Switch1.ico")
+		QuickAccessButton1 := TaskAutomatorGui.Add("Button", "x210 y233 w30 h20", "Go!")
+		QuickAccessButton1.OnEvent("Click", ProccessQuickAccessButton1) 
 	} else {
-		QuickAccessHk1 := TaskAutomatorGui.Add("Hotkey", "vQuickAccessHk1 x210 y233 w30 h20", QuickAccessHk1).OnEvent("Change", SubmitQuickAccess)
+		OptionsMenu.SetIcon("1b. Switch &Quick Access Hotkeys/Buttons", IconLib . "\Switch2.ico")
+		if SecureMode == true {
+			QuickAccessHk1 := TaskAutomatorGui.Add("Hotkey", "vQuickAccessHk1 x210 y233 w30 h20 +disabled", QuickAccessHk1)
+		} else {
+			QuickAccessHk1 := TaskAutomatorGui.Add("Hotkey", "vQuickAccessHk1 x210 y233 w30 h20", QuickAccessHk1).OnEvent("Change", SubmitQuickAccess)
+		}
 	}
 	;----------------------------------------------------
 	TaskAutomatorGui.Add("Text", "x7 y264 h20", "2")
 	if EditBoxesAvailable == true {
-		TaskAutomatorGui.Add("Picture", "x18 y264 w20 h20 +border", QuickIcon2).OnEvent("Click", SelectNewIcon2)
+		try {
+			TaskAutomatorGui.Add("Picture", "x18 y264 w20 h20 +border", QuickIcon2).OnEvent("Click", SelectNewIcon2)
+		}
+		catch {
+			QuickIcon2 := ""
+			IniWrite QuickIcon2, IniFile, "QuickAccessIcons", "QuickIcon2"
+			FlagReload := true
+		}
 		EditQuickAcess2 := TaskAutomatorGui.Add("Edit", "vQuickAccess2 x45 y264 w160 h20")
 	} else {
-		TaskAutomatorGui.Add("Picture", "x18 y264 w20 h20 +border", QuickIcon2)
+		try {
+			TaskAutomatorGui.Add("Picture", "x18 y264 w20 h20 +border", QuickIcon2)
+		}
+		catch {
+			QuickIcon2 := ""
+			IniWrite QuickIcon2, IniFile, "QuickAccessIcons", "QuickIcon2"
+			FlagReload := true
+		}
 		EditQuickAcess2 := TaskAutomatorGui.Add("Edit", "vQuickAccess2 x45 y264 w160 h20 +Disabled")
 	}
-	EditQuickAcess2.Opt("" . BackgroundDarkGrey . "")
+	EditQuickAcess2.Opt("" . BackgroundMainColor . "")
 	EditQuickAcess2.Value := QuickAccess2
-	if SecureMode == true {
-		QuickAccessHk2 := TaskAutomatorGui.Add("Hotkey", "vQuickAccessHk2 x210 y264 w30 h20 +disabled", QuickAccessHk2)
+	if QuickAccessButtons == true {
+		QuickAccessButton2 := TaskAutomatorGui.Add("Button", "x210 y264 w30 h20", "Go!")
+		QuickAccessButton2.OnEvent("Click", ProccessQuickAccessButton2) 
 	} else {
-		QuickAccessHk2 := TaskAutomatorGui.Add("Hotkey", "vQuickAccessHk2 x210 y264 w30 h20", QuickAccessHk2).OnEvent("Change", SubmitQuickAccess)
+		if SecureMode == true {
+			QuickAccessHk2 := TaskAutomatorGui.Add("Hotkey", "vQuickAccessHk2 x210 y264 w30 h20 +disabled", QuickAccessHk2)
+		} else {
+			QuickAccessHk2 := TaskAutomatorGui.Add("Hotkey", "vQuickAccessHk2 x210 y264 w30 h20", QuickAccessHk2).OnEvent("Change", SubmitQuickAccess)
+		}
 	}
 	;----------------------------------------------------
 	TaskAutomatorGui.Add("Text", "x7 y295 h20", "3")
 	if EditBoxesAvailable == true {
-		TaskAutomatorGui.Add("Picture", "x18 y295 w20 h20 +border", QuickIcon3).OnEvent("Click", SelectNewIcon3)
+		try {
+			TaskAutomatorGui.Add("Picture", "x18 y295 w20 h20 +border", QuickIcon3).OnEvent("Click", SelectNewIcon3)
+		}
+		catch {
+			QuickIcon3 := ""
+			IniWrite QuickIcon3, IniFile, "QuickAccessIcons", "QuickIcon3"
+			FlagReload := true
+		}
 		EditQuickAcess3 := TaskAutomatorGui.Add("Edit", "vQuickAccess3 x45 y295 w160 h20")
 	} else {
-		TaskAutomatorGui.Add("Picture", "x18 y295 w20 h20 +border", QuickIcon3)
+		try {
+			TaskAutomatorGui.Add("Picture", "x18 y295 w20 h20 +border", QuickIcon3)
+		}
+		catch {
+			QuickIcon3 := ""
+			IniWrite QuickIcon3, IniFile, "QuickAccessIcons", "QuickIcon3"
+			FlagReload := true
+		}
 		EditQuickAcess3 := TaskAutomatorGui.Add("Edit", "vQuickAccess3 x45 y295 w160 h20 +Disabled")
 	}
-	EditQuickAcess3.Opt("" . BackgroundDarkGrey . "")
+	EditQuickAcess3.Opt("" . BackgroundMainColor . "")
 	EditQuickAcess3.Value := QuickAccess3
-	if SecureMode == true {
-		QuickAccessHk3 := TaskAutomatorGui.Add("Hotkey", "vQuickAccessHk3 x210 y295 w30 h20 +disabled", QuickAccessHk3)
+	if QuickAccessButtons == true {
+		QuickAccessButton3 := TaskAutomatorGui.Add("Button", "x210 y295 w30 h20", "Go!")
+		QuickAccessButton3.OnEvent("Click", ProccessQuickAccessButton3) 
 	} else {
-		QuickAccessHk3 := TaskAutomatorGui.Add("Hotkey", "vQuickAccessHk3 x210 y295 w30 h20", QuickAccessHk3).OnEvent("Change", SubmitQuickAccess)
+		if SecureMode == true {
+			QuickAccessHk3 := TaskAutomatorGui.Add("Hotkey", "vQuickAccessHk3 x210 y295 w30 h20 +disabled", QuickAccessHk3)
+		} else {
+			QuickAccessHk3 := TaskAutomatorGui.Add("Hotkey", "vQuickAccessHk3 x210 y295 w30 h20", QuickAccessHk3).OnEvent("Change", SubmitQuickAccess)
+		}
 	}
 	;----------------------------------------------------
 	TaskAutomatorGui.Add("Text", "x7 y326 h20", "4")
 	if EditBoxesAvailable == true {
-		TaskAutomatorGui.Add("Picture", "x18 y326 w20 h20 +border", QuickIcon4).OnEvent("Click", SelectNewIcon4)
+		try {
+			TaskAutomatorGui.Add("Picture", "x18 y326 w20 h20 +border", QuickIcon4).OnEvent("Click", SelectNewIcon4)
+		}
+		catch {
+			QuickIcon4 := ""
+			IniWrite QuickIcon4, IniFile, "QuickAccessIcons", "QuickIcon4"
+			FlagReload := true
+		}
 		EditQuickAcess4 := TaskAutomatorGui.Add("Edit", "vQuickAccess4 x45 y326 w160 h20")
 	} else {
-		TaskAutomatorGui.Add("Picture", "x18 y326 w20 h20 +border", QuickIcon4)
+		try {
+			TaskAutomatorGui.Add("Picture", "x18 y326 w20 h20 +border", QuickIcon4)
+		}
+		catch {
+			QuickIcon4 := ""
+			IniWrite QuickIcon4, IniFile, "QuickAccessIcons", "QuickIcon4"
+			FlagReload := true
+		}
 		EditQuickAcess4 := TaskAutomatorGui.Add("Edit", "vQuickAccess4 x45 y326 w160 h20 +Disabled")
 	}
-	EditQuickAcess4.Opt("" . BackgroundDarkGrey . "")
+	EditQuickAcess4.Opt("" . BackgroundMainColor . "")
 	EditQuickAcess4.Value := QuickAccess4
-	if SecureMode == true {
-		QuickAccessHk4 := TaskAutomatorGui.Add("Hotkey", "vQuickAccessHk4 x210 y326 w30 h20 +disabled", QuickAccessHk4)
+	if QuickAccessButtons == true {
+		QuickAccessButton4 := TaskAutomatorGui.Add("Button", "x210 y326 w30 h20", "Go!")
+		QuickAccessButton4.OnEvent("Click", ProccessQuickAccessButton4) 
 	} else {
-		QuickAccessHk4 := TaskAutomatorGui.Add("Hotkey", "vQuickAccessHk4 x210 y326 w30 h20", QuickAccessHk4).OnEvent("Change", SubmitQuickAccess)
+		if SecureMode == true {
+			QuickAccessHk4 := TaskAutomatorGui.Add("Hotkey", "vQuickAccessHk4 x210 y326 w30 h20 +disabled", QuickAccessHk4)
+		} else {
+			QuickAccessHk4 := TaskAutomatorGui.Add("Hotkey", "vQuickAccessHk4 x210 y326 w30 h20", QuickAccessHk4).OnEvent("Change", SubmitQuickAccess)
+		}
 	}
 	;----------------------------------------------------
 	TaskAutomatorGui.Add("Text", "x7 y357 h20", "5")
 	if EditBoxesAvailable == true {
-		TaskAutomatorGui.Add("Picture", "x18 y357 w20 h20 +border", QuickIcon5).OnEvent("Click", SelectNewIcon5)
+		try {
+			TaskAutomatorGui.Add("Picture", "x18 y357 w20 h20 +border", QuickIcon5).OnEvent("Click", SelectNewIcon5)
+		}
+		catch {
+			QuickIcon5 := ""
+			IniWrite QuickIcon5, IniFile, "QuickAccessIcons", "QuickIcon5"
+			FlagReload := true
+		}
 		EditQuickAcess5 := TaskAutomatorGui.Add("Edit", "vQuickAccess5 x45 y357 w160 h20")
 	} else {
-		TaskAutomatorGui.Add("Picture", "x18 y357 w20 h20 +border", QuickIcon5)
+		try {
+			TaskAutomatorGui.Add("Picture", "x18 y357 w20 h20 +border", QuickIcon5)
+		}
+		catch {
+			QuickIcon5 := ""
+			IniWrite QuickIcon5, IniFile, "QuickAccessIcons", "QuickIcon5"
+			FlagReload := true
+		}
 		EditQuickAcess5 := TaskAutomatorGui.Add("Edit", "vQuickAccess5 x45 y357 w160 h20 +Disabled")
 	}
-	EditQuickAcess5.Opt("" . BackgroundDarkGrey . "")
+	EditQuickAcess5.Opt("" . BackgroundMainColor . "")
 	EditQuickAcess5.Value := QuickAccess5
-	if SecureMode == true {
-		QuickAccessHk5 := TaskAutomatorGui.Add("Hotkey", "vQuickAccessHk5 x210 y357 w30 h20 +disabled", QuickAccessHk5)
+	if QuickAccessButtons == true {
+		QuickAccessButton5 := TaskAutomatorGui.Add("Button", "x210 y357 w30 h20", "Go!")
+		QuickAccessButton5.OnEvent("Click", ProccessQuickAccessButton5) 
 	} else {
-		QuickAccessHk5 := TaskAutomatorGui.Add("Hotkey", "vQuickAccessHk5 x210 y357 w30 h20", QuickAccessHk5).OnEvent("Change", SubmitQuickAccess)
+		if SecureMode == true {
+			QuickAccessHk5 := TaskAutomatorGui.Add("Hotkey", "vQuickAccessHk5 x210 y357 w30 h20 +disabled", QuickAccessHk5)
+		} else {
+			QuickAccessHk5 := TaskAutomatorGui.Add("Hotkey", "vQuickAccessHk5 x210 y357 w30 h20", QuickAccessHk5).OnEvent("Change", SubmitQuickAccess)
+		}
 	}
 	;----------------------------------------------------
 	TaskAutomatorGui.Add("Text", "x7 y388 h20", "6")
 	if EditBoxesAvailable == true {
-		TaskAutomatorGui.Add("Picture", "x18 y388 w20 h20 +border", QuickIcon6).OnEvent("Click", SelectNewIcon6)
+		try {
+			TaskAutomatorGui.Add("Picture", "x18 y388 w20 h20 +border", QuickIcon6).OnEvent("Click", SelectNewIcon6)
+		}
+		catch {
+			QuickIcon6 := ""
+			IniWrite QuickIcon6, IniFile, "QuickAccessIcons", "QuickIcon6"
+			FlagReload := true
+		}
 		EditQuickAcess6 := TaskAutomatorGui.Add("Edit", "vQuickAccess6 x45 y388 w160 h20")
 	} else {
-		TaskAutomatorGui.Add("Picture", "x18 y388 w20 h20 +border", QuickIcon6)
+		try {
+			TaskAutomatorGui.Add("Picture", "x18 y388 w20 h20 +border", QuickIcon6)
+		}
+		catch {
+			QuickIcon6 := ""
+			IniWrite QuickIcon6, IniFile, "QuickAccessIcons", "QuickIcon6"
+			FlagReload := true
+		}
 		EditQuickAcess6 := TaskAutomatorGui.Add("Edit", "vQuickAccess6 x45 y388 w160 h20 +Disabled")
 	}
-	EditQuickAcess6.Opt("" . BackgroundDarkGrey . "")
+	EditQuickAcess6.Opt("" . BackgroundMainColor . "")
 	EditQuickAcess6.Value := QuickAccess6
-	if SecureMode == true {
-		QuickAccessHk6 := TaskAutomatorGui.Add("Hotkey", "vQuickAccessHk6 x210 y388 w30 h20 +disabled", QuickAccessHk6)
+	if QuickAccessButtons == true {
+		QuickAccessButton6 := TaskAutomatorGui.Add("Button", "x210 y388 w30 h20", "Go!")
+		QuickAccessButton6.OnEvent("Click", ProccessQuickAccessButton6) 
 	} else {
-		QuickAccessHk6 := TaskAutomatorGui.Add("Hotkey", "vQuickAccessHk6 x210 y388 w30 h20", QuickAccessHk6).OnEvent("Change", SubmitQuickAccess)
+		if SecureMode == true {
+			QuickAccessHk6 := TaskAutomatorGui.Add("Hotkey", "vQuickAccessHk6 x210 y388 w30 h20 +disabled", QuickAccessHk6)
+		} else {
+			QuickAccessHk6 := TaskAutomatorGui.Add("Hotkey", "vQuickAccessHk6 x210 y388 w30 h20", QuickAccessHk6).OnEvent("Change", SubmitQuickAccess)
+		}
 	}
 	;----------------------------------------------------
 	TaskAutomatorGui.Add("Text", "x7 y419 h20", "7")
 	if EditBoxesAvailable == true {
-		TaskAutomatorGui.Add("Picture", "x18 y419 w20 h20 +border", QuickIcon7).OnEvent("Click", SelectNewIcon7)
+		try {
+			TaskAutomatorGui.Add("Picture", "x18 y419 w20 h20 +border", QuickIcon7).OnEvent("Click", SelectNewIcon7)
+		}
+		catch {
+			QuickIcon7 := ""
+			IniWrite QuickIcon7, IniFile, "QuickAccessIcons", "QuickIcon7"
+			FlagReload := true
+		}
 		EditQuickAcess7 := TaskAutomatorGui.Add("Edit", "vQuickAccess7 x45 y419 w160 h20")
 	} else {
-		TaskAutomatorGui.Add("Picture", "x18 y419 w20 h20 +border", QuickIcon7)
+		try {
+			TaskAutomatorGui.Add("Picture", "x18 y419 w20 h20 +border", QuickIcon7)
+		}
+		catch {
+			QuickIcon7 := ""
+			IniWrite QuickIcon7, IniFile, "QuickAccessIcons", "QuickIcon7"
+			FlagReload := true
+		}
 		EditQuickAcess7 := TaskAutomatorGui.Add("Edit", "vQuickAccess7 x45 y419 w160 h20 +Disabled")
 	}
-	EditQuickAcess7.Opt("" . BackgroundDarkGrey . "")
+	EditQuickAcess7.Opt("" . BackgroundMainColor . "")
 	EditQuickAcess7.Value := QuickAccess7
-	if SecureMode == true {
-		QuickAccessHk7 := TaskAutomatorGui.Add("Hotkey", "vQuickAccessHk7 x210 y419 w30 h20 +disabled", QuickAccessHk7)
+	if QuickAccessButtons == true {
+		QuickAccessButton7 := TaskAutomatorGui.Add("Button", "x210 y419 w30 h20", "Go!")
+		QuickAccessButton7.OnEvent("Click", ProccessQuickAccessButton7) 
 	} else {
-		QuickAccessHk7 := TaskAutomatorGui.Add("Hotkey", "vQuickAccessHk7 x210 y419 w30 h20", QuickAccessHk7).OnEvent("Change", SubmitQuickAccess)
+		if SecureMode == true {
+			QuickAccessHk7 := TaskAutomatorGui.Add("Hotkey", "vQuickAccessHk7 x210 y419 w30 h20 +disabled", QuickAccessHk7)
+		} else {
+			QuickAccessHk7 := TaskAutomatorGui.Add("Hotkey", "vQuickAccessHk7 x210 y419 w30 h20", QuickAccessHk7).OnEvent("Change", SubmitQuickAccess)
+		}
 	}
 	;----------------------------------------------------
 	TaskAutomatorGui.Add("Text", "x7 y450 h20", "8")
 	if EditBoxesAvailable == true {
-		TaskAutomatorGui.Add("Picture", "x18 y450 w20 h20 +border", QuickIcon8).OnEvent("Click", SelectNewIcon8)
+		try {
+			TaskAutomatorGui.Add("Picture", "x18 y450 w20 h20 +border", QuickIcon8).OnEvent("Click", SelectNewIcon8)
+		}
+		catch {
+			QuickIcon8 := ""
+			IniWrite QuickIcon8, IniFile, "QuickAccessIcons", "QuickIcon8"
+			FlagReload := true
+		}
 		EditQuickAcess8 := TaskAutomatorGui.Add("Edit", "vQuickAccess8 x45 y450 w160 h20")
 	} else {
-		TaskAutomatorGui.Add("Picture", "x18 y450 w20 h20 +border", QuickIcon8)
+		try {
+			TaskAutomatorGui.Add("Picture", "x18 y450 w20 h20 +border", QuickIcon8)
+		}
+		catch {
+			QuickIcon8 := ""
+			IniWrite QuickIcon8, IniFile, "QuickAccessIcons", "QuickIcon8"
+			FlagReload := true
+		}
 		EditQuickAcess8 := TaskAutomatorGui.Add("Edit", "vQuickAccess8 x45 y450 w160 h20 +Disabled")
 	}
-	EditQuickAcess8.Opt("" . BackgroundDarkGrey . "")
+	EditQuickAcess8.Opt("" . BackgroundMainColor . "")
 	EditQuickAcess8.Value := QuickAccess8
-	if SecureMode == true {
-		QuickAccessHk8 := TaskAutomatorGui.Add("Hotkey", "vQuickAccessHk8 x210 y450 w30 h20 +disabled", QuickAccessHk8)
+	if QuickAccessButtons == true {
+		QuickAccessButton8 := TaskAutomatorGui.Add("Button", "x210 y450 w30 h20", "Go!")
+		QuickAccessButton8.OnEvent("Click", ProccessQuickAccessButton8) 
 	} else {
-		QuickAccessHk8 := TaskAutomatorGui.Add("Hotkey", "vQuickAccessHk8 x210 y450 w30 h20", QuickAccessHk8).OnEvent("Change", SubmitQuickAccess)
+		if SecureMode == true {
+			QuickAccessHk8 := TaskAutomatorGui.Add("Hotkey", "vQuickAccessHk8 x210 y450 w30 h20 +disabled", QuickAccessHk8)
+		} else {
+			QuickAccessHk8 := TaskAutomatorGui.Add("Hotkey", "vQuickAccessHk8 x210 y450 w30 h20", QuickAccessHk8).OnEvent("Change", SubmitQuickAccess)
+		}
 	}
 	;----------------------------------------------------
 	TaskAutomatorGui.Add("Text", "x7 y481 h20", "9")
 	if EditBoxesAvailable == true {
-		TaskAutomatorGui.Add("Picture", "x18 y481 w20 h20 +border", QuickIcon9).OnEvent("Click", SelectNewIcon9)
+		try {
+			TaskAutomatorGui.Add("Picture", "x18 y481 w20 h20 +border", QuickIcon9).OnEvent("Click", SelectNewIcon9)
+		}
+		catch {
+			QuickIcon9 := ""
+			IniWrite QuickIcon9, IniFile, "QuickAccessIcons", "QuickIcon9"
+			FlagReload := true
+		}
 		EditQuickAcess9 := TaskAutomatorGui.Add("Edit", "vQuickAccess9 x45 y481 w160 h20")
 	} else {
-		TaskAutomatorGui.Add("Picture", "x18 y481 w20 h20 +border", QuickIcon9)
+		try {
+			TaskAutomatorGui.Add("Picture", "x18 y481 w20 h20 +border", QuickIcon9)
+		}
+		catch {
+			QuickIcon9 := ""
+			IniWrite QuickIcon9, IniFile, "QuickAccessIcons", "QuickIcon9"
+			FlagReload := true
+		}
 		EditQuickAcess9 := TaskAutomatorGui.Add("Edit", "vQuickAccess9 x45 y481 w160 h20 +Disabled")
 	}
-	EditQuickAcess9.Opt("" . BackgroundDarkGrey . "")
+	if FlagReload == true {
+		Reload
+	}
+	EditQuickAcess9.Opt("" . BackgroundMainColor . "")
 	EditQuickAcess9.Value := QuickAccess9
-	if SecureMode == true {
-		QuickAccessHk9 := TaskAutomatorGui.Add("Hotkey", "vQuickAccessHk9 x210 y481 w30 h20 +disabled", QuickAccessHk9)
+	if QuickAccessButtons == true {
+		QuickAccessButton9 := TaskAutomatorGui.Add("Button", "x210 y481 w30 h20", "Go!")
+		QuickAccessButton9.OnEvent("Click", ProccessQuickAccessButton9) 
 	} else {
-		QuickAccessHk9 := TaskAutomatorGui.Add("Hotkey", "vQuickAccessHk9 x210 y481 w30 h20", QuickAccessHk9).OnEvent("Change", SubmitQuickAccess)
+		if SecureMode == true {
+			QuickAccessHk9 := TaskAutomatorGui.Add("Hotkey", "vQuickAccessHk9 x210 y481 w30 h20 +disabled", QuickAccessHk9)
+		} else {
+			QuickAccessHk9 := TaskAutomatorGui.Add("Hotkey", "vQuickAccessHk9 x210 y481 w30 h20", QuickAccessHk9).OnEvent("Change", SubmitQuickAccess)
+		}
+	}
+case SwitchModulesOFF:
+	try {
+		OptionsMenu.SetIcon("2. Switch &Clicker", IconLib . "\Switch2.ico")
+		OptionsMenu.SetIcon("3. Switch &Jumps", IconLib . "\Switch2.ico")
+		OptionsMenu.SetIcon("1. Switch Quick &Access", IconLib . "\Switch2.ico")
+		OptionsMenu.SetIcon("Switch Secure Edit &Boxes && Icons: On/Off", IconLib . "\EditBox2.ico")
+		OptionsMenu.SetIcon("4. Switch Bottom Mo&dules OFF", IconLib . "\Switch1.ico")
+	}
+	catch {
+	}
+	SwitchQuickAccess := 0
+	SwitchClicker := 0
+	SwitchJumps := 0
+	SwitchModulesOFF := 1
+	if EditBoxesAvailable == true {
+		OptionsMenu.SetIcon("Switch Secure Edit &Boxes && Icons: On/Off", IconLib . "\EditBox2.ico")
+		try {
+			TaskAutomatorGui.Add("Picture", "x9 y230 w230 h271 +border", BottomPicture).OnEvent("Click", SelectBottomPicture)
+		}
+		catch {
+			BottomPicture := ""
+			IniWrite BottomPicture, IniFile, "Pictures", "BottomPicture"
+			Reload
+		}
+	} else {
+		OptionsMenu.SetIcon("Switch Secure Edit &Boxes && Icons: On/Off", IconLib . "\EditBox1.ico")
+		try {
+			TaskAutomatorGui.Add("Picture", "x9 y230 w230 h271 +border", BottomPicture)
+		}
+		catch {
+			BottomPicture := ""
+			IniWrite BottomPicture, IniFile, "Pictures", "BottomPicture"
+			Reload
+		}
 	}
 }
 ;----------------------------------------------------
@@ -915,8 +1314,9 @@ case LicenseKeyInFile != LicenseKey:
 	ExitApp(2)
 }
 ;----------------------------------------------------
-Hotkey Saved.StartAutoRunHotkey, (ThisHotkey) => ProcessRunWalkHotkey(RunSelected := true, ThisHotkey)
-
+if SwitchKbAutoRun == true {
+	Hotkey Saved.StartAutoRunHotkey, (ThisHotkey) => ProcessRunWalkHotkey(RunSelected := true, ThisHotkey)
+}
 Switch true {
 case SwitchJumps:
 	Hotkey Saved.JumpHotkey0, (ThisHotkey) => ProcessJumpHotkey0(ThisHotkey)
@@ -926,47 +1326,70 @@ case SwitchJumps:
 	Hotkey Saved.JumpHotkey4, (ThisHotkey) => ProcessJumpHotkey4(ThisHotkey)
 case SwitchClicker:
 	Hotkey Saved.PatternClickerHotkey, (ThisHotkey) => ProcessPatternClicker(ThisHotkey)
-case QuickAccess:
-	Hotkey Saved.QuickAccessHk1, (ThisHotkey) => ProcessQuickAccess(ThisHotkey)
-	Hotkey Saved.QuickAccessHk2, (ThisHotkey) => ProcessQuickAccess(ThisHotkey)
-	Hotkey Saved.QuickAccessHk3, (ThisHotkey) => ProcessQuickAccess(ThisHotkey)
-	Hotkey Saved.QuickAccessHk4, (ThisHotkey) => ProcessQuickAccess(ThisHotkey)
-	Hotkey Saved.QuickAccessHk5, (ThisHotkey) => ProcessQuickAccess(ThisHotkey)
-	Hotkey Saved.QuickAccessHk6, (ThisHotkey) => ProcessQuickAccess(ThisHotkey)
-	Hotkey Saved.QuickAccessHk7, (ThisHotkey) => ProcessQuickAccess(ThisHotkey)
-	Hotkey Saved.QuickAccessHk8, (ThisHotkey) => ProcessQuickAccess(ThisHotkey)
-	Hotkey Saved.QuickAccessHk9, (ThisHotkey) => ProcessQuickAccess(ThisHotkey)
+case SwitchQuickAccess:
+	if QuickAccessButtons == false {
+		Hotkey Saved.QuickAccessHk1, (ThisHotkey) => ProcessQuickAccess(ThisHotkey)
+		Hotkey Saved.QuickAccessHk2, (ThisHotkey) => ProcessQuickAccess(ThisHotkey)
+		Hotkey Saved.QuickAccessHk3, (ThisHotkey) => ProcessQuickAccess(ThisHotkey)
+		Hotkey Saved.QuickAccessHk4, (ThisHotkey) => ProcessQuickAccess(ThisHotkey)
+		Hotkey Saved.QuickAccessHk5, (ThisHotkey) => ProcessQuickAccess(ThisHotkey)
+		Hotkey Saved.QuickAccessHk6, (ThisHotkey) => ProcessQuickAccess(ThisHotkey)
+		Hotkey Saved.QuickAccessHk7, (ThisHotkey) => ProcessQuickAccess(ThisHotkey)
+		Hotkey Saved.QuickAccessHk8, (ThisHotkey) => ProcessQuickAccess(ThisHotkey)
+		Hotkey Saved.QuickAccessHk9, (ThisHotkey) => ProcessQuickAccess(ThisHotkey)
+	}
+case SwitchModulesOFF:
 }
 ;----------------------------------------------------
 ExitMsg(*){
 	ShowExit:
-		Exitmsg := Gui("+AlwaysOnTop")
-		Exitmsg.BackColor := "0x2F2F2F"
+		if GuiPriorityAlwaysOnTop == true {
+			Exitmsg := Gui("+AlwaysOnTop")
+		} else {
+			Exitmsg := Gui()
+		}
+		Exitmsg.BackColor := "0x" . BackgroundColor
+		MessageBackgroundPicture := IniRead(IniFile, "Background", "MessageBackgroundPicture")
+		if MessageBackgroundPicture == "" {
+			try {
+				Exitmsg.Add("Picture", "x0 y0 w470 h240 +BackgroundTrans", ImageLib . DefaultMsgBackgroundImage)
+			}
+			catch {
+			}
+		} else {
+			try {
+				Exitmsg.Add("Picture", "x0 y0 w470 h240 +BackgroundTrans", MessageBackgroundPicture)
+			}
+			catch {
+				MessageBackgroundPicture := ""
+				IniWrite MessageBackgroundPicture, IniFile, "Background", "MessageBackgroundPicture"
+				Reload
+			}
+		}
 		try {
-			Exitmsg.Add("Picture", "x-32 y0 w712 h300", ImageLib . "\MLTABackground2.png")
-			Exitmsg.Add("Picture", "x9 y14 w64 h64 +border", IconLib . "\ML-TA.ico")
+			Exitmsg.Add("Picture", "x9 y14 w64 h64 +border", IconLib . MLSoftwareIcon)
 		}
 		catch {
 		}
-		Exitmsg.SetFont("s20 W700 Q4 cLime", "Georgia")
+		Exitmsg.SetFont("s20 W700 Q4 " . MessageAppNameFontColor, MessageAppNameFontType)
 		Exitmsg.Add("Text", "x80 y8", AppName)
-		Exitmsg.SetFont("s9 cLime", "Comic Sans MS")
+		Exitmsg.SetFont("s9 " . MessageFontColor, MessageFontType)
 		Exitmsg.Add("Text", "x80 y45", "Mean Little's Task Automator v" CurrentVersion)
 		Exitmsg.Add("Text", "x80 y65", "License key: ")
 		Exitmsg.SetFont()
-		Exitmsg.SetFont("s7 Bold " . BlueFont . "", "Comic Sans MS")
-		Exitmsg.Add("Text", "x160 y68", LicenseKey)
+		Exitmsg.SetFont("s8 Bold " . LicenseKeyFontColor, LicenseKeyFontType)
+		Exitmsg.Add("Text", "x160 y65", LicenseKey)
 		Exitmsg.Add("Text", "x0 y90 w470 h1 +0x5")
 		Exitmsg.SetFont()
-		Exitmsg.SetFont("s12 cLime", "Comic Sans MS")
+		Exitmsg.SetFont("s12 " . MessageMainMsgFontColor, MessageMainMsgFontType)
 		Exitmsg.Add("Text", "x80 y110", "ML Task Automator will close in " ExitMessageTimeWait / 1000 " seconds")
         Exitmsg.Add("Text", "x175 y140", "Have a nice day!")
 		Exitmsg.SetFont()
-		Exitmsg.SetFont("s9 cLime", "Comic Sans MS")
+		Exitmsg.SetFont("s9 " . MessageFontColor, MessageFontType)
 		Exitmsg.Add("Text", "x0 y180 w470 h1 +0x5")
 		Exitmsg.Add("Text", "x100 y190", "Copyright 2024 FDJ-Dash. All Rights Reserved.")
 		Exitmsg.SetFont()
-		Exitmsg.SetFont("s8 cLime", "Comic Sans MS")
+		Exitmsg.SetFont("s8 " . MessageFontColor, MessageFontType)
 		Exitmsg.Add("Text", "x120 y212", "Made with AutoHotkey V" A_AhkVersion . " " . (1 ? "Unicode" : "ANSI") . " " . (A_PtrSize == 8 ? "64-bit" : "32-bit"))
         Exitmsg.Title := "Goodbye!"
         Exitmsg.Show("w470 h240")
@@ -976,33 +1399,53 @@ ExitMsg(*){
 ;----------------------------------------------------
 InvalidLicenseMsg(*){
 	ShowLicense:
-        InvLicMsg := Gui("+AlwaysOnTop")
-		InvLicMsg.BackColor := "0x2F2F2F"
+		if GuiPriorityAlwaysOnTop == true {
+			InvLicMsg := Gui("+AlwaysOnTop")
+		} else {
+			InvLicMsg := Gui()
+		}
+		InvLicMsg.BackColor := "0x" . BackgroundColor
+		MessageBackgroundPicture := IniRead(IniFile, "Background", "MessageBackgroundPicture")
+		if MessageBackgroundPicture == "" {
+			try {
+				InvLicMsg.Add("Picture", "x0 y0 w470 h240", ImageLib . DefaultMsgBackgroundImage)
+			}
+			catch {
+			}
+		} else {
+			try {
+				InvLicMsg.Add("Picture", "x0 y0 w470 h240", MessageBackgroundPicture)
+			}
+			catch {
+				MessageBackgroundPicture := ""
+				IniWrite MessageBackgroundPicture, IniFile, "Background", "MessageBackgroundPicture"
+				Reload
+			}
+		}
 		try {
-			InvLicMsg.Add("Picture", "x-32 y0 w712 h300", ImageLib . "\MLTABackground2.png")
-			InvLicMsg.Add("Picture", "x9 y14 w64 h64 +border", IconLib . "\ML-TA.ico")
+			InvLicMsg.Add("Picture", "x9 y14 w64 h64 +border", IconLib . MLSoftwareIcon)
 		}
 		catch {
 		}
-		InvLicMsg.SetFont("s20 W700 Q4 cLime", "Georgia")
+		InvLicMsg.SetFont("s20 W700 Q4 " . MessageAppNameFontColor, MessageAppNameFontType)
         InvLicMsg.Add("Text", "x80 y8", AppName)
-		InvLicMsg.SetFont("s9 cLime", "Comic Sans MS")
+		InvLicMsg.SetFont("s9 " . MessageFontColor, MessageFontType)
 		InvLicMsg.Add("Text", "x80 y45", "Mean Little's Task Automator v" CurrentVersion)
 		InvLicMsg.Add("Text", "x80 y65", "License key: ")
 		InvLicMsg.SetFont()
-		InvLicMsg.SetFont("s7 Bold cRed", "Comic Sans MS")
-		InvLicMsg.Add("Text", "x160 y68", "???")
+		InvLicMsg.SetFont("s8 Bold cRed", LicenseKeyFontType)
+		InvLicMsg.Add("Text", "x160 y65", "???")
 		InvLicMsg.Add("Text", "x0 y90 w470 h1 +0x5")
 		InvLicMsg.SetFont()
-		InvLicMsg.SetFont("s12 cRed", "Comic Sans MS")
+		InvLicMsg.SetFont("s12 cRed", MessageMainMsgFontType)
 		InvLicMsg.Add("Text", "x167 y110", "Invalid License Key")
         InvLicMsg.Add("Text", "x80 y140", "ML Task Automator will close in " ExitMessageTimeWait / 1000 " seconds")
 		InvLicMsg.SetFont()
-		InvLicMsg.SetFont("s9 cLime", "Comic Sans MS")
+		InvLicMsg.SetFont("s9 " . MessageFontColor, MessageFontType)
 		InvLicMsg.Add("Text", "x0 y180 w470 h1 +0x5")
 		InvLicMsg.Add("Text", "x100 y190", "Copyright 2024 FDJ-Dash. All Rights Reserved.")
 		InvLicMsg.SetFont()
-		InvLicMsg.SetFont("s8 cLime", "Comic Sans MS")
+		InvLicMsg.SetFont("s8 " . MessageFontColor, MessageFontType)
 		InvLicMsg.Add("Text", "x120 y212", "Made with AutoHotkey V" A_AhkVersion . " " . (1 ? "Unicode" : "ANSI") . " " . (A_PtrSize == 8 ? "64-bit" : "32-bit"))
         InvLicMsg.Title := "Invalid License Key!"
         InvLicMsg.Show("w470 h240")
@@ -1012,33 +1455,53 @@ InvalidLicenseMsg(*){
 ;----------------------------------------------------
 LicenseFileMissingMsg(*){
 	ShowMissingLicFile:
-        NoLicFileMsg := Gui("+AlwaysOnTop")
-		NoLicFileMsg.BackColor := "0x2F2F2F"
+		if GuiPriorityAlwaysOnTop == true {
+			NoLicFileMsg := Gui("+AlwaysOnTop")
+		} else {
+			NoLicFileMsg := Gui()
+		}
+		NoLicFileMsg.BackColor := "0x" . BackgroundColor
+		MessageBackgroundPicture := IniRead(IniFile, "Background", "MessageBackgroundPicture")
+		if MessageBackgroundPicture == "" {
+			try {
+				NoLicFileMsg.Add("Picture", "x0 y0 w470 h240", ImageLib . DefaultMsgBackgroundImage)
+			}
+			catch {
+			}
+		} else {
+			try {
+				NoLicFileMsg.Add("Picture", "x0 y0 w470 h240", MessageBackgroundPicture)
+			}
+			catch {
+				MessageBackgroundPicture := ""
+				IniWrite MessageBackgroundPicture, IniFile, "Background", "MessageBackgroundPicture"
+				Reload
+			}
+		}
 		try {
-			NoLicFileMsg.Add("Picture", "x-32 y0 w712 h300", ImageLib . "\MLTABackground2.png")
-			NoLicFileMsg.Add("Picture", "x9 y14 w64 h64 +border", IconLib . "\ML-TA.ico")
+			NoLicFileMsg.Add("Picture", "x9 y14 w64 h64 +border", IconLib . MLSoftwareIcon)
 		}
 		catch {
 		}
-		NoLicFileMsg.SetFont("s20 W700 Q4 cLime", "Georgia")
+		NoLicFileMsg.SetFont("s20 W700 Q4 " . MessageAppNameFontColor, MessageAppNameFontType)
         NoLicFileMsg.Add("Text", "x80 y8", AppName)
-		NoLicFileMsg.SetFont("s9 cLime", "Comic Sans MS")
+		NoLicFileMsg.SetFont("s9 " . MessageFontColor, MessageFontType)
 		NoLicFileMsg.Add("Text", "x80 y45", "Mean Little's Task Automator v" CurrentVersion)
 		NoLicFileMsg.Add("Text", "x80 y65", "License key: ")
 		NoLicFileMsg.SetFont()
-		NoLicFileMsg.SetFont("s7 Bold cRed", "Comic Sans MS")
-		NoLicFileMsg.Add("Text", "x160 y68", "???")
+		NoLicFileMsg.SetFont("s8 Bold cRed", LicenseKeyFontType)
+		NoLicFileMsg.Add("Text", "x160 y65", "???")
 		NoLicFileMsg.Add("Text", "x0 y90 w470 h1 +0x5")
 		NoLicFileMsg.SetFont()
-		NoLicFileMsg.SetFont("s12 cRed", "Comic Sans MS")
+		NoLicFileMsg.SetFont("s12 cRed", MessageMainMsgFontType)
 		NoLicFileMsg.Add("Text", "x160 y110", "License file not found")
         NoLicFileMsg.Add("Text", "x80 y140", "ML Task Automator will close in " ExitMessageTimeWait / 1000 " seconds")
 		NoLicFileMsg.SetFont()
-		NoLicFileMsg.SetFont("s9 cLime", "Comic Sans MS")
+		NoLicFileMsg.SetFont("s9 " . MessageFontColor, MessageFontType)
 		NoLicFileMsg.Add("Text", "x0 y180 w470 h1 +0x5")
 		NoLicFileMsg.Add("Text", "x100 y190", "Copyright 2024 FDJ-Dash. All Rights Reserved.")
 		NoLicFileMsg.SetFont()
-		NoLicFileMsg.SetFont("s8 cLime", "Comic Sans MS")
+		NoLicFileMsg.SetFont("s8 " . MessageFontColor, MessageFontType)
 		NoLicFileMsg.Add("Text", "x120 y212", "Made with AutoHotkey V" A_AhkVersion . " " . (1 ? "Unicode" : "ANSI") . " " . (A_PtrSize == 8 ? "64-bit" : "32-bit"))
         NoLicFileMsg.Title := "Invalid License Key!"
         NoLicFileMsg.Show("w470 h240")
@@ -1048,32 +1511,52 @@ LicenseFileMissingMsg(*){
 ;----------------------------------------------------
 InvalidPath(*){
 	ShowInvPath:
-		InvPathmsg := Gui("+AlwaysOnTop")
-		InvPathmsg.BackColor := "0x2F2F2F"
+		if GuiPriorityAlwaysOnTop == true {
+			InvPathmsg := Gui("+AlwaysOnTop")
+		} else {
+			InvPathmsg := Gui()
+		}
+		InvPathmsg.BackColor := "0x" . BackgroundColor
+		MessageBackgroundPicture := IniRead(IniFile, "Background", "MessageBackgroundPicture")
+		if MessageBackgroundPicture == "" {
+			try {
+				InvPathmsg.Add("Picture", "x0 y0 w470 h240", ImageLib . DefaultMsgBackgroundImage)
+			}
+			catch {
+			}
+		} else {
+			try {
+				InvPathmsg.Add("Picture", "x0 y0 w470 h240", MessageBackgroundPicture)
+			}
+			catch {
+				MessageBackgroundPicture := ""
+				IniWrite MessageBackgroundPicture, IniFile, "Background", "MessageBackgroundPicture"
+				Reload
+			}
+		}
 		try {
-			InvPathmsg.Add("Picture", "x-32 y0 w712 h300", ImageLib . "\MLTABackground2.png")
-			InvPathmsg.Add("Picture", "x9 y14 w64 h64 +border", IconLib . "\ML-TA.ico")
+			InvPathmsg.Add("Picture", "x9 y14 w64 h64 +border", IconLib . MLSoftwareIcon)
 		}
 		catch {
 		}
-		InvPathmsg.SetFont("s20 W700 Q4 cLime", "Georgia")
+		InvPathmsg.SetFont("s20 W700 Q4 " . MessageAppNameFontColor, MessageAppNameFontType)
         InvPathmsg.Add("Text", "x80 y8", AppName)
-		InvPathmsg.SetFont("s9 cLime", "Comic Sans MS")
+		InvPathmsg.SetFont("s9 " . MessageFontColor, MessageFontType)
 		InvPathmsg.Add("Text", "x80 y45", "Mean Little's Task Automator v" CurrentVersion)
 		InvPathmsg.Add("Text", "x80 y65", "License key: ")
 		InvPathmsg.SetFont()
-		InvPathmsg.SetFont("s7 Bold " . BlueFont . "", "Comic Sans MS")
-		InvPathmsg.Add("Text", "x160 y68", LicenseKey)
+		InvPathmsg.SetFont("s8 Bold " . LicenseKeyFontColor, LicenseKeyFontType)
+		InvPathmsg.Add("Text", "x160 y65", LicenseKey)
 		InvPathmsg.Add("Text", "x0 y90 w470 h1 +0x5")
 		InvPathmsg.SetFont()
-		InvPathmsg.SetFont("s12 cLime", "Comic Sans MS")
+		InvPathmsg.SetFont("s12 " . MessageMainMsgFontColor, MessageMainMsgFontType)
 		InvPathmsg.Add("Text", "x145 y125", "Your path input is invalid.")
 		InvPathmsg.SetFont()
-		InvPathmsg.SetFont("s9 cLime", "Comic Sans MS")
+		InvPathmsg.SetFont("s9 " . MessageFontColor, MessageFontType)
 		InvPathmsg.Add("Text", "x0 y180 w470 h1 +0x5")
 		InvPathmsg.Add("Text", "x25 y190", "Copyright 2024 FDJ-Dash. All Rights Reserved.")
 		InvPathmsg.SetFont()
-		InvPathmsg.SetFont("s8 cLime", "Comic Sans MS")
+		InvPathmsg.SetFont("s8 " . MessageFontColor, MessageFontType)
 		InvPathmsg.Add("Text", "x25 y212", "Made with AutoHotkey V" A_AhkVersion . " " . (1 ? "Unicode" : "ANSI") . " " . (A_PtrSize == 8 ? "64-bit" : "32-bit"))
         ogcButtonOK := InvPathmsg.Add("Button", "x370 y200 w80 h24", "OK")
 		ogcButtonOK.OnEvent("Click", Destroy)
@@ -1089,32 +1572,52 @@ InvalidPath(*){
 ;----------------------------------------------------
 SaveMsg(*){
 	ShowSave:
-		Savemsg := Gui("+AlwaysOnTop")
-		Savemsg.BackColor := "0x2F2F2F"
+		if GuiPriorityAlwaysOnTop == true {
+			Savemsg := Gui("+AlwaysOnTop")
+		} else {
+			Savemsg := Gui()
+		}
+		Savemsg.BackColor := "0x" . BackgroundColor
+		MessageBackgroundPicture := IniRead(IniFile, "Background", "MessageBackgroundPicture")
+		if MessageBackgroundPicture == "" {
 		try {
-			Savemsg.Add("Picture", "x-32 y0 w712 h300", ImageLib . "\MLTABackground2.png")
-			Savemsg.Add("Picture", "x9 y14 w64 h64 +border", IconLib . "\ML-TA.ico")
+				Savemsg.Add("Picture", "x0 y0 w470 h240", ImageLib . DefaultMsgBackgroundImage)
+			}
+			catch {
+			}
+		} else {
+			try {
+				Savemsg.Add("Picture", "x0 y0 w470 h240", MessageBackgroundPicture)
+			}
+			catch {
+				MessageBackgroundPicture := ""
+				IniWrite MessageBackgroundPicture, IniFile, "Background", "MessageBackgroundPicture"
+				Reload
+			}
+		}
+		try {
+			Savemsg.Add("Picture", "x9 y14 w64 h64 +border", IconLib . MLSoftwareIcon)
 		}
 		catch {
 		}
-		Savemsg.SetFont("s20 W700 Q4 cLime", "Georgia")
+		Savemsg.SetFont("s20 W700 Q4 " . MessageAppNameFontColor, MessageAppNameFontType)
         Savemsg.Add("Text", "x80 y8", AppName)
-		Savemsg.SetFont("s9 cLime", "Comic Sans MS")
+		Savemsg.SetFont("s9 " . MessageFontColor, MessageFontType)
 		Savemsg.Add("Text", "x80 y45", "Mean Little's Task Automator v" CurrentVersion)
 		Savemsg.Add("Text", "x80 y65", "License key: ")
 		Savemsg.SetFont()
-		Savemsg.SetFont("s7 Bold " . BlueFont . "", "Comic Sans MS")
-		Savemsg.Add("Text", "x160 y68", LicenseKey)
+		Savemsg.SetFont("s8 Bold " . LicenseKeyFontColor, LicenseKeyFontType)
+		Savemsg.Add("Text", "x160 y65", LicenseKey)
 		Savemsg.Add("Text", "x0 y90 w470 h1 +0x5")
 		Savemsg.SetFont()
-		Savemsg.SetFont("s12 cLime", "Comic Sans MS")
+		Savemsg.SetFont("s12 " . MessageMainMsgFontColor, MessageMainMsgFontType)
 		Savemsg.Add("Text", "x110 y125", "Values saved successfully to ini file")
 		Savemsg.SetFont()
-		Savemsg.SetFont("s9 cLime", "Comic Sans MS")
+		Savemsg.SetFont("s9 " . MessageFontColor, MessageFontType)
 		Savemsg.Add("Text", "x0 y180 w470 h1 +0x5")
 		Savemsg.Add("Text", "x25 y190", "Copyright 2024 FDJ-Dash. All Rights Reserved.")
 		Savemsg.SetFont()
-		Savemsg.SetFont("s8 cLime", "Comic Sans MS")
+		Savemsg.SetFont("s8 " . MessageFontColor, MessageFontType)
 		Savemsg.Add("Text", "x25 y212", "Made with AutoHotkey V" A_AhkVersion . " " . (1 ? "Unicode" : "ANSI") . " " . (A_PtrSize == 8 ? "64-bit" : "32-bit"))
         ogcButtonOK := Savemsg.Add("Button", "x370 y200 w80 h24", "OK")
 		ogcButtonOK.OnEvent("Click", Destroy)
@@ -1130,33 +1633,53 @@ SaveMsg(*){
 ;----------------------------------------------------
 SecureModeOff(*){
 	ShowSecModeOff:
-        SecModeOff := Gui("+AlwaysOnTop")
-		SecModeOff.BackColor := "0x2F2F2F"
+		if GuiPriorityAlwaysOnTop == true {
+			SecModeOff := Gui("+AlwaysOnTop")
+		} else {
+			SecModeOff := Gui()
+		}
+		SecModeOff.BackColor := "0x" . BackgroundColor
+		MessageBackgroundPicture := IniRead(IniFile, "Background", "MessageBackgroundPicture")
+		if MessageBackgroundPicture == "" {
 		try {
-			SecModeOff.Add("Picture", "x-32 y0 w712 h300", ImageLib . "\MLTABackground2.png")
-			SecModeOff.Add("Picture", "x9 y14 w64 h64 +border", IconLib . "\ML-TA.ico")
+				SecModeOff.Add("Picture", "x0 y0 w470 h240", ImageLib . DefaultMsgBackgroundImage)
+			}
+			catch {
+			}
+		} else {
+			try {
+				SecModeOff.Add("Picture", "x0 y0 w470 h240", MessageBackgroundPicture)
+			}
+			catch {
+				MessageBackgroundPicture := ""
+				IniWrite MessageBackgroundPicture, IniFile, "Background", "MessageBackgroundPicture"
+				Reload
+			}
+		}
+		try {
+			SecModeOff.Add("Picture", "x9 y14 w64 h64 +border", IconLib . MLSoftwareIcon)
 		}
 		catch {
 		}
-		SecModeOff.SetFont("s20 W700 Q4 cLime", "Georgia")
+		SecModeOff.SetFont("s20 W700 Q4 " . MessageAppNameFontColor, MessageAppNameFontType)
         SecModeOff.Add("Text", "x80 y8", AppName)
-		SecModeOff.SetFont("s9 cLime", "Comic Sans MS")
+		SecModeOff.SetFont("s9 " . MessageFontColor, MessageFontType)
 		SecModeOff.Add("Text", "x80 y45", "Mean Little's Task Automator v" CurrentVersion)
 		SecModeOff.Add("Text", "x80 y65", "License key: ")
 		SecModeOff.SetFont()
-		SecModeOff.SetFont("s7 Bold " . BlueFont . "", "Comic Sans MS")
-		SecModeOff.Add("Text", "x160 y68", LicenseKey)
+		SecModeOff.SetFont("s8 Bold " . LicenseKeyFontColor, LicenseKeyFontType)
+		SecModeOff.Add("Text", "x160 y65", LicenseKey)
 		SecModeOff.Add("Text", "x0 y90 w470 h1 +0x5")
 		SecModeOff.SetFont()
-		SecModeOff.SetFont("s12 cLime", "Comic Sans MS")
-		SecModeOff.Add("Text", "x145 y110", "Secure Mode is OFF.")
-		SecModeOff.Add("Text", "x80 y140", "Switch Secure Mode ON and try again.")
+		SecModeOff.SetFont("s12 " . MessageMainMsgFontColor, MessageMainMsgFontType)
+		SecModeOff.Add("Text", "x160 y110", "Secure Mode is OFF.")
+		SecModeOff.Add("Text", "x98 y140", "Switch Secure Mode ON and try again.")
 		SecModeOff.SetFont()
-		SecModeOff.SetFont("s9 cLime", "Comic Sans MS")
+		SecModeOff.SetFont("s9 " . MessageFontColor, MessageFontType)
 		SecModeOff.Add("Text", "x0 y180 w470 h1 +0x5")
 		SecModeOff.Add("Text", "x25 y190", "Copyright 2024 FDJ-Dash. All Rights Reserved.")
 		SecModeOff.SetFont()
-		SecModeOff.SetFont("s8 cLime", "Comic Sans MS")
+		SecModeOff.SetFont("s8 " . MessageFontColor, MessageFontType)
 		SecModeOff.Add("Text", "x25 y212", "Made with AutoHotkey V" A_AhkVersion . " " . (1 ? "Unicode" : "ANSI") . " " . (A_PtrSize == 8 ? "64-bit" : "32-bit"))
         ogcButtonOK := SecModeOff.Add("Button", "x370 y200 w80 h24", "OK")
 		ogcButtonOK.OnEvent("Click", Destroy)
@@ -1173,34 +1696,55 @@ SecureModeOff(*){
 MenuHandlerAbout(*)
 {
 	ShowAbout:
-        About := Gui("+AlwaysOnTop")
-		About.BackColor := "0x2F2F2F"
+		if GuiPriorityAlwaysOnTop == true {
+			About := Gui("+AlwaysOnTop")
+		} else {
+			About := Gui()
+		}
+		About.BackColor := "0x" . BackgroundColor
+		; About.BackColor := ""
+		MessageBackgroundPicture := IniRead(IniFile, "Background", "MessageBackgroundPicture")
+		if MessageBackgroundPicture == "" {
 		try {
-			About.Add("Picture", "x-32 y0 w712 h300", ImageLib . "\MLTABackground2.png")
-			About.Add("Picture", "x9 y14 w64 h64 +border", IconLib . "\ML-TA.ico")
+				About.Add("Picture", "x0 y0 w470 h240", ImageLib . DefaultMsgBackgroundImage)
+			}
+			catch {
+			}
+		} else {
+			try {
+				About.Add("Picture", "x0 y0 w470 h240", MessageBackgroundPicture)
+			}
+			catch {
+				MessageBackgroundPicture := ""
+				IniWrite MessageBackgroundPicture, IniFile, "Background", "MessageBackgroundPicture"
+				Reload
+			}
+		}
+		try {
+			About.Add("Picture", "x9 y14 w64 h64 +border", IconLib . MLSoftwareIcon)
 		}
 		catch {
 		}
-		About.SetFont("s20 W700 Q4 cLime", "Georgia")
+		About.SetFont("s20 W700 Q4 " . MessageAppNameFontColor, MessageAppNameFontType)
         About.Add("Text", "x80 y8", AppName)
-		About.SetFont("s9 cLime", "Comic Sans MS")
+		About.SetFont("s9 " . MessageFontColor, MessageFontType)
 		About.Add("Text", "x80 y45", "Mean Little's Task Automator v" CurrentVersion)
 		About.Add("Text", "x80 y65", "License key: ")
 		About.SetFont()
-		About.SetFont("s7 Bold " . BlueFont . "", "Comic Sans MS")
-		About.Add("Text", "x160 y68", LicenseKey)
+		About.SetFont("s8 Bold " . LicenseKeyFontColor, LicenseKeyFontType)
+		About.Add("Text", "x160 y65", LicenseKey)
 		About.Add("Text", "x0 y90 w470 h1 +0x5")
 		About.SetFont()
-		About.SetFont("s12 cLime", "Comic Sans MS")
+		About.SetFont("s12 " . MessageMainMsgFontColor, MessageMainMsgFontType)
 		About.Add("Text", "x80 y115", "Programmed and designed by:")
 		About.Add("Link", "x310 y115", "<a href=`"https://github.com/FDJ-Dash`">FDJ-Dash</a>")
 		About.SetFont()
-		About.SetFont("s9 cLime", "Comic Sans MS")
+		About.SetFont("s9 " . MessageFontColor, MessageFontType)
 		About.Add("Text", "x105 y155", "Support mail: mean.little.software@gmail.com")
 		About.Add("Text", "x0 y180 w470 h1 +0x5")
         About.Add("Text", "x25 y190", "Copyright 2024 FDJ-Dash. All Rights Reserved.")
 		About.SetFont()
-		About.SetFont("s8 cLime", "Comic Sans MS")
+		About.SetFont("s8 " . MessageFontColor, MessageFontType)
 		About.Add("Text", "x25 y212", "Made with AutoHotkey V" A_AhkVersion . " " . (1 ? "Unicode" : "ANSI") . " " . (A_PtrSize == 8 ? "64-bit" : "32-bit"))
 		ogcButtonOK := About.Add("Button", "x370 y200 w80 h24", "OK")
 		ogcButtonOK.OnEvent("Click", Destroy)
@@ -1216,33 +1760,53 @@ MenuHandlerAbout(*)
 ;----------------------------------------------------
 MenuHandlerGuide(*) {
 	ShowGuide:
-        GuideMsg := Gui("+AlwaysOnTop")
-		GuideMsg.BackColor := "0x2F2F2F"
+		if GuiPriorityAlwaysOnTop == true {
+			GuideMsg := Gui("+AlwaysOnTop")
+		} else {
+			GuideMsg := Gui()
+		}
+		GuideMsg.BackColor := "0x" . BackgroundColor
+		MessageBackgroundPicture := IniRead(IniFile, "Background", "MessageBackgroundPicture")
+		if MessageBackgroundPicture == "" {
 		try {
-			GuideMsg.Add("Picture", "x-32 y0 w712 h300", ImageLib . "\MLTABackground2.png")
-			GuideMsg.Add("Picture", "x9 y14 w64 h64 +border", IconLib . "\ML-TA.ico")
+				GuideMsg.Add("Picture", "x0 y0 w470 h240", ImageLib . DefaultMsgBackgroundImage)
+			}
+			catch {
+			}
+		} else {
+			try {
+				GuideMsg.Add("Picture", "x0 y0 w470 h240", MessageBackgroundPicture)
+			}
+			catch {
+				MessageBackgroundPicture := ""
+				IniWrite MessageBackgroundPicture, IniFile, "Background", "MessageBackgroundPicture"
+				Reload
+			}
+		}
+		try {
+			GuideMsg.Add("Picture", "x9 y14 w64 h64 +border", IconLib . MLSoftwareIcon)
 		}
 		catch {
 		}
-		GuideMsg.SetFont("s20 W700 Q4 cLime", "Georgia")
+		GuideMsg.SetFont("s20 W700 Q4 " . MessageAppNameFontColor, MessageAppNameFontType)
         GuideMsg.Add("Text", "x80 y8", AppName)
-		GuideMsg.SetFont("s9 cLime", "Comic Sans MS")
+		GuideMsg.SetFont("s9 " . MessageFontColor, MessageFontType)
 		GuideMsg.Add("Text", "x80 y45", "Mean Little's Task Automator v" CurrentVersion)
 		GuideMsg.Add("Text", "x80 y65", "License key: ")
 		GuideMsg.SetFont()
-		GuideMsg.SetFont("s7 Bold " . BlueFont . "", "Comic Sans MS")
-		GuideMsg.Add("Text", "x160 y68", LicenseKey)
+		GuideMsg.SetFont("s8 Bold " . LicenseKeyFontColor, LicenseKeyFontType)
+		GuideMsg.Add("Text", "x160 y65", LicenseKey)
 		GuideMsg.Add("Text", "x0 y90 w470 h1 +0x5")
 		GuideMsg.SetFont()
-		GuideMsg.SetFont("s12 cLime", "Comic Sans MS")
+		GuideMsg.SetFont("s12 " . MessageMainMsgFontColor, MessageMainMsgFontType)
 		GuideMsg.Add("Text", "x100 y110", "The guide will open in your browser.")
         GuideMsg.Add("Text", "x137 y140", "You can close this message.")
 		GuideMsg.SetFont()
-		GuideMsg.SetFont("s9 cLime", "Comic Sans MS")
+		GuideMsg.SetFont("s9 " . MessageFontColor, MessageFontType)
 		GuideMsg.Add("Text", "x0 y180 w470 h1 +0x5")
 		GuideMsg.Add("Text", "x25 y190", "Copyright 2024 FDJ-Dash. All Rights Reserved.")
 		GuideMsg.SetFont()
-		GuideMsg.SetFont("s8 cLime", "Comic Sans MS")
+		GuideMsg.SetFont("s8 " . MessageFontColor, MessageFontType)
 		GuideMsg.Add("Text", "x25 y212", "Made with AutoHotkey V" A_AhkVersion . " " . (1 ? "Unicode" : "ANSI") . " " . (A_PtrSize == 8 ? "64-bit" : "32-bit"))
         ogcButtonOK := GuideMsg.Add("Button", "x370 y200 w80 h24 Default", "OK")
 		ogcButtonOK.OnEvent("Click", Destroy)
@@ -1255,6 +1819,70 @@ MenuHandlerGuide(*) {
 	
 	Destroy(*){
 		GuideMsg.Destroy()
+	}
+}
+;----------------------------------------------------
+MenuHandlerQuickAccessMsg(*) {
+	ShowQuickAccMsg:
+		if GuiPriorityAlwaysOnTop == true {
+			QuickAccMsg := Gui("+AlwaysOnTop")
+		} else {
+			QuickAccMsg := Gui()
+		}
+        QuickAccMsg := Gui("+AlwaysOnTop")
+		QuickAccMsg.BackColor := "0x" . BackgroundColor
+		MessageBackgroundPicture := IniRead(IniFile, "Background", "MessageBackgroundPicture")
+		if MessageBackgroundPicture == "" {
+		try {
+				QuickAccMsg.Add("Picture", "x0 y0 w470 h240", ImageLib . DefaultMsgBackgroundImage)
+			}
+			catch {
+			}
+		} else {
+			try {
+				QuickAccMsg.Add("Picture", "x0 y0 w470 h240", MessageBackgroundPicture)
+			}
+			catch {
+				MessageBackgroundPicture := ""
+				IniWrite MessageBackgroundPicture, IniFile, "Background", "MessageBackgroundPicture"
+				Reload
+			}
+		}
+		try {
+			QuickAccMsg.Add("Picture", "x9 y14 w64 h64 +border", IconLib . MLSoftwareIcon)
+		}
+		catch {
+		}
+		QuickAccMsg.SetFont("s20 W700 Q4 " . MessageAppNameFontColor, MessageAppNameFontType)
+        QuickAccMsg.Add("Text", "x80 y8", AppName)
+		QuickAccMsg.SetFont("s9 " . MessageFontColor, MessageFontType)
+		QuickAccMsg.Add("Text", "x80 y45", "Mean Little's Task Automator v" CurrentVersion)
+		QuickAccMsg.Add("Text", "x80 y65", "License key: ")
+		QuickAccMsg.SetFont()
+		QuickAccMsg.SetFont("s8 Bold " . LicenseKeyFontColor, LicenseKeyFontType)
+		QuickAccMsg.Add("Text", "x160 y65", LicenseKey)
+		QuickAccMsg.Add("Text", "x0 y90 w470 h1 +0x5")
+		QuickAccMsg.SetFont()
+		QuickAccMsg.SetFont("s12 " . MessageMainMsgFontColor, MessageMainMsgFontType)
+		QuickAccMsg.Add("Text", "x80 y110", "To switch Quick Access Buttons you need to")
+        QuickAccMsg.Add("Text", "x110 y140", "switch to Quick Access module first.")
+		QuickAccMsg.SetFont()
+		QuickAccMsg.SetFont("s9 " . MessageFontColor, MessageFontType)
+		QuickAccMsg.Add("Text", "x0 y180 w470 h1 +0x5")
+		QuickAccMsg.Add("Text", "x25 y190", "Copyright 2024 FDJ-Dash. All Rights Reserved.")
+		QuickAccMsg.SetFont()
+		QuickAccMsg.SetFont("s8 " . MessageFontColor, MessageFontType)
+		QuickAccMsg.Add("Text", "x25 y212", "Made with AutoHotkey V" A_AhkVersion . " " . (1 ? "Unicode" : "ANSI") . " " . (A_PtrSize == 8 ? "64-bit" : "32-bit"))
+        ogcButtonOK := QuickAccMsg.Add("Button", "x370 y200 w80 h24 Default", "OK")
+		ogcButtonOK.OnEvent("Click", Destroy)
+        QuickAccMsg.Title := "Guide"
+        QuickAccMsg.Show("w470 h240")
+        ControlFocus("Button1", "Guide")
+        QuickAccMsg.Opt("+LastFound")
+    Return
+	
+	Destroy(*){
+		QuickAccMsg.Destroy()
 	}
 }
 ;----------------------------------------------------
@@ -1321,7 +1949,7 @@ ProcessRunWalkHotkey(RunSelected, CurrentHotkey, *){
 				}
 				break
 			}
-			Sleep AutoRunLoop
+			Sleep AutoRunLoopInterval
 		}
 	}
 }
@@ -1329,101 +1957,104 @@ ProcessRunWalkHotkey(RunSelected, CurrentHotkey, *){
 ; General Loop
 Loop {
 	MouseGetPos(&x, &y)
-	if ControllerAvailable == true {
-		TextOnOffController.Value := " Controller Found"
-		ControllerName.Value := GetKeyState(ControllerNumber "JoyName")
-		cont_info := GetKeyState(ControllerNumber "JoyInfo")
-		if RadioCtrlAuRunYes.Value == true {
-			RadioCtrlAuRunNo.Value := false
-			if InStr(cont_info, "Z") {
-				try {
-					axis_info_Z := Round(GetKeyState(ControllerNumber "JoyZ"))
-				}
-				catch as e {
-					; the controller was disconnected
-					TextOnOffController.Value := " Controller Not Found"
-					ControllerName.Value := " "
-					RadioCtrlAuRunYes.Value := false
-					RadioCtrlAuRunNo.Value := true
-					ControllerAvailable := false
-				}
-				; Controller RT key
-				if axis_info_Z < 45 {
-					RunSelected := true
-					WalkSelected := false
-					TextOnOffCtrlAuRun.Value := " ON"
-					SB.SetText("Controller autorun active.")
-					Send("{" . SprintKey . " down}")
-					Send("{" . ButtonRT . " down}")
-					if RadioScrlUpYes.Value == 1 {
-						RadioScrlUpNo.Value := 0
-						TextOnOffScrlUp.Value := " ON"
-						Count := 0
-						SB.SetText("AutoRun + Scroll up active. Scrlup count: " Count)
-						loop ScrlUpCount {
-							Send("{WheelUP}")
-							sleep ScrlUpInterval
-							axis_info_Z := Round(GetKeyState(ControllerNumber "JoyZ"))
-							if axis_info_Z > 55 {
+	if SwitchControllerAutoRun == false {
+	} else {	
+		if ControllerAvailable == true {
+			TextOnOffController.Value := " Controller Found"
+			ControllerName.Value := GetKeyState(ControllerNumber "JoyName")
+			cont_info := GetKeyState(ControllerNumber "JoyInfo")
+			if RadioCtrlAuRunYes.Value == true {
+				RadioCtrlAuRunNo.Value := false
+				if InStr(cont_info, "Z") {
+					try {
+						axis_info_Z := Round(GetKeyState(ControllerNumber "JoyZ"))
+					}
+					catch as e {
+						; the controller was disconnected
+						TextOnOffController.Value := " Controller Not Found"
+						ControllerName.Value := " "
+						RadioCtrlAuRunYes.Value := false
+						RadioCtrlAuRunNo.Value := true
+						ControllerAvailable := false
+					}
+					; Controller RT key
+					if axis_info_Z < 45 {
+						RunSelected := true
+						WalkSelected := false
+						TextOnOffCtrlAuRun.Value := " ON"
+						SB.SetText("Controller autorun active.")
+						Send("{" . SprintKey . " down}")
+						Send("{" . ButtonRT . " down}")
+						if RadioScrlUpYes.Value == 1 {
+							RadioScrlUpNo.Value := 0
+							TextOnOffScrlUp.Value := " ON"
+							Count := 0
+							SB.SetText("AutoRun + Scroll up active. Scrlup count: " Count)
+							loop ScrlUpCount {
+								Send("{WheelUP}")
+								sleep ScrlUpInterval
+								axis_info_Z := Round(GetKeyState(ControllerNumber "JoyZ"))
+								if axis_info_Z > 55 {
+									break
+								}
+								Count++
+								SB.SetText("AutoRun + Scroll up active. Scrlup count: " Count)
+							}
+							TextOnOffScrlUp.Value := " OFF"
+							SB.SetText("AutoRun triggered by controller active.")
+						}
+						loop {
+							try {
+								axis_info_Z := Round(GetKeyState(ControllerNumber "JoyZ"))
+							}
+							catch as e {
+								; the controller was disconnected
+								TextOnOffController.Value := " Controller Not Found"
+								ControllerName.Value := " "
+								RadioCtrlAuRunYes.Value := false
+								RadioCtrlAuRunNo.Value := true
+								ControllerAvailable := false
+								TextOnOffCtrlAuRun.Value := " OFF"
+								Send("{" . SprintKey . " up}")
+								Send("{" . ButtonRT . " up}")
 								break
 							}
-							Count++
-							SB.SetText("AutoRun + Scroll up active. Scrlup count: " Count)
-						}
-						TextOnOffScrlUp.Value := " OFF"
-						SB.SetText("AutoRun triggered by controller active.")
-					}
-					loop {
-						try {
-							axis_info_Z := Round(GetKeyState(ControllerNumber "JoyZ"))
-						}
-						catch as e {
-							; the controller was disconnected
-							TextOnOffController.Value := " Controller Not Found"
-							ControllerName.Value := " "
-							RadioCtrlAuRunYes.Value := false
-							RadioCtrlAuRunNo.Value := true
-							ControllerAvailable := false
-							TextOnOffCtrlAuRun.Value := " OFF"
-							Send("{" . SprintKey . " up}")
-							Send("{" . ButtonRT . " up}")
-							break
-						}
-						; Controller LT key
-						if axis_info_Z > 55 or GetKeyState(StopAutoRunHotKey.Value, "P") {
-							RunSelected := false
-							WalkSelected := true
-							TextOnOffCtrlAuRun.Value := " OFF"
-							MouseGetPos(&x, &y)
-							SB.SetText("Ready.                        X:" . x . " Y:" . y )
-							Send("{" . SprintKey . " up}")
-							Send("{" . ButtonRT . " up}")
-							if RadioScrlDownYes.Value == 1 {
-								RadioScrlDownNo.Value := 0
-								TextOnOffScrlDown.Value := " ON"
-								Count := 0
-								SB.SetText("Scroll down active. ScrlDown count: " Count)
-								loop ScrlDownCount {
-									Send("{WheelDown}")
-									sleep ScrlDownInterval
-									axis_info_Z := Round(GetKeyState(ControllerNumber "JoyZ"))
-									if axis_info_Z < 45 {
-										break
-									}
-									Count++
-									SB.SetText("Scroll down active. ScrlDown count: " Count)
-								}
-								TextOnOffScrlDown.Value := " OFF"
+							; Controller LT key
+							if axis_info_Z > 55 {
+								RunSelected := false
+								WalkSelected := true
+								TextOnOffCtrlAuRun.Value := " OFF"
+								MouseGetPos(&x, &y)
 								SB.SetText("Ready.                        X:" . x . " Y:" . y )
-							}
-							break
-						} ; End JoyZ LT key
-						Sleep AutoRunLoop
-					} ; End AutoRun loop
-				} ; End JoyZ RT key
-			} ; End cont_info Z
-		} ; End RadioCtrlAuRunYes
-	} ; End Controller Available
+								Send("{" . SprintKey . " up}")
+								Send("{" . ButtonRT . " up}")
+								if RadioScrlDownYes.Value == 1 {
+									RadioScrlDownNo.Value := 0
+									TextOnOffScrlDown.Value := " ON"
+									Count := 0
+									SB.SetText("Scroll down active. ScrlDown count: " Count)
+									loop ScrlDownCount {
+										Send("{WheelDown}")
+										sleep ScrlDownInterval
+										axis_info_Z := Round(GetKeyState(ControllerNumber "JoyZ"))
+										if axis_info_Z < 45 {
+											break
+										}
+										Count++
+										SB.SetText("Scroll down active. ScrlDown count: " Count)
+									}
+									TextOnOffScrlDown.Value := " OFF"
+									SB.SetText("Ready.                        X:" . x . " Y:" . y )
+								}
+								break
+							} ; End JoyZ LT key
+							Sleep AutoRunLoopInterval
+						} ; End AutoRun loop
+					} ; End JoyZ RT key
+				} ; End cont_info Z
+			} ; End RadioCtrlAuRunYes
+		} ; End Controller Available
+	} ; End else
 	
 	if ControllerAvailable == false {
 		TextOnOffController.Value := " Controller Not Found"
@@ -1619,6 +2250,141 @@ ProcessQuickAccess(CurrentHotkey, *) {
 		catch {
 			InvalidPath
 		}
+	}
+	
+}
+;----------------------------------------------------¨
+ProccessQuickAccessButton1(*){
+	Saved := TaskAutomatorGui.Submit(false)
+	if SecureMode == false {
+		SecureModeOff
+		return
+	}
+	try {
+		run "" . Saved.QuickAccess1 . ""
+	}
+	catch {
+		InvalidPath
+	}
+	
+}
+;----------------------------------------------------¨
+ProccessQuickAccessButton2(*){
+	Saved := TaskAutomatorGui.Submit(false)
+	if SecureMode == false {
+		SecureModeOff
+		return
+	}
+	try {
+		run "" . Saved.QuickAccess2 . ""
+	}
+	catch {
+		InvalidPath
+	}
+	
+}
+;----------------------------------------------------¨
+ProccessQuickAccessButton3(*){
+	Saved := TaskAutomatorGui.Submit(false)
+	if SecureMode == false {
+		SecureModeOff
+		return
+	}
+	try {
+		run "" . Saved.QuickAccess3 . ""
+	}
+	catch {
+		InvalidPath
+	}
+	
+}
+;----------------------------------------------------¨
+ProccessQuickAccessButton4(*){
+	Saved := TaskAutomatorGui.Submit(false)
+	if SecureMode == false {
+		SecureModeOff
+		return
+	}
+	try {
+		run "" . Saved.QuickAccess4 . ""
+	}
+	catch {
+		InvalidPath
+	}
+	
+}
+;----------------------------------------------------¨
+ProccessQuickAccessButton5(*){
+	Saved := TaskAutomatorGui.Submit(false)
+	if SecureMode == false {
+		SecureModeOff
+		return
+	}
+	try {
+		run "" . Saved.QuickAccess5 . ""
+	}
+	catch {
+		InvalidPath
+	}
+	
+}
+;----------------------------------------------------¨
+ProccessQuickAccessButton6(*){
+	Saved := TaskAutomatorGui.Submit(false)
+	if SecureMode == false {
+		SecureModeOff
+		return
+	}
+	try {
+		run "" . Saved.QuickAccess6 . ""
+	}
+	catch {
+		InvalidPath
+	}
+	
+}
+;----------------------------------------------------¨
+ProccessQuickAccessButton7(*){
+	Saved := TaskAutomatorGui.Submit(false)
+	if SecureMode == false {
+		SecureModeOff
+		return
+	}
+	try {
+		run "" . Saved.QuickAccess7 . ""
+	}
+	catch {
+		InvalidPath
+	}
+	
+}
+;----------------------------------------------------¨
+ProccessQuickAccessButton8(*){
+	Saved := TaskAutomatorGui.Submit(false)
+	if SecureMode == false {
+		SecureModeOff
+		return
+	}
+	try {
+		run "" . Saved.QuickAccess8 . ""
+	}
+	catch {
+		InvalidPath
+	}
+	
+}
+;----------------------------------------------------¨
+ProccessQuickAccessButton9(*){
+	Saved := TaskAutomatorGui.Submit(false)
+	if SecureMode == false {
+		SecureModeOff
+		return
+	}
+	try {
+		run "" . Saved.QuickAccess9 . ""
+	}
+	catch {
+		InvalidPath
 	}
 	
 }
@@ -1833,6 +2599,7 @@ SecureModeHandler(*) {
 	IniWrite SecureMode, IniFile, "Properties", "SecureMode"
 	Reload
 }
+;----------------------------------------------------
 EditBoxesHandler(*){
 	EditBoxesAvailable := IniRead(IniFile, "Properties", "EditBoxesAvailable")
 	EditBoxesAvailable := !EditBoxesAvailable
@@ -1840,33 +2607,111 @@ EditBoxesHandler(*){
 	Reload
 }
 ;----------------------------------------------------
+GuiPriorityAlwaysOnTopHandler(*){
+	GuiPriorityAlwaysOnTop := IniRead(IniFile, "Properties", "GuiPriorityAlwaysOnTop")
+	GuiPriorityAlwaysOnTop := !GuiPriorityAlwaysOnTop
+	IniWrite GuiPriorityAlwaysOnTop, IniFile, "Properties", "GuiPriorityAlwaysOnTop"
+	Reload
+}
+;----------------------------------------------------
+KbAutoRunOFFHandler(*){
+	SwitchKbAutoRun := IniRead(IniFile, "Modules", "SwitchKbAutoRun")
+	SwitchKbAutoRun := !SwitchKbAutoRun
+	IniWrite SwitchKbAutoRun, IniFile, "Modules", "SwitchKbAutoRun"
+	Send("{" . SprintKey . " up}")
+	Send("{" . ForwardKey . " up}")
+	Reload
+}
+;----------------------------------------------------
+ControllerAutoRunOFFHandler(*){
+	SwitchControllerAutoRun := IniRead(IniFile, "Modules", "SwitchControllerAutoRun")
+	SwitchControllerAutoRun := !SwitchControllerAutoRun
+	IniWrite SwitchControllerAutoRun, IniFile, "Modules", "SwitchControllerAutoRun"
+	Send("{" . SprintKey . " up}")
+	Send("{" . ButtonRT . " up}")
+	Reload
+}
+;----------------------------------------------------
 SwitchJumpsHandler(*){
 	SwitchClicker := false
-	QuickAccess := false
+	SwitchQuickAccess := false
 	SwitchJumps := true
+	SwitchModulesOFF := false
 	IniWrite SwitchJumps, IniFile, "Modules", "SwitchJumps"
-	IniWrite QuickAccess, IniFile, "Modules", "QuickAccess"
+	IniWrite SwitchQuickAccess, IniFile, "Modules", "SwitchQuickAccess"
 	IniWrite SwitchClicker, IniFile, "Modules", "SwitchClicker"
+	IniWrite SwitchModulesOFF, IniFile, "Modules", "SwitchModulesOFF"
 	Reload
 }
 ;----------------------------------------------------
 SwitchClickerHandler(*){
 	SwitchJumps := false
-	QuickAccess := false
+	SwitchQuickAccess := false
 	SwitchClicker := true
+	SwitchModulesOFF := false
 	IniWrite SwitchJumps, IniFile, "Modules", "SwitchJumps"
-	IniWrite QuickAccess, IniFile, "Modules", "QuickAccess"
+	IniWrite SwitchQuickAccess, IniFile, "Modules", "SwitchQuickAccess"
 	IniWrite SwitchClicker, IniFile, "Modules", "SwitchClicker"
+	IniWrite SwitchModulesOFF, IniFile, "Modules", "SwitchModulesOFF"
 	Reload
 }
-
+;----------------------------------------------------
 QuickAccessHandler(*) {
 	SwitchJumps := false
 	SwitchClicker := false
-	QuickAccess := true
+	SwitchQuickAccess := true
+	SwitchModulesOFF := false
 	IniWrite SwitchJumps, IniFile, "Modules", "SwitchJumps"
 	IniWrite SwitchClicker, IniFile, "Modules", "SwitchClicker"
-	IniWrite QuickAccess, IniFile, "Modules", "QuickAccess"
+	IniWrite SwitchQuickAccess, IniFile, "Modules", "SwitchQuickAccess"
+	IniWrite SwitchModulesOFF, IniFile, "Modules", "SwitchModulesOFF"
+	Reload
+}
+;----------------------------------------------------
+SwitchTopModulesOFFHandler(*){
+	SwitchKbAutoRun := false
+	SwitchControllerAutoRun := false
+	SwitchTopModulesOFF := true
+	IniWrite SwitchKbAutoRun, IniFile, "Modules", "SwitchKbAutoRun"
+	IniWrite SwitchControllerAutoRun, IniFile, "Modules", "SwitchControllerAutoRun"
+	IniWrite SwitchTopModulesOFF, IniFile, "Modules", "SwitchTopModulesOFF"
+	Reload
+}
+;----------------------------------------------------
+SwitchBottomModulesOFFHandler(*){
+	SwitchJumps := false
+	SwitchQuickAccess := false
+	SwitchClicker := false
+	SwitchModulesOFF := true
+	IniWrite SwitchJumps, IniFile, "Modules", "SwitchJumps"
+	IniWrite SwitchClicker, IniFile, "Modules", "SwitchClicker"
+	IniWrite SwitchQuickAccess, IniFile, "Modules", "SwitchQuickAccess"
+	IniWrite SwitchModulesOFF, IniFile, "Modules", "SwitchModulesOFF"
+	Send("{" . SprintKey . " up}")
+	Send("{" . ButtonRT . " up}")
+	Reload
+}
+;----------------------------------------------------
+QuickAccessButtonsHandler(*) {
+	if SwitchQuickAccess == false {
+		MenuHandlerQuickAccessMsg
+	} else {
+		QuickAccessButtons := IniRead(IniFile, "Modules", "QuickAccessButtons")
+		QuickAccessButtons := !QuickAccessButtons
+		IniWrite QuickAccessButtons, IniFile, "Modules", "QuickAccessButtons"
+		Reload
+	}
+}
+;----------------------------------------------------
+ChangeBackgroundHandler(*){
+	SelectedFile := FileSelect(3, "", "Open a file", "Text Documents (*.ico; *.png; *.jpg)")
+	IniWrite SelectedFile, IniFile, "Background", "BackgroundPicture"
+	Reload
+}
+;----------------------------------------------------
+ChangeMessageBackgroundHandler(*){
+	SelectedFile := FileSelect(3, "", "Open a file", "Text Documents (*.ico; *.png; *.jpg)")
+	IniWrite SelectedFile, IniFile, "Background", "MessageBackgroundPicture"
 	Reload
 }
 ;----------------------------------------------------
@@ -1921,6 +2766,18 @@ SelectNewIcon8(*) {
 SelectNewIcon9(*) {
 	SelectedFile := FileSelect(3, "", "Open a file", "Text Documents (*.ico; *.png; *.jpg)")
 	IniWrite SelectedFile, IniFile, "QuickAccessIcons", "QuickIcon9"
+	Reload
+}
+;----------------------------------------------------
+SelectTopPicture(*) {
+	SelectedFile := FileSelect(3, "", "Open a file", "Text Documents (*.ico; *.png; *.jpg)")
+	IniWrite SelectedFile, IniFile, "Pictures", "TopPicture"
+	Reload
+}
+;----------------------------------------------------
+SelectBottomPicture(*) {
+	SelectedFile := FileSelect(3, "", "Open a file", "Text Documents (*.ico; *.png; *.jpg)")
+	IniWrite SelectedFile, IniFile, "Pictures", "BottomPicture"
 	Reload
 }
 ;----------------------------------------------------
@@ -2023,7 +2880,7 @@ SubmitValues(*){
 		IniWrite Saved.Coord4Interval, IniFile, "CursorLocationClicker", "Coord4Interval"
 		SaveMsg
 	}
-	if QuickAccess == true {
+	if SwitchQuickAccess == true {
 		IniWrite Saved.QuickAccess1, IniFile, "QuickAccessPath", "QuickAccess1"
 		IniWrite Saved.QuickAccess2, IniFile, "QuickAccessPath", "QuickAccess2"
 		IniWrite Saved.QuickAccess3, IniFile, "QuickAccessPath", "QuickAccess3"
@@ -2044,24 +2901,32 @@ CreateNewIniFile(*) {
 	FileAppend "; HINT: If you delete this file or move it away from its forder,`n" , IniFile 
 	FileAppend "; Task Automator will generate a new file on the spot.`n" , IniFile
 	FileAppend ";--------------------------------------------------`n" , IniFile
+	FileAppend "; ADVISE: If you need a specific Module its a good idea to turn all other modules off.`n" , IniFile
+	FileAppend ";--------------------------------------------------`n" , IniFile
 	FileAppend "; WARNING 1: When asigning hotkeys, make sure none of them are the same as other asigned hotkeys.`n" , IniFile
 	FileAppend ";--------------------------------------------------`n" , IniFile
 	FileAppend "; WARNING 2: Don't set this file as read only!`n" , IniFile
 	FileAppend ";--------------------------------------------------`n" , IniFile
 	FileAppend "[Modules]`n" , IniFile
-	FileAppend "SwitchJumps=0`n" , IniFile
+	FileAppend "SwitchKbAutoRun=1`n" , IniFile
+	FileAppend "SwitchControllerAutoRun=1`n" , IniFile
+	FileAppend "SwitchTopModulesOFF=1`n" , IniFile
+	FileAppend ";-------------------------------`n" , IniFile
+	FileAppend "SwitchQuickAccess=1`n" , IniFile
+	FileAppend "QuickAccessButtons=1`n" , IniFile
 	FileAppend "SwitchClicker=0`n" , IniFile
-	FileAppend "QuickAccess=1`n" , IniFile
+	FileAppend "SwitchJumps=0`n" , IniFile
+	FileAppend "SwitchModulesOFF=0`n" , IniFile
 	FileAppend ";--------------------------------------------------`n" , IniFile
 	FileAppend "[Properties]`n" , IniFile
 	FileAppend "ExitMessageTimeWait=3000`n" , IniFile
 	FileAppend "SecureMode=1`n" , IniFile
-	FileAppend "EditBoxesAvailable=0`n" , IniFile
+	FileAppend "EditBoxesAvailable=1`n" , IniFile
 	FileAppend "SuspendHotkeys=0`n" , IniFile
-	FileAppend "AutoRunLoop=100`n" , IniFile
+	FileAppend "AutoRunLoopInterval=100`n" , IniFile
 	FileAppend "GeneralLoopInterval=100`n" , IniFile
 	FileAppend "LoopAmount=100`n" , IniFile
-	FileAppend "FirstRun=0`n" , IniFile
+	FileAppend "GuiPriorityAlwaysOnTop=1`n" , IniFile
 	FileAppend ";--------------------------------------------------`n" , IniFile
 	FileAppend "[PaceProperties]`n" , IniFile
 	FileAppend "ScrlUpCount=33`n" , IniFile
@@ -2082,15 +2947,15 @@ CreateNewIniFile(*) {
 	FileAppend "JumpHotkey3=Numpad3`n" , IniFile
 	FileAppend "JumpHotkey4=Numpad4`n" , IniFile
 	FileAppend ";-------------------------------`n" , IniFile
-	FileAppend "QuickAccess1=`n" , IniFile
-	FileAppend "QuickAccess2=`n" , IniFile
-	FileAppend "QuickAccess3=`n" , IniFile
-	FileAppend "QuickAccess4=`n" , IniFile
-	FileAppend "QuickAccess5=`n" , IniFile
-	FileAppend "QuickAccess6=`n" , IniFile
-	FileAppend "QuickAccess7=`n" , IniFile
-	FileAppend "QuickAccess8=`n" , IniFile
-	FileAppend "QuickAccess9=`n" , IniFile
+	FileAppend "QuickAccessHk1=1`n" , IniFile
+	FileAppend "QuickAccessHk2=2`n" , IniFile
+	FileAppend "QuickAccessHk3=3`n" , IniFile
+	FileAppend "QuickAccessHk4=4`n" , IniFile
+	FileAppend "QuickAccessHk5=5`n" , IniFile
+	FileAppend "QuickAccessHk6=6`n" , IniFile
+	FileAppend "QuickAccessHk7=7`n" , IniFile
+	FileAppend "QuickAccessHk8=8`n" , IniFile
+	FileAppend "QuickAccessHk9=9`n" , IniFile
 	FileAppend ";--------------------------------------------------`n" , IniFile
 	FileAppend "[AutoRun]`n" , IniFile
 	FileAppend "SprintKey=Shift`n" , IniFile
@@ -2126,6 +2991,28 @@ CreateNewIniFile(*) {
 	FileAppend "CoordY4=463`n" , IniFile
 	FileAppend "Coord4Interval=1000`n" , IniFile
 	FileAppend ";--------------------------------------------------`n" , IniFile
+	FileAppend "[QuickAccessPath]`n" , IniFile
+	FileAppend "QuickAccess1=https://mean-littles-app.gitbook.io/mean-littles-software`n" , IniFile
+	FileAppend "QuickAccess2=https://cornucopias.io/`n" , IniFile
+	FileAppend "QuickAccess3=C:\Users\`n" , IniFile
+	FileAppend "QuickAccess4=https://outlook.live.com/mail/`n" , IniFile
+	FileAppend "QuickAccess5=https://drive.google.com/drive/`n" , IniFile
+	FileAppend "QuickAccess6=`n" , IniFile
+	FileAppend "QuickAccess7=`n" , IniFile
+	FileAppend "QuickAccess8=`n" , IniFile
+	FileAppend "QuickAccess9=`n" , IniFile
+	FileAppend ";--------------------------------------------------`n" , IniFile
+	FileAppend "[QuickAccessIcons]`n" , IniFile
+	FileAppend "QuickIcon1=`n" , IniFile
+	FileAppend "QuickIcon2=`n" , IniFile
+	FileAppend "QuickIcon3=`n" , IniFile
+	FileAppend "QuickIcon4=`n" , IniFile
+	FileAppend "QuickIcon5=`n" , IniFile
+	FileAppend "QuickIcon6=`n" , IniFile
+	FileAppend "QuickIcon7=`n" , IniFile
+	FileAppend "QuickIcon8=`n" , IniFile
+	FileAppend "QuickIcon9=`n" , IniFile
+	FileAppend ";--------------------------------------------------`n" , IniFile
 	FileAppend "[JumpProperties]`n" , IniFile
 	FileAppend "VeryShortJumpRace=400`n" , IniFile
 	FileAppend "VeryShortJumpLenght=500`n" , IniFile
@@ -2141,4 +3028,36 @@ CreateNewIniFile(*) {
 	FileAppend ";-------------------------------`n" , IniFile
 	FileAppend "VeryLongJumpRace=600`n" , IniFile
 	FileAppend "VeryLongJumpLenght=750`n" , IniFile
+	FileAppend ";--------------------------------------------------`n" , IniFile
+	FileAppend "[FontType]`n" , IniFile
+	FileAppend "MainFontType=Comic Sans MS`n" , IniFile
+	FileAppend "MessageAppNameFontType=Georgia`n" , IniFile
+	FileAppend "LicenseKeyFontType=Comic Sans MS`n" , IniFile
+	FileAppend "MessageMainMsgFontType=Georgia`n" , IniFile
+	FileAppend "MessageFontType=Georgia`n" , IniFile
+	FileAppend ";-------------------------------`n" , IniFile
+	FileAppend "; See the list of recommended fonts here: https://www.autohotkey.com/docs/v2/misc/FontsStandard.htm`n" , IniFile
+	FileAppend ";--------------------------------------------------`n" , IniFile
+	FileAppend "[FontColors]`n" , IniFile
+	FileAppend "MainFontColor=Lime`n" , IniFile
+	FileAppend "FontClickerPatternColor=70A0FA`n" , IniFile
+	FileAppend ";-------------------------------`n" , IniFile
+	FileAppend "MessageAppNameFontColor=Lime`n" , IniFile
+	FileAppend "MessageMainMsgFontColor=Lime`n" , IniFile
+	FileAppend "MessageFontColor=Lime`n" , IniFile
+	FileAppend "LicenseKeyFontColor=70A0FA`n" , IniFile
+	FileAppend ";-------------------------------`n" , IniFile
+	FileAppend "; See the list of color names and RGB values here: https://www.autohotkey.com/docs/v2/misc/Colors.htm`n" , IniFile
+	FileAppend "; Black Silver Gray White Maroon Red Purple Fuchsia Green Lime Olive Yellow Navy Blue Teal Aqua`n" , IniFile
+	FileAppend "; If the color name you need is not listed you can still write its RGB value`n" , IniFile
+	FileAppend ";--------------------------------------------------`n" , IniFile
+	FileAppend "[Background]`n" , IniFile
+	FileAppend "BackgroundColor=2F2F2F`n" , IniFile
+	FileAppend "BackgroundPicture=`n" , IniFile
+	FileAppend "MessageBackgroundPicture=`n" , IniFile
+	FileAppend ";--------------------------------------------------`n" , IniFile
+	FileAppend "[Pictures]`n" , IniFile
+	FileAppend "TopPicture=`n" , IniFile
+	FileAppend "BottomPicture=`n" , IniFile
 }
+
