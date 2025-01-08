@@ -3,15 +3,15 @@
 Auto Clicker Module
 
 
-![MLAutoClicker-TA](https://mean-littles-app.gitbook.io/~gitbook/image?url=https%3A%2F%2F4188136884-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-x-prod.appspot.com%2Fo%2Fspaces%252FS1x31hC3oLxNMMnroww1%252Fuploads%252FIJbY0kInGTV398SY8M86%252FML-TA.png%3Falt%3Dmedia%26token%3Dee5220e9-835a-4a3a-a90a-98e2664e32e3&width=768&dpr=1&quality=100&sign=1633d3e6&sv=2)
+![MLAutoClicker-TA](https://mean-littles-app.gitbook.io/~gitbook/image?url=https%3A%2F%2F4188136884-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-x-prod.appspot.com%2Fo%2Fspaces%252FS1x31hC3oLxNMMnroww1%252Fuploads%252FeyqidkSBBTyyh5z2Sr3l%252FMLTA1.png%3Falt%3Dmedia%26token%3Dbe1cf87c-55e2-4370-aff1-12de88b69dd0&width=768&dpr=4&quality=100&sign=6dc6080c&sv=2)
 
 Quick Access Module
 
-![MLQuickAccess-TA](https://mean-littles-app.gitbook.io/~gitbook/image?url=https%3A%2F%2F4188136884-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-x-prod.appspot.com%2Fo%2Fspaces%252FS1x31hC3oLxNMMnroww1%252Fuploads%252FTGtvVJ7ldN4HtqVgdPsL%252FQuickAccess.png%3Falt%3Dmedia%26token%3D2c266ae6-0ddb-41ea-bcec-10d6e9f285d6&width=768&dpr=1&quality=100&sign=a30645e4&sv=2)
+![MLQuickAccess-TA](https://mean-littles-app.gitbook.io/~gitbook/image?url=https%3A%2F%2F4188136884-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-x-prod.appspot.com%2Fo%2Fspaces%252FS1x31hC3oLxNMMnroww1%252Fuploads%252FhMXR15IofZRXHa99KdRG%252FMLTA4.png%3Falt%3Dmedia%26token%3De9b7d7ea-1b32-4149-84a7-2a98b329f4b1&width=768&dpr=4&quality=100&sign=9c822150&sv=2)
 
 Jumps Module
 
-![MLJumps-TA](https://mean-littles-app.gitbook.io/~gitbook/image?url=https%3A%2F%2F4188136884-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-x-prod.appspot.com%2Fo%2Fspaces%252FS1x31hC3oLxNMMnroww1%252Fuploads%252FJ7TbwAC8W7bQCw71wHZK%252FJumpsModule.png%3Falt%3Dmedia%26token%3D5751291e-6d3b-4efa-a13d-2d85f1164a2a&width=768&dpr=1&quality=100&sign=24796e73&sv=2)
+![MLJumps-TA](https://mean-littles-app.gitbook.io/~gitbook/image?url=https%3A%2F%2F4188136884-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-x-prod.appspot.com%2Fo%2Fspaces%252FS1x31hC3oLxNMMnroww1%252Fuploads%252FslTDQIUNxYiFentj6HVC%252FMLTA6.png%3Falt%3Dmedia%26token%3D7b96f6f5-3648-41c9-a909-2685f3ea53b5&width=768&dpr=4&quality=100&sign=19fe0ef2&sv=2)
 
 ## How does it work?
 - The App will read the ML_TaskAutomator.ini file with hotkeys and values stored and will try to detect any game controller device on your computer in case you have one.
