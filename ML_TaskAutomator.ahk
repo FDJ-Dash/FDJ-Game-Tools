@@ -1,4 +1,15 @@
-﻿#Requires Autohotkey v2
+﻿; ------------ Credits ------------
+; Creator: Fernando Daniel Jaime.
+; Programmer Alias: FDJ-Dash.
+; Gamer Alias: Mean Little, Grey Dash, Dash.
+; ------------ App Details ------------
+; App Full Name: Mean Little's Task Automator.
+; Description: This is an app aimed towards repetitive tasks like holding a button down for extended time,
+; mouse clicks or even click patterns. Additionally it brings interchangeable modules like jumps
+; for certain games and Quick access module to store and run any program in your computer or load
+; a web page on your browser easily. 
+; --------------------------------
+#Requires Autohotkey v2
 #SingleInstance
 SetWorkingDir(A_ScriptDir)
 Global IconLib := A_ScriptDir . "\Icons"
@@ -6,11 +17,16 @@ Global IconLib := A_ScriptDir . "\Icons"
 , HotkeyGuide := "https://mean-littles-app.gitbook.io/mean-littles-software"
 , IniFile := A_ScriptDir . "\ML_TaskAutomator.ini"
 , LicenseFile := A_ScriptDir . "\LicenseKey.ini"
-, VersionInfoFile := A_ScriptDir . "\VersionInfo.ini"
+, DataFile := A_Temp . "\MLTA_Data.ini"
+, TempCleanFileMLTA := A_Temp . "\MLTA_CleanFile.ini"
 , AppName := "ML Task Automator"
-, CurrentVersion := "1.3"
+, CurrentVersion := "v1.4"
 , MLSoftwareIcon := "\Logo-FDJ-Dash.png"
 , DefaultMsgBackgroundImage := "\Lightning2.jpg"
+
+AuxHkDataFile := A_Temp . "\MLTA_AuxHkData.ini"
+ClikerStartInterval := 500
+ClikerStopInterval := 1500
 ;----------------------------------------------------
 ; Read ini file
 if !FileExist(IniFile) {
@@ -94,20 +110,16 @@ if SwitchModulesOFF > 1 or SwitchModulesOFF < 0 {
 ;----------------------------------------------------
 ; Read Ini Properties
 ExitMessageTimeWait := IniRead(IniFile, "Properties", "ExitMessageTimeWait")
-SecureMode := IniRead(IniFile, "Properties", "SecureMode")
-if SecureMode > 1 or SecureMode < 0 {
-	SecureMode := 1
-	IniWrite SecureMode, IniFile, "Properties", "SecureMode"
+SuspendedHotkeysTimeWait := IniRead(IniFile, "Properties", "SuspendedHotkeysTimeWait")
+HotkeyEditMode := IniRead(IniFile, "Properties", "HotkeyEditMode")
+if HotkeyEditMode > 1 or HotkeyEditMode < 0 {
+	HotkeyEditMode := 1
+	IniWrite HotkeyEditMode, IniFile, "Properties", "HotkeyEditMode"
 }
 EditBoxesAvailable := IniRead(IniFile, "Properties", "EditBoxesAvailable")
 if EditBoxesAvailable > 1 or EditBoxesAvailable < 0 {
 	EditBoxesAvailable := 1
 	IniWrite EditBoxesAvailable, IniFile, "Properties", "EditBoxesAvailable"
-}
-SuspendHotkeys := IniRead(IniFile, "Properties", "SuspendHotkeys")
-if SuspendHotkeys > 1 or SuspendHotkeys < 0 {
-	SuspendHotkeys := 0
-	IniWrite SuspendHotkeys, IniFile, "Properties", "SuspendHotkeys"
 }
 AutoRunLoopInterval := IniRead(IniFile, "Properties", "AutoRunLoopInterval")
 if AutoRunLoopInterval < 0  {
@@ -129,6 +141,34 @@ if GuiPriorityAlwaysOnTop < 0 or GuiPriorityAlwaysOnTop > 1 {
 	GuiPriorityAlwaysOnTop := 0
 	IniWrite GuiPriorityAlwaysOnTop, IniFile, "Properties", "GuiPriorityAlwaysOnTop"
 }
+PositionX := IniRead(IniFile, "Properties", "PositionX")
+PositionY := IniRead(IniFile, "Properties", "PositionY")
+if isInteger(PositionX) != true or PositionX == "" or PositionX == -32000 {
+	PositionX := A_ScreenWidth / 2 - 200
+}
+if isInteger(PositionY) != true or PositionY == "" or PositionY == -32000 {
+	PositionY := 150
+}
+ExitTaskAutomatorKey := IniRead(IniFile, "Properties", "ExitTaskAutomatorKey")
+SuspendHotkeysKey := IniRead(IniFile, "Properties", "SuspendHotkeysKey")
+;----------------------------------------------------
+; Read ini Settings
+CheckforUpdatesDaily := IniRead(IniFile, "Settings", "CheckforUpdatesDaily")
+CheckforupdatesWeekly := IniRead(IniFile, "Settings", "CheckforupdatesWeekly")
+NeverCheckForUpdates := IniRead(IniFile, "Settings", "NeverCheckForUpdates")
+LastUpdateCheckTimeStamp := IniRead(IniFile, "Settings", "LastUpdateCheckTimeStamp")
+NeedUpdate := IniRead(IniFile, "Settings", "NeedUpdate")
+switch true {
+case CheckforUpdatesDaily == true:
+	CheckforupdatesWeekly := false
+	NeverCheckForUpdates := false
+case CheckforupdatesWeekly == true:
+	CheckforUpdatesDaily := false
+	NeverCheckForUpdates := false
+case NeverCheckForUpdates == true:
+	CheckforUpdatesDaily := false
+	CheckforupdatesWeekly := false
+}
 ;----------------------------------------------------
 ; Read Ini PaceProperties
 ScrlUpCount := IniRead(IniFile, "PaceProperties", "ScrlUpCount")
@@ -139,14 +179,102 @@ ScrlDownInterval := IniRead(IniFile, "PaceProperties", "ScrlDownInterval")
 ; Read Ini Saved Hotkey
 StartAutoRunHotkey := IniRead(IniFile, "SavedHotkey", "StartAutoRunHotkey")
 StopAutoRunHotKey := IniRead(IniFile, "SavedHotkey", "StopAutoRunHotKey")
+switch true {
+case StartAutoRunHotkey == "+":
+	StartAutoRunHotkey := "Shift"
+	IniWrite StartAutoRunHotkey, IniFile, "SavedHotkey", "StartAutoRunHotkey"
+case StartAutoRunHotkey == "!":
+	StartAutoRunHotkey := "Alt"
+	IniWrite StartAutoRunHotkey, IniFile, "SavedHotkey", "StartAutoRunHotkey"
+case StartAutoRunHotkey == "^":
+	StartAutoRunHotkey := "Ctrl"
+	IniWrite StartAutoRunHotkey, IniFile, "SavedHotkey", "StartAutoRunHotkey"
+}
+switch true {
+case StopAutoRunHotKey == "+":
+	StopAutoRunHotKey := "Shift"
+	IniWrite StopAutoRunHotKey, IniFile, "SavedHotkey", "StopAutoRunHotKey"
+case StopAutoRunHotKey == "!":
+	StopAutoRunHotKey := "Alt"
+	IniWrite StopAutoRunHotKey, IniFile, "SavedHotkey", "StopAutoRunHotKey"
+case StopAutoRunHotKey == "^":
+	StopAutoRunHotKey := "Ctrl"
+	IniWrite StopAutoRunHotKey, IniFile, "SavedHotkey", "StopAutoRunHotKey"
+}
+;-------------------------------
 PatternClickerHotkey := IniRead(IniFile, "SavedHotkey", "PatternClickerHotkey")
-StopPatternHotkey := IniRead(IniFile, "SavedHotkey", "StopPatternHotkey")
+switch true {
+case PatternClickerHotkey == "+":
+	PatternClickerHotkey := "Shift"
+	IniWrite PatternClickerHotkey, IniFile, "SavedHotkey", "PatternClickerHotkey"
+case PatternClickerHotkey == "!":
+	PatternClickerHotkey := "Alt"
+	IniWrite PatternClickerHotkey, IniFile, "SavedHotkey", "PatternClickerHotkey"
+case PatternClickerHotkey == "^":
+	PatternClickerHotkey := "Ctrl"
+	IniWrite PatternClickerHotkey, IniFile, "SavedHotkey", "PatternClickerHotkey"
+}
 ;-------------------------------
 JumpHotkey0 := IniRead(IniFile, "SavedHotkey", "JumpHotkey0")
 JumpHotkey1 := IniRead(IniFile, "SavedHotkey", "JumpHotkey1")
 JumpHotkey2 := IniRead(IniFile, "SavedHotkey", "JumpHotkey2")
 JumpHotkey3 := IniRead(IniFile, "SavedHotkey", "JumpHotkey3")
 JumpHotkey4 := IniRead(IniFile, "SavedHotkey", "JumpHotkey4")
+switch true {
+case JumpHotkey0 == "+":
+	JumpHotkey0 := "Shift"
+	IniWrite JumpHotkey0, IniFile, "SavedHotkey", "JumpHotkey0"
+case JumpHotkey0 == "!":
+	JumpHotkey0 := "Alt"
+	IniWrite JumpHotkey0, IniFile, "SavedHotkey", "JumpHotkey0"
+case JumpHotkey0 == "^":
+	JumpHotkey0 := "Ctrl"
+	IniWrite JumpHotkey0, IniFile, "SavedHotkey", "JumpHotkey0"
+}
+switch true {
+case JumpHotkey1 == "+":
+	JumpHotkey1 := "Shift"
+	IniWrite JumpHotkey1, IniFile, "SavedHotkey", "JumpHotkey1"
+case JumpHotkey1 == "!":
+	JumpHotkey1 := "Alt"
+	IniWrite JumpHotkey1, IniFile, "SavedHotkey", "JumpHotkey1"
+case JumpHotkey1 == "^":
+	JumpHotkey1 := "Ctrl"
+	IniWrite JumpHotkey1, IniFile, "SavedHotkey", "JumpHotkey1"
+}
+switch true {
+case JumpHotkey2 == "+":
+	JumpHotkey2 := "Shift"
+	IniWrite JumpHotkey2, IniFile, "SavedHotkey", "JumpHotkey2"
+case JumpHotkey2 == "!":
+	JumpHotkey2 := "Alt"
+	IniWrite JumpHotkey2, IniFile, "SavedHotkey", "JumpHotkey2"
+case JumpHotkey2 == "^":
+	JumpHotkey2 := "Ctrl"
+	IniWrite JumpHotkey2, IniFile, "SavedHotkey", "JumpHotkey2"
+}
+switch true {
+case JumpHotkey3 == "+":
+	JumpHotkey3 := "Shift"
+	IniWrite JumpHotkey3, IniFile, "SavedHotkey", "JumpHotkey3"
+case JumpHotkey3 == "!":
+	JumpHotkey3 := "Alt"
+	IniWrite JumpHotkey3, IniFile, "SavedHotkey", "JumpHotkey3"
+case JumpHotkey3 == "^":
+	JumpHotkey3 := "Ctrl"
+	IniWrite JumpHotkey3, IniFile, "SavedHotkey", "JumpHotkey3"
+}
+switch true {
+case JumpHotkey4 == "+":
+	JumpHotkey4 := "Shift"
+	IniWrite JumpHotkey4, IniFile, "SavedHotkey", "JumpHotkey4"
+case JumpHotkey4 == "!":
+	JumpHotkey4 := "Alt"
+	IniWrite JumpHotkey4, IniFile, "SavedHotkey", "JumpHotkey4"
+case JumpHotkey4 == "^":
+	JumpHotkey4 := "Ctrl"
+	IniWrite JumpHotkey4, IniFile, "SavedHotkey", "JumpHotkey4"
+}
 ;-------------------------------
 QuickAccessHk1 := IniRead(IniFile, "SavedHotkey", "QuickAccessHk1")
 QuickAccessHk2 := IniRead(IniFile, "SavedHotkey", "QuickAccessHk2")
@@ -157,6 +285,106 @@ QuickAccessHk6 := IniRead(IniFile, "SavedHotkey", "QuickAccessHk6")
 QuickAccessHk7 := IniRead(IniFile, "SavedHotkey", "QuickAccessHk7")
 QuickAccessHk8 := IniRead(IniFile, "SavedHotkey", "QuickAccessHk8")
 QuickAccessHk9 := IniRead(IniFile, "SavedHotkey", "QuickAccessHk9")
+
+switch true {
+case QuickAccessHk1 == "+":
+	QuickAccessHk1 := "Shift"
+	IniWrite QuickAccessHk1, IniFile, "SavedHotkey", "QuickAccessHk1"
+case QuickAccessHk1 == "!":
+	QuickAccessHk1 := "Alt"
+	IniWrite QuickAccessHk1, IniFile, "SavedHotkey", "QuickAccessHk1"
+case QuickAccessHk1 == "^":
+	QuickAccessHk1 := "Ctrl"
+	IniWrite QuickAccessHk1, IniFile, "SavedHotkey", "QuickAccessHk1"
+}
+switch true {
+case QuickAccessHk2 == "+":
+	QuickAccessHk2 := "Shift"
+	IniWrite QuickAccessHk2, IniFile, "SavedHotkey", "QuickAccessHk2"
+case QuickAccessHk2 == "!":
+	QuickAccessHk2 := "Alt"
+	IniWrite QuickAccessHk2, IniFile, "SavedHotkey", "QuickAccessHk2"
+case QuickAccessHk2 == "^":
+	QuickAccessHk2 := "Ctrl"
+	IniWrite QuickAccessHk2, IniFile, "SavedHotkey", "QuickAccessHk2"
+}
+switch true {
+case QuickAccessHk3 == "+":
+	QuickAccessHk3 := "Shift"
+	IniWrite QuickAccessHk3, IniFile, "SavedHotkey", "QuickAccessHk3"
+case QuickAccessHk3 == "!":
+	QuickAccessHk3 := "Alt"
+	IniWrite QuickAccessHk3, IniFile, "SavedHotkey", "QuickAccessHk3"
+case QuickAccessHk3 == "^":
+	QuickAccessHk3 := "Ctrl"
+	IniWrite QuickAccessHk3, IniFile, "SavedHotkey", "QuickAccessHk3"
+}
+switch true {
+case QuickAccessHk4 == "+":
+	QuickAccessHk4 := "Shift"
+	IniWrite QuickAccessHk4, IniFile, "SavedHotkey", "QuickAccessHk4"
+case QuickAccessHk4 == "!":
+	QuickAccessHk4 := "Alt"
+	IniWrite QuickAccessHk4, IniFile, "SavedHotkey", "QuickAccessHk4"
+case QuickAccessHk4 == "^":
+	QuickAccessHk4 := "Ctrl"
+	IniWrite QuickAccessHk4, IniFile, "SavedHotkey", "QuickAccessHk4"
+}
+switch true {
+case QuickAccessHk5 == "+":
+	QuickAccessHk5 := "Shift"
+	IniWrite QuickAccessHk5, IniFile, "SavedHotkey", "QuickAccessHk5"
+case QuickAccessHk5 == "!":
+	QuickAccessHk5 := "Alt"
+	IniWrite QuickAccessHk5, IniFile, "SavedHotkey", "QuickAccessHk5"
+case QuickAccessHk5 == "^":
+	QuickAccessHk5 := "Ctrl"
+	IniWrite QuickAccessHk5, IniFile, "SavedHotkey", "QuickAccessHk5"
+}
+switch true {
+case QuickAccessHk6 == "+":
+	QuickAccessHk6 := "Shift"
+	IniWrite QuickAccessHk6, IniFile, "SavedHotkey", "QuickAccessHk6"
+case QuickAccessHk6 == "!":
+	QuickAccessHk6 := "Alt"
+	IniWrite QuickAccessHk6, IniFile, "SavedHotkey", "QuickAccessHk6"
+case QuickAccessHk6 == "^":
+	QuickAccessHk6 := "Ctrl"
+	IniWrite QuickAccessHk6, IniFile, "SavedHotkey", "QuickAccessHk6"
+}
+switch true {
+case QuickAccessHk7 == "+":
+	QuickAccessHk7 := "Shift"
+	IniWrite QuickAccessHk7, IniFile, "SavedHotkey", "QuickAccessHk7"
+case QuickAccessHk7 == "!":
+	QuickAccessHk7 := "Alt"
+	IniWrite QuickAccessHk7, IniFile, "SavedHotkey", "QuickAccessHk7"
+case QuickAccessHk7 == "^":
+	QuickAccessHk7 := "Ctrl"
+	IniWrite QuickAccessHk7, IniFile, "SavedHotkey", "QuickAccessHk7"
+}
+switch true {
+case QuickAccessHk8 == "+":
+	QuickAccessHk8 := "Shift"
+	IniWrite QuickAccessHk8, IniFile, "SavedHotkey", "QuickAccessHk8"
+case QuickAccessHk8 == "!":
+	QuickAccessHk8 := "Alt"
+	IniWrite QuickAccessHk8, IniFile, "SavedHotkey", "QuickAccessHk8"
+case QuickAccessHk8 == "^":
+	QuickAccessHk8 := "Ctrl"
+	IniWrite QuickAccessHk8, IniFile, "SavedHotkey", "QuickAccessHk8"
+}
+switch true {
+case QuickAccessHk9 == "+":
+	QuickAccessHk9 := "Shift"
+	IniWrite QuickAccessHk9, IniFile, "SavedHotkey", "QuickAccessHk9"
+case QuickAccessHk9 == "!":
+	QuickAccessHk9 := "Alt"
+	IniWrite QuickAccessHk9, IniFile, "SavedHotkey", "QuickAccessHk9"
+case QuickAccessHk9 == "^":
+	QuickAccessHk9 := "Ctrl"
+	IniWrite QuickAccessHk9, IniFile, "SavedHotkey", "QuickAccessHk9"
+}
 ;----------------------------------------------------
 ; Read ini AutoRun
 SprintKey := IniRead(IniFile, "AutoRun", "SprintKey")
@@ -191,6 +419,14 @@ Coord3Interval := IniRead(IniFile, "CursorLocationClicker", "Coord3Interval")
 CoordX4 := IniRead(IniFile, "CursorLocationClicker", "CoordX4")
 CoordY4 := IniRead(IniFile, "CursorLocationClicker", "CoordY4")
 Coord4Interval := IniRead(IniFile, "CursorLocationClicker", "Coord4Interval")
+;-------------------------------
+CoordX5 := IniRead(IniFile, "CursorLocationClicker", "CoordX5")
+CoordY5 := IniRead(IniFile, "CursorLocationClicker", "CoordY5")
+Coord5Interval := IniRead(IniFile, "CursorLocationClicker", "Coord5Interval")
+;-------------------------------
+CoordX6 := IniRead(IniFile, "CursorLocationClicker", "CoordX6")
+CoordY6 := IniRead(IniFile, "CursorLocationClicker", "CoordY6")
+Coord6Interval := IniRead(IniFile, "CursorLocationClicker", "Coord6Interval")
 ;--------------------------------------------------
 ; Read ini QuickAccessPath
 QuickAccess1 := IniRead(IniFile, "QuickAccessPath", "QuickAccess1")
@@ -250,7 +486,7 @@ if BackgroundPicture == "" {
 	}
 } else {
 	try {
-		TaskAutomatorGui.Add("Picture", "x0 y0 w250 h570", BackgroundPicture)
+		TaskAutomatorGui.Add("Picture", "x0 y0 w250 h590", BackgroundPicture)
 	}
 	catch {
 		BackgroundPicture := ""
@@ -260,22 +496,23 @@ if BackgroundPicture == "" {
 }
 ;----------------------------------------------------
 ; Setup Menu
-FileMenu := Menu()
 MenuBar_Storage := MenuBar()
+;-------------------------------
+FileMenu := Menu()
 MenuBar_Storage.Add("&File", FileMenu)
-FileMenu.Add("S&uspend Hotkeys`tCtrl+U",SuspendMenuHandler)
+FileMenu.Add("Suspend Hotkeys`t" . SuspendHotkeysKey,SuspendMenuHandler)
 FileMenu.Insert()
-FileMenu.Add("&Exit`tCtrl+K",MenuHandlerExit)
+FileMenu.Add("Exit`t" . ExitTaskAutomatorKey,MenuHandlerExit)
 try {
-	FileMenu.SetIcon("S&uspend Hotkeys`tCtrl+U",IconLib . "\stop.ico")
-	FileMenu.SetIcon("&Exit`tCtrl+K",IconLib . "\exit.ico")
+	FileMenu.SetIcon("Suspend Hotkeys`t" . SuspendHotkeysKey,IconLib . "\stop.ico")
+	FileMenu.SetIcon("Exit`t" . ExitTaskAutomatorKey,IconLib . "\exit.ico")
 }
 catch {
 }
 ;-------------------------------
 OptionsMenu := Menu()
 MenuBar_Storage.Add("&Options", OptionsMenu)
-OptionsMenu.Add("Switch Secure &Mode: On/Off", SecureModeHandler)
+OptionsMenu.Add("Switch Hotkey Edit Mode: On/Off", HotkeyEditModeHandler)
 OptionsMenu.Add("Switch Secure Edit &Boxes && Icons: On/Off", EditBoxesHandler)
 OptionsMenu.Insert()
 OptionsMenu.Add("Edit &Ini File", EditIniFileHandler)
@@ -296,14 +533,14 @@ OptionsMenu.Insert()
 OptionsMenu.Add("&Always On Top: ON/OFF", GuiPriorityAlwaysOnTopHandler)
 try {
 	if EditBoxesAvailable == true {
-		OptionsMenu.SetIcon("Switch Secure Edit &Boxes && Icons: On/Off", IconLib . "\EditBox2.ico")
+		OptionsMenu.SetIcon("Switch Secure Edit &Boxes && Icons: On/Off", IconLib . "\EditBox2.png")
 	} else {
-		OptionsMenu.SetIcon("Switch Secure Edit &Boxes && Icons: On/Off", IconLib . "\EditBox1.ico")
+		OptionsMenu.SetIcon("Switch Secure Edit &Boxes && Icons: On/Off", IconLib . "\EditBox1.png")
 	}
-	if SecureMode == true {
-		OptionsMenu.SetIcon("Switch Secure &Mode: On/Off", IconLib . "\Locked.ico")
+	if HotkeyEditMode == true {
+		OptionsMenu.SetIcon("Switch Hotkey Edit Mode: On/Off", IconLib . "\Locked.ico")
 	} else {
-		OptionsMenu.SetIcon("Switch Secure &Mode: On/Off", IconLib . "\Unlocked.ico")
+		OptionsMenu.SetIcon("Switch Hotkey Edit Mode: On/Off", IconLib . "\Unlocked.png")
 	}
 	OptionsMenu.SetIcon("Switch &Keyboard Autorun ON/OFF", IconLib . "\Switch2.ico")
 	OptionsMenu.SetIcon("Switch Con&troller Autorun ON/OFF", IconLib . "\Switch2.ico")
@@ -321,16 +558,33 @@ try {
 catch {
 }
 ;-------------------------------
+SettingsMenu := Menu()
+MenuBar_Storage.Add("&Settings", SettingsMenu)
+SettingsMenu.Add("Check for updates &daily", MenuHandlerCheckUptDaily)
+SettingsMenu.Add("Check for updates &weekly", MenuHandlerCheckUptWeekly)
+SettingsMenu.Add("&Never check for updates", MenuHandlerNeverCheckUpt)
+
+try {
+	SettingsMenu.SetIcon("Check for updates &daily", IconLib . "\CheckDaily.png")
+	SettingsMenu.SetIcon("Check for updates &weekly", IconLib . "\CheckWeekly.png")
+	SettingsMenu.SetIcon("&Never check for updates", IconLib . "\stop.ico")
+}
+catch {
+}
+;-------------------------------
 HelpMenu := Menu()
 MenuBar_Storage.Add("&Help", HelpMenu)
 HelpMenu.Add("Guide", MenuHandlerGuide)
 HelpMenu.Add("Quick Fix", MenuHandlerQuickFix)
 HelpMenu.Insert()
+HelpMenu.Add("Update", MenuHandlerUpdate)
+HelpMenu.Insert()
 HelpMenu.Add("About", MenuHandlerAbout)
 
 try {
-	HelpMenu.SetIcon("Guide", IconLib . MLSoftwareIcon)
+	HelpMenu.SetIcon("Guide", IconLib . "\Logo-MLTA.ico")
 	HelpMenu.SetIcon("Quick Fix", IconLib . "\Fix.ico")
+	HelpMenu.SetIcon("Update", IconLib . "\Update.png")
 	HelpMenu.SetIcon("About", IconLib . "\info.ico")
 }
 catch {
@@ -351,22 +605,102 @@ if SwitchKbAutoRun == false {
 	TextOnOff1 := TaskAutomatorGui.Add("Text","x105 y10 h20 +0x200", " OFF ")
 	TaskAutomatorGui.Add("Text", "x10 y35 h20 +0x200", " Stop AutoRun ")
 	OptionsMenu.SetIcon("Switch &Keyboard Autorun ON/OFF", IconLib . "\Switch1.ico")
-	if SecureMode == true {
+	if HotkeyEditMode == true {
+		if FileExist(AuxHkDataFile){
+			try {
+				FileDelete AuxHkDataFile
+			}
+			catch {
+			}
+		}
 		try {
 			OptionsMenu.SetIcon("Switch Secure &Mode: On/Off", IconLib . "\Locked.ico")
 		}
 		catch {
 		}
-		StartAutoRunHotkey := TaskAutomatorGui.Add("Hotkey", "vStartAutoRunHotkey x150 y10 w74 h20 +disabled", StartAutoRunHotkey)
-		StopAutoRunHotKey := TaskAutomatorGui.Add("Hotkey", "vStopAutoRunHotKey x150 y35 w74 h20 +disabled", StopAutoRunHotKey)
+		StartAutoRunHotkey := TaskAutomatorGui.Add("Hotkey", "vStartAutoRunHotkey x150 y10 w90 h20 +disabled", StartAutoRunHotkey)
+		StopAutoRunHotKey := TaskAutomatorGui.Add("Hotkey", "vStopAutoRunHotKey x150 y35 w90 h20 +disabled", StopAutoRunHotKey)
 	} else {
 		try {
 			OptionsMenu.SetIcon("Switch Secure &Mode: On/Off", IconLib . "\Unlocked.ico")
 		}
 		catch {
 		}
-		StartAutoRunHotkey := TaskAutomatorGui.Add("Hotkey", "vStartAutoRunHotkey x150 y10 w74 h20", StartAutoRunHotkey).OnEvent("Change", SubmitAutoRunHotkey)
-		StopAutoRunHotKey := TaskAutomatorGui.Add("Hotkey", "vStopAutoRunHotKey x150 y35 w74 h20", StopAutoRunHotKey).OnEvent("Change", SubmitAutoRunHotkey)
+		if !FileExist(AuxHkDataFile) {
+			CreateNewAuxHkDataFile()
+		}
+		
+		CtrlStartAutoRunHotkey := IniRead(AuxHkDataFile, "CtrlHkFlags", "CtrlStartAutoRunHotkey")
+		AltStartAutoRunHotkey := IniRead(AuxHkDataFile, "AltHkFlags", "AltStartAutoRunHotkey")
+		ShiftStartAutoRunHotkey := IniRead(AuxHkDataFile, "ShiftHkFlags", "ShiftStartAutoRunHotkey")
+		switch true {
+		case CtrlStartAutoRunHotkey == 1:
+			if StartAutoRunHotkey == "" {
+				StartAutoRunHotkey := "Ctrl"
+				IniWrite StartAutoRunHotkey, IniFile, "SavedHotkey", "StartAutoRunHotkey"
+			}
+			CtrlStartAutoRunHotkey := 0
+			IniWrite CtrlStartAutoRunHotkey, AuxHkDataFile, "CtrlHkFlags", "CtrlStartAutoRunHotkey"
+		case AltStartAutoRunHotkey == 1:
+			if StartAutoRunHotkey == "" {
+				StartAutoRunHotkey := "Alt"
+				IniWrite StartAutoRunHotkey, IniFile, "SavedHotkey", "StartAutoRunHotkey"
+			}
+			AltStartAutoRunHotkey := 0
+			IniWrite AltStartAutoRunHotkey, AuxHkDataFile, "AltHkFlags", "AltStartAutoRunHotkey"
+		case ShiftStartAutoRunHotkey == 1:
+			if StartAutoRunHotkey == "" {
+				StartAutoRunHotkey := "Shift"
+				IniWrite StartAutoRunHotkey, IniFile, "SavedHotkey", "StartAutoRunHotkey"
+			}
+			ShiftStartAutoRunHotkey := 0
+			IniWrite ShiftStartAutoRunHotkey, AuxHkDataFile, "ShiftHkFlags", "ShiftStartAutoRunHotkey" 
+		case StartAutoRunHotkey == "":
+			StartAutoRunHotkey := "Space"
+			IniWrite StartAutoRunHotkey, IniFile, "SavedHotkey", "StartAutoRunHotkey"
+		}
+		
+		CtrlStopAutoRunHotKey := IniRead(AuxHkDataFile, "CtrlHkFlags", "CtrlStopAutoRunHotKey")
+		AltStopAutoRunHotKey := IniRead(AuxHkDataFile, "AltHkFlags", "AltStopAutoRunHotKey")
+		ShiftStopAutoRunHotKey := IniRead(AuxHkDataFile, "ShiftHkFlags", "ShiftStopAutoRunHotKey")
+		switch true {
+		case CtrlStopAutoRunHotKey == 1:
+			if StopAutoRunHotKey == "" {
+				StopAutoRunHotKey := "Ctrl"
+				IniWrite StopAutoRunHotKey, IniFile, "SavedHotkey", "StopAutoRunHotKey"
+			}
+			CtrlStopAutoRunHotKey := 0
+			IniWrite CtrlStopAutoRunHotKey, AuxHkDataFile, "CtrlHkFlags", "CtrlStopAutoRunHotKey"
+		case AltStopAutoRunHotKey == 1:
+			if StopAutoRunHotKey == "" {
+				StopAutoRunHotKey := "Alt"
+				IniWrite StopAutoRunHotKey, IniFile, "SavedHotkey", "StopAutoRunHotKey"
+			}
+			AltStopAutoRunHotKey := 0
+			IniWrite AltStopAutoRunHotKey, AuxHkDataFile, "AltHkFlags", "AltStopAutoRunHotKey"
+		case ShiftStopAutoRunHotKey == 1:
+			if StopAutoRunHotKey == "" {
+				StopAutoRunHotKey := "Shift"
+				IniWrite StopAutoRunHotKey, IniFile, "SavedHotkey", "StopAutoRunHotKey"
+			}
+			ShiftStopAutoRunHotKey := 0
+			IniWrite ShiftStopAutoRunHotKey, AuxHkDataFile, "ShiftHkFlags", "ShiftStopAutoRunHotKey" 
+		case StopAutoRunHotKey == "":
+			StopAutoRunHotKey := "Space"
+			IniWrite StopAutoRunHotKey, IniFile, "SavedHotkey", "StopAutoRunHotKey"
+		}
+		; compare both hotkeys
+		if StartAutoRunHotkey == StopAutoRunHotKey {
+			LicenseKeyInFile := IniRead(LicenseFile, "Data", "LicenseKey")
+			DuplicatedHotkeyValue()
+			StartAutoRunHotkey := "r"
+			StopAutoRunHotKey := "t"
+			IniWrite StartAutoRunHotkey, IniFile, "SavedHotkey", "StartAutoRunHotkey"
+			IniWrite StopAutoRunHotKey, IniFile, "SavedHotkey", "StopAutoRunHotKey"
+		}
+		
+		StartAutoRunHotkey := TaskAutomatorGui.Add("Hotkey", "vStartAutoRunHotkey x150 y10 w90 h20", StartAutoRunHotkey).OnEvent("Change", SubmitAutoRunHotkey)
+		StopAutoRunHotKey := TaskAutomatorGui.Add("Hotkey", "vStopAutoRunHotKey x150 y35 w90 h20", StopAutoRunHotKey).OnEvent("Change", SubmitStopAutoRunHotkey)
 	}
 }
 
@@ -435,8 +769,8 @@ if SwitchControllerAutoRun == false {
 	;----------------------------------------------------
 	; Controller AutoRun
 	TaskAutomatorGui.Add("Text","x10 y172 w110 h20 +0x200", " Controller AutoRun:")
-	RadioCtrlAuRunYes := TaskAutomatorGui.Add("Radio", "x130 y172 w30 h20 +Checked", "Y")
-	RadioCtrlAuRunNo := TaskAutomatorGui.Add("Radio", "x165 y172 w30 h20", "N")
+	RadioCtrlAuRunYes := TaskAutomatorGui.Add("Radio", "x130 y172 w30 h20", "Y")
+	RadioCtrlAuRunNo := TaskAutomatorGui.Add("Radio", "x165 y172 w30 h20 +Checked", "N")
 	TextOnOffCtrlAuRun := TaskAutomatorGui.Add("Text","x210 y172 w30 h20 +0x200", " OFF")
 	TaskAutomatorGui.Add("Text","x25 y197 w200 h20 +0x200", " Use RT / LT Keys to turn it on / off ")
 }
@@ -471,25 +805,175 @@ case SwitchJumps:
 	TaskAutomatorGui.Add("Text", "x20 y373 w95 h20 +0x200", " Very Long jump")
 	TextOnOff6 := TaskAutomatorGui.Add("Text","x120 y373 h20 +0x200", " OFF ")
 
-	if SecureMode == true {
+	if HotkeyEditMode == true {
 		JumpHotkey0 := TaskAutomatorGui.Add("Hotkey", "vJumpHotkey0 x155 y273 w74 h20 +disabled", JumpHotkey0)
 		JumpHotkey1 := TaskAutomatorGui.Add("Hotkey", "vJumpHotkey1 x155 y298 w74 h20 +disabled", JumpHotkey1)
 		JumpHotkey2 := TaskAutomatorGui.Add("Hotkey", "vJumpHotkey2 x155 y323 w74 h20 +disabled", JumpHotkey2)
 		JumpHotkey3 := TaskAutomatorGui.Add("Hotkey", "vJumpHotkey3 x155 y348 w74 h20 +disabled", JumpHotkey3)
 		JumpHotkey4 := TaskAutomatorGui.Add("Hotkey", "vJumpHotkey4 x155 y373 w74 h20 +disabled", JumpHotkey4)
 	} else {
-		JumpHotkey0 := TaskAutomatorGui.Add("Hotkey", "vJumpHotkey0 x155 y273 w74 h20", JumpHotkey0).OnEvent("Change", SubmitJumpHotkey)
-		JumpHotkey1 := TaskAutomatorGui.Add("Hotkey", "vJumpHotkey1 x155 y298 w74 h20", JumpHotkey1).OnEvent("Change", SubmitJumpHotkey)
-		JumpHotkey2 := TaskAutomatorGui.Add("Hotkey", "vJumpHotkey2 x155 y323 w74 h20", JumpHotkey2).OnEvent("Change", SubmitJumpHotkey)
-		JumpHotkey3 := TaskAutomatorGui.Add("Hotkey", "vJumpHotkey3 x155 y348 w74 h20", JumpHotkey3).OnEvent("Change", SubmitJumpHotkey)
-		JumpHotkey4 := TaskAutomatorGui.Add("Hotkey", "vJumpHotkey4 x155 y373 w74 h20", JumpHotkey4).OnEvent("Change", SubmitJumpHotkey)
+		CtrlJumpHotkey0 := IniRead(AuxHkDataFile, "CtrlHkFlags", "CtrlJumpHotkey0")
+		AltJumpHotkey0 := IniRead(AuxHkDataFile, "AltHkFlags", "AltJumpHotkey0")
+		ShiftJumpHotkey0 := IniRead(AuxHkDataFile, "ShiftHkFlags", "ShiftJumpHotkey0")
+		switch true {
+		case CtrlJumpHotkey0 == 1:
+			if JumpHotkey0 == "" {
+				JumpHotkey0 := "Ctrl"
+				IniWrite JumpHotkey0, IniFile, "SavedHotkey", "JumpHotkey0"
+			}
+			CtrlJumpHotkey0 := 0
+			IniWrite CtrlJumpHotkey0, AuxHkDataFile, "CtrlHkFlags", "CtrlJumpHotkey0"
+		case AltJumpHotkey0 == 1:
+			if JumpHotkey0 == "" {
+				JumpHotkey0 := "Alt"
+				IniWrite JumpHotkey0, IniFile, "SavedHotkey", "JumpHotkey0"
+			}
+			AltJumpHotkey0 := 0
+			IniWrite AltJumpHotkey0, AuxHkDataFile, "AltHkFlags", "AltJumpHotkey0"
+		case ShiftJumpHotkey0 == 1:
+			if JumpHotkey0 == "" {
+				JumpHotkey0 := "Shift"
+				IniWrite JumpHotkey0, IniFile, "SavedHotkey", "JumpHotkey0"
+			}
+			ShiftJumpHotkey0 := 0
+			IniWrite ShiftJumpHotkey0, AuxHkDataFile, "ShiftHkFlags", "ShiftJumpHotkey0" 
+		case JumpHotkey0 == "":
+			JumpHotkey0 := "Space"
+			IniWrite JumpHotkey0, IniFile, "SavedHotkey", "JumpHotkey0"
+		}
+		
+		CtrlJumpHotkey1 := IniRead(AuxHkDataFile, "CtrlHkFlags", "CtrlJumpHotkey1")
+		AltJumpHotkey1 := IniRead(AuxHkDataFile, "AltHkFlags", "AltJumpHotkey1")
+		ShiftJumpHotkey1 := IniRead(AuxHkDataFile, "ShiftHkFlags", "ShiftJumpHotkey1")
+		switch true {
+		case CtrlJumpHotkey1 == 1:
+			if JumpHotkey1 == "" {
+				JumpHotkey1 := "Ctrl"
+				IniWrite JumpHotkey1, IniFile, "SavedHotkey", "JumpHotkey1"
+			}
+			CtrlJumpHotkey1 := 0
+			IniWrite CtrlJumpHotkey1, AuxHkDataFile, "CtrlHkFlags", "CtrlJumpHotkey1"
+		case AltJumpHotkey1 == 1:
+			if JumpHotkey1 == "" {
+				JumpHotkey1 := "Alt"
+				IniWrite JumpHotkey1, IniFile, "SavedHotkey", "JumpHotkey1"
+			}
+			AltJumpHotkey1 := 0
+			IniWrite AltJumpHotkey1, AuxHkDataFile, "AltHkFlags", "AltJumpHotkey1"
+		case ShiftJumpHotkey1 == 1:
+			if JumpHotkey1 == "" {
+				JumpHotkey1 := "Shift"
+				IniWrite JumpHotkey1, IniFile, "SavedHotkey", "JumpHotkey1"
+			}
+			ShiftJumpHotkey1 := 0
+			IniWrite ShiftJumpHotkey1, AuxHkDataFile, "ShiftHkFlags", "ShiftJumpHotkey1" 
+		case JumpHotkey1 == "":
+			JumpHotkey1 := "Space"
+			IniWrite JumpHotkey1, IniFile, "SavedHotkey", "JumpHotkey1"
+		}
+		
+		CtrlJumpHotkey2 := IniRead(AuxHkDataFile, "CtrlHkFlags", "CtrlJumpHotkey2")
+		AltJumpHotkey2 := IniRead(AuxHkDataFile, "AltHkFlags", "AltJumpHotkey2")
+		ShiftJumpHotkey2 := IniRead(AuxHkDataFile, "ShiftHkFlags", "ShiftJumpHotkey2")
+		switch true {
+		case CtrlJumpHotkey2 == 1:
+			if JumpHotkey2 == "" {
+				JumpHotkey2 := "Ctrl"
+				IniWrite JumpHotkey2, IniFile, "SavedHotkey", "JumpHotkey2"
+			}
+			CtrlJumpHotkey2 := 0
+			IniWrite CtrlJumpHotkey2, AuxHkDataFile, "CtrlHkFlags", "CtrlJumpHotkey2"
+		case AltJumpHotkey2 == 1:
+			if JumpHotkey2 == "" {
+				JumpHotkey2 := "Alt"
+				IniWrite JumpHotkey2, IniFile, "SavedHotkey", "JumpHotkey2"
+			}
+			AltJumpHotkey2 := 0
+			IniWrite AltJumpHotkey2, AuxHkDataFile, "AltHkFlags", "AltJumpHotkey2"
+		case ShiftJumpHotkey2 == 1:
+			if JumpHotkey2 == "" {
+				JumpHotkey2 := "Shift"
+				IniWrite JumpHotkey2, IniFile, "SavedHotkey", "JumpHotkey2"
+			}
+			ShiftJumpHotkey2 := 0
+			IniWrite ShiftJumpHotkey2, AuxHkDataFile, "ShiftHkFlags", "ShiftJumpHotkey2" 
+		case JumpHotkey2 == "":
+			JumpHotkey2 := "Space"
+			IniWrite JumpHotkey2, IniFile, "SavedHotkey", "JumpHotkey2"
+		}
+		
+		CtrlJumpHotkey3 := IniRead(AuxHkDataFile, "CtrlHkFlags", "CtrlJumpHotkey3")
+		AltJumpHotkey3 := IniRead(AuxHkDataFile, "AltHkFlags", "AltJumpHotkey3")
+		ShiftJumpHotkey3 := IniRead(AuxHkDataFile, "ShiftHkFlags", "ShiftJumpHotkey3")
+		switch true {
+		case CtrlJumpHotkey3 == 1:
+			if JumpHotkey3 == "" {
+				JumpHotkey3 := "Ctrl"
+				IniWrite JumpHotkey3, IniFile, "SavedHotkey", "JumpHotkey3"
+			}
+			CtrlJumpHotkey3 := 0
+			IniWrite CtrlJumpHotkey3, AuxHkDataFile, "CtrlHkFlags", "CtrlJumpHotkey3"
+		case AltJumpHotkey3 == 1:
+			if JumpHotkey3 == "" {
+				JumpHotkey3 := "Alt"
+				IniWrite JumpHotkey3, IniFile, "SavedHotkey", "JumpHotkey3"
+			}
+			AltJumpHotkey3 := 0
+			IniWrite AltJumpHotkey3, AuxHkDataFile, "AltHkFlags", "AltJumpHotkey3"
+		case ShiftJumpHotkey3 == 1:
+			if JumpHotkey3 == "" {
+				JumpHotkey3 := "Shift"
+				IniWrite JumpHotkey3, IniFile, "SavedHotkey", "JumpHotkey3"
+			}
+			ShiftJumpHotkey3 := 0
+			IniWrite ShiftJumpHotkey3, AuxHkDataFile, "ShiftHkFlags", "ShiftJumpHotkey3" 
+		case JumpHotkey3 == "":
+			JumpHotkey3 := "Space"
+			IniWrite JumpHotkey3, IniFile, "SavedHotkey", "JumpHotkey3"
+		}
+		
+		CtrlJumpHotkey4 := IniRead(AuxHkDataFile, "CtrlHkFlags", "CtrlJumpHotkey4")
+		AltJumpHotkey4 := IniRead(AuxHkDataFile, "AltHkFlags", "AltJumpHotkey4")
+		ShiftJumpHotkey4 := IniRead(AuxHkDataFile, "ShiftHkFlags", "ShiftJumpHotkey4")
+		switch true {
+		case CtrlJumpHotkey4 == 1:
+			if JumpHotkey4 == "" {
+				JumpHotkey4 := "Ctrl"
+				IniWrite JumpHotkey4, IniFile, "SavedHotkey", "JumpHotkey4"
+			}
+			CtrlJumpHotkey4 := 0
+			IniWrite CtrlJumpHotkey4, AuxHkDataFile, "CtrlHkFlags", "CtrlJumpHotkey4"
+		case AltJumpHotkey4 == 1:
+			if JumpHotkey4 == "" {
+				JumpHotkey4 := "Alt"
+				IniWrite JumpHotkey4, IniFile, "SavedHotkey", "JumpHotkey4"
+			}
+			AltJumpHotkey4 := 0
+			IniWrite AltJumpHotkey4, AuxHkDataFile, "AltHkFlags", "AltJumpHotkey4"
+		case ShiftJumpHotkey4 == 1:
+			if JumpHotkey4 == "" {
+				JumpHotkey4 := "Shift"
+				IniWrite JumpHotkey4, IniFile, "SavedHotkey", "JumpHotkey4"
+			}
+			ShiftJumpHotkey4 := 0
+			IniWrite ShiftJumpHotkey4, AuxHkDataFile, "ShiftHkFlags", "ShiftJumpHotkey4" 
+		case JumpHotkey4 == "":
+			JumpHotkey4 := "Space"
+			IniWrite JumpHotkey4, IniFile, "SavedHotkey", "JumpHotkey4"
+		}
+		
+		JumpHotkey0 := TaskAutomatorGui.Add("Hotkey", "vJumpHotkey0 x155 y273 w74 h20", JumpHotkey0).OnEvent("Change", SubmitJumpHotkey0)
+		JumpHotkey1 := TaskAutomatorGui.Add("Hotkey", "vJumpHotkey1 x155 y298 w74 h20", JumpHotkey1).OnEvent("Change", SubmitJumpHotkey1)
+		JumpHotkey2 := TaskAutomatorGui.Add("Hotkey", "vJumpHotkey2 x155 y323 w74 h20", JumpHotkey2).OnEvent("Change", SubmitJumpHotkey2)
+		JumpHotkey3 := TaskAutomatorGui.Add("Hotkey", "vJumpHotkey3 x155 y348 w74 h20", JumpHotkey3).OnEvent("Change", SubmitJumpHotkey3)
+		JumpHotkey4 := TaskAutomatorGui.Add("Hotkey", "vJumpHotkey4 x155 y373 w74 h20", JumpHotkey4).OnEvent("Change", SubmitJumpHotkey4)
 	}
 case SwitchClicker:
 	try {
 		OptionsMenu.SetIcon("2. Switch &Clicker", IconLib . "\Switch1.ico")
 		OptionsMenu.SetIcon("3. Switch &Jumps", IconLib . "\Switch2.ico")
 		OptionsMenu.SetIcon("1. Switch Quick &Access", IconLib . "\Switch2.ico")
-		OptionsMenu.SetIcon("Switch Secure Edit &Boxes && Icons: On/Off", IconLib . "\EditBox2.ico")
+		OptionsMenu.SetIcon("Switch Secure Edit &Boxes && Icons: On/Off", IconLib . "\EditBox2.png")
 		OptionsMenu.SetIcon("4. Switch Bottom Mo&dules OFF", IconLib . "\Switch2.ico")
 	}
 	catch {
@@ -498,18 +982,46 @@ case SwitchClicker:
 	SwitchClicker := 1
 	SwitchJumps := 0
 	SwitchModulesOFF := 0
-	TaskAutomatorGui.Add("Text","x48 y226 h20 +0x200", " Auto Clicker - Toggle Key ")
-	
-	if SecureMode == true {
-		PatternClickerHotkey := TaskAutomatorGui.Add("Hotkey", "vPatternClickerHotkey x55 y276 w65 h20 +disabled", PatternClickerHotkey)
-		StopPatternHotkey := TaskAutomatorGui.Add("Hotkey", "vStopPatternHotkey x177 y276 w65 h20 +disabled", StopPatternHotkey)
+	TaskAutomatorGui.Add("Text","x10 y226 h20 +0x200", " Auto Clicker ")
+	TextPatternClickerOnOff := TaskAutomatorGui.Add("Text","x105 y226 h20 +0x200", " OFF ")
+	if HotkeyEditMode == true {
+		PatternClickerHotkey := TaskAutomatorGui.Add("Hotkey", "vPatternClickerHotkey x150 y226 w90 h20 +disabled", PatternClickerHotkey)
 	} else {
-		PatternClickerHotkey := TaskAutomatorGui.Add("Hotkey", "vPatternClickerHotkey x55 y276 w65 h20", PatternClickerHotkey).OnEvent("Change", SubmitPatternClickerHotkey)
-		StopPatternHotkey := TaskAutomatorGui.Add("Hotkey", "vStopPatternHotkey x177 y276 w65 h20", StopPatternHotkey).OnEvent("Change", SubmitPatternClickerHotkey)
+		CtrlPatternClickerHotkey := IniRead(AuxHkDataFile, "CtrlHkFlags", "CtrlPatternClickerHotkey")
+		AltPatternClickerHotkey := IniRead(AuxHkDataFile, "AltHkFlags", "AltPatternClickerHotkey")
+		ShiftPatternClickerHotkey := IniRead(AuxHkDataFile, "ShiftHkFlags", "ShiftPatternClickerHotkey")
+		switch true {
+		case CtrlPatternClickerHotkey == 1:
+			if PatternClickerHotkey == "" {
+				PatternClickerHotkey := "Ctrl"
+				IniWrite PatternClickerHotkey, IniFile, "SavedHotkey", "PatternClickerHotkey"
+			}
+			CtrlPatternClickerHotkey := 0
+			IniWrite CtrlPatternClickerHotkey, AuxHkDataFile, "CtrlHkFlags", "CtrlPatternClickerHotkey"
+		case AltPatternClickerHotkey == 1:
+			if PatternClickerHotkey == "" {
+				PatternClickerHotkey := "Alt"
+				IniWrite PatternClickerHotkey, IniFile, "SavedHotkey", "PatternClickerHotkey"
+			}
+			AltPatternClickerHotkey := 0
+			IniWrite AltPatternClickerHotkey, AuxHkDataFile, "AltHkFlags", "AltPatternClickerHotkey"
+		case ShiftPatternClickerHotkey == 1:
+			if PatternClickerHotkey == "" {
+				PatternClickerHotkey := "Shift"
+				IniWrite PatternClickerHotkey, IniFile, "SavedHotkey", "PatternClickerHotkey"
+			}
+			ShiftPatternClickerHotkey := 0
+			IniWrite ShiftPatternClickerHotkey, AuxHkDataFile, "ShiftHkFlags", "ShiftPatternClickerHotkey" 
+		case PatternClickerHotkey == "":
+			PatternClickerHotkey := "Space"
+			IniWrite PatternClickerHotkey, IniFile, "SavedHotkey", "PatternClickerHotkey"
+		}
+		
+		PatternClickerHotkey := TaskAutomatorGui.Add("Hotkey", "vPatternClickerHotkey x150 y226 w90 h20", PatternClickerHotkey).OnEvent("Change", SubmitPatternClickerHotkey)
 	}
 	if EditBoxesAvailable == true {
 		try {
-			OptionsMenu.SetIcon("Switch Secure Edit &Boxes && Icons: On/Off", IconLib . "\EditBox2.ico")
+			OptionsMenu.SetIcon("Switch Secure Edit &Boxes && Icons: On/Off", IconLib . "\EditBox2.png")
 		}
 		catch {
 		}
@@ -517,7 +1029,7 @@ case SwitchClicker:
 		EditPatternClickerOffset := TaskAutomatorGui.Add("Edit", "vRandomOffset x190 y251 w50 h20 +Number")
 	} else {
 		try {
-			OptionsMenu.SetIcon("Switch Secure Edit &Boxes && Icons: On/Off", IconLib . "\EditBox1.ico")
+			OptionsMenu.SetIcon("Switch Secure Edit &Boxes && Icons: On/Off", IconLib . "\EditBox1.png")
 		}
 		catch {
 		}
@@ -526,15 +1038,26 @@ case SwitchClicker:
 	}
 	TextPatternClickInterval := TaskAutomatorGui.Add("Text","x10 y251 h20 +0x200", " Interval ")
 	TextPatternClickerOffset := TaskAutomatorGui.Add("Text","x120 y251 h20 +0x200", " Rnd Offset ")
-	TextToggleClicker := TaskAutomatorGui.Add("Text","x07 y276 h20 +0x200", "ON/OFF")
-	TextPosX := TaskAutomatorGui.Add("Text","x25 y301 h20 +0x200", "X")
-	TextPosY := TaskAutomatorGui.Add("Text","x80 y301 h20 +0x200", "Y")
-	TextPosInterval := TaskAutomatorGui.Add("Text","x120 y301 h20 +0x200", " Interval ")
-	TextPatternClickerOnOff := TaskAutomatorGui.Add("Text","x195 y301 h20 +0x200", " OFF ")
-	
+	;----------------------------------------------------
+	TextLoop := TaskAutomatorGui.Add("Text","x10 y276 h20 +0x200", " Loop amount: ")
 	TaskAutomatorGui.SetFont()
 	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
-	TextPos0Interval := TaskAutomatorGui.Add("Text","x125 y276 h20 +0x200", "Stop Ptrn")
+	if EditBoxesAvailable == true {
+		EditLoopTimes := TaskAutomatorGui.Add("Edit", "vLoopAmount x98 y276 w70 h20 +Number")
+	} else {
+		EditLoopTimes := TaskAutomatorGui.Add("Edit", "vLoopAmount x98 y276 w70 h20 +Number +Disabled")
+	}
+	EditLoopTimes.Opt("" . BackgroundMainColor . "")
+	TaskAutomatorGui.SetFont()
+	TaskAutomatorGui.SetFont("Bold " . MainFontColor, MainFontType)
+	EditLoopTimes.Value := LoopAmount
+	
+	RadioCountLoopsYes := TaskAutomatorGui.Add("Radio", "x179 y276 h20 +Checked", "Y")
+	RadioCountLoopsNo := TaskAutomatorGui.Add("Radio", "x211 y276 w30 h20", "N")
+	;----------------------------------------------------
+	TextPosX := TaskAutomatorGui.Add("Text","x37 y300 +0x200", " X ")
+	TextPosY := TaskAutomatorGui.Add("Text","x84 y300 +0x200", " Y ")
+	TextPosInterval := TaskAutomatorGui.Add("Text","x121 y300 +0x200", " Interval ")
 	TaskAutomatorGui.SetFont()
 	TaskAutomatorGui.SetFont("Bold " . MainFontColor, MainFontType)
 	EditPatternClicker.Value := ClickInterval
@@ -542,12 +1065,13 @@ case SwitchClicker:
 	EditPatternClickerOffset.Value := RandomOffset
 	EditPatternClickerOffset.Opt("" . BackgroundMainColor . "")
 	;----------------------------------------------------
+	TextPosX1 := TaskAutomatorGui.Add("Text","x10 y319 h20 +0x200", "1")
 	TaskAutomatorGui.SetFont()
 	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
 	if EditBoxesAvailable == true {
-		EditPosX0 := TaskAutomatorGui.Add("Edit", "vCoordX0 x10 y326 w40 h20 +Number")
+		EditPosX0 := TaskAutomatorGui.Add("Edit", "vCoordX0 x25 y319 w40 h20 +Number")
 	} else {
-		EditPosX0 := TaskAutomatorGui.Add("Edit", "vCoordX0 x10 y326 w40 h20 +Number +Disabled")
+		EditPosX0 := TaskAutomatorGui.Add("Edit", "vCoordX0 x25 y319 w40 h20 +Number +Disabled")
 	}
 	EditPosX0.Opt("" . BackgroundMainColor . "")
 	TaskAutomatorGui.SetFont()
@@ -556,9 +1080,9 @@ case SwitchClicker:
 	TaskAutomatorGui.SetFont()
 	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
 	if EditBoxesAvailable == true {
-		EditPosY0 := TaskAutomatorGui.Add("Edit", "vCoordY0 x65 y326 w40 h20 +Number")
+		EditPosY0 := TaskAutomatorGui.Add("Edit", "vCoordY0 x73 y319 w40 h20 +Number")
 	} else {
-		EditPosY0 := TaskAutomatorGui.Add("Edit", "vCoordY0 x65 y326 w40 h20 +Number +Disabled")
+		EditPosY0 := TaskAutomatorGui.Add("Edit", "vCoordY0 x73 y319 w40 h20 +Number +Disabled")
 	}
 	EditPosY0.Opt("" . BackgroundMainColor . "")
 	TaskAutomatorGui.SetFont()
@@ -567,24 +1091,25 @@ case SwitchClicker:
 	TaskAutomatorGui.SetFont()
 	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
 	if EditBoxesAvailable == true {
-		EditPos0Interval := TaskAutomatorGui.Add("Edit", "vCoord0Interval x120 y326 w50 h20 +Number")
+		EditPos0Interval := TaskAutomatorGui.Add("Edit", "vCoord0Interval x121 y319 w50 h20 +Number")
 	} else {
-		EditPos0Interval := TaskAutomatorGui.Add("Edit", "vCoord0Interval x120 y326 w50 h20 +Number +Disabled")
+		EditPos0Interval := TaskAutomatorGui.Add("Edit", "vCoord0Interval x121 y319 w50 h20 +Number +Disabled")
 	}
 	EditPos0Interval.Opt("" . BackgroundMainColor . "")
 	TaskAutomatorGui.SetFont()
 	TaskAutomatorGui.SetFont("Bold " . MainFontColor, MainFontType)
 	EditPos0Interval.Value := Coord0Interval
 	
-	RadioPos0Yes := TaskAutomatorGui.Add("Radio", "x184 y326 h20", "Y")
-	RadioPos0No := TaskAutomatorGui.Add("Radio", "x216 y326 w30 h20 +Checked", "N")
+	RadioPos0Yes := TaskAutomatorGui.Add("Radio", "x179 y319 h20", "Y")
+	RadioPos0No := TaskAutomatorGui.Add("Radio", "x211 y319 w30 h20 +Checked", "N")
 	;----------------------------------------------------
+	TextPosX2 := TaskAutomatorGui.Add("Text","x10 y344 h20 +0x200", "2")
 	TaskAutomatorGui.SetFont()
 	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
 	if EditBoxesAvailable == true {
-		EditPosX1 := TaskAutomatorGui.Add("Edit", "vCoordX1 x10 y351 w40 h20 +Number")
+		EditPosX1 := TaskAutomatorGui.Add("Edit", "vCoordX1 x25 y344 w40 h20 +Number")
 	} else {
-		EditPosX1 := TaskAutomatorGui.Add("Edit", "vCoordX1 x10 y351 w40 h20 +Number +Disabled")
+		EditPosX1 := TaskAutomatorGui.Add("Edit", "vCoordX1 x25 y344 w40 h20 +Number +Disabled")
 	}
 	EditPosX1.Opt("" . BackgroundMainColor . "")
 	TaskAutomatorGui.SetFont()
@@ -593,9 +1118,9 @@ case SwitchClicker:
 	TaskAutomatorGui.SetFont()
 	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
 	if EditBoxesAvailable == true {
-		EditPosY1 := TaskAutomatorGui.Add("Edit", "vCoordY1 x65 y351 w40 h20 +Number")
+		EditPosY1 := TaskAutomatorGui.Add("Edit", "vCoordY1 x73 y344 w40 h20 +Number")
 	} else {
-		EditPosY1 := TaskAutomatorGui.Add("Edit", "vCoordY1 x65 y351 w40 h20 +Number +Disabled")
+		EditPosY1 := TaskAutomatorGui.Add("Edit", "vCoordY1 x73 y344 w40 h20 +Number +Disabled")
 	}
 	EditPosY1.Opt("" . BackgroundMainColor . "")
 	TaskAutomatorGui.SetFont()
@@ -604,24 +1129,25 @@ case SwitchClicker:
 	TaskAutomatorGui.SetFont()
 	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
 	if EditBoxesAvailable == true {
-		EditPos1Interval := TaskAutomatorGui.Add("Edit", "vCoord1Interval x120 y351 w50 h20 +Number")
+		EditPos1Interval := TaskAutomatorGui.Add("Edit", "vCoord1Interval x121 y344 w50 h20 +Number")
 	} else {
-		EditPos1Interval := TaskAutomatorGui.Add("Edit", "vCoord1Interval x120 y351 w50 h20 +Number +Disabled")
+		EditPos1Interval := TaskAutomatorGui.Add("Edit", "vCoord1Interval x121 y344 w50 h20 +Number +Disabled")
 	}
 	EditPos1Interval.Opt("" . BackgroundMainColor . "")
 	TaskAutomatorGui.SetFont()
 	TaskAutomatorGui.SetFont("Bold " . MainFontColor, MainFontType)
 	EditPos1Interval.Value := Coord1Interval
 	
-	RadioPos1Yes := TaskAutomatorGui.Add("Radio", "x184 y351 h20", "Y")
-	RadioPos1No := TaskAutomatorGui.Add("Radio", "x216 y351 w30 h20 +Checked", "N")
+	RadioPos1Yes := TaskAutomatorGui.Add("Radio", "x179 y344 h20", "Y")
+	RadioPos1No := TaskAutomatorGui.Add("Radio", "x211 y344 w30 h20 +Checked", "N")
 	;----------------------------------------------------
+	TextPosX3 := TaskAutomatorGui.Add("Text","x10 y369 h20 +0x200", "3")
 	TaskAutomatorGui.SetFont()
 	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
 	if EditBoxesAvailable == true {
-		EditPosX2 := TaskAutomatorGui.Add("Edit", "vCoordX2 x10 y376 w40 h20 +Number")
+		EditPosX2 := TaskAutomatorGui.Add("Edit", "vCoordX2 x25 y369 w40 h20 +Number")
 	} else {
-		EditPosX2 := TaskAutomatorGui.Add("Edit", "vCoordX2 x10 y376 w40 h20 +Number +Disabled")
+		EditPosX2 := TaskAutomatorGui.Add("Edit", "vCoordX2 x25 y369 w40 h20 +Number +Disabled")
 	}
 	EditPosX2.Opt("" . BackgroundMainColor . "")
 	TaskAutomatorGui.SetFont()
@@ -630,9 +1156,9 @@ case SwitchClicker:
 	TaskAutomatorGui.SetFont()
 	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
 	if EditBoxesAvailable == true {
-		EditPosY2 := TaskAutomatorGui.Add("Edit", "vCoordY2 x65 y376 w40 h20 +Number")
+		EditPosY2 := TaskAutomatorGui.Add("Edit", "vCoordY2 x73 y369 w40 h20 +Number")
 	} else {
-		EditPosY2 := TaskAutomatorGui.Add("Edit", "vCoordY2 x65 y376 w40 h20 +Number +Disabled")
+		EditPosY2 := TaskAutomatorGui.Add("Edit", "vCoordY2 x73 y369 w40 h20 +Number +Disabled")
 	}
 	EditPosY2.Opt("" . BackgroundMainColor . "")
 	TaskAutomatorGui.SetFont()
@@ -641,24 +1167,25 @@ case SwitchClicker:
 	TaskAutomatorGui.SetFont()
 	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
 	if EditBoxesAvailable == true {
-		EditPos2Interval := TaskAutomatorGui.Add("Edit", "vCoord2Interval x120 y376 w50 h20 +Number")
+		EditPos2Interval := TaskAutomatorGui.Add("Edit", "vCoord2Interval x121 y369 w50 h20 +Number")
 	} else {
-		EditPos2Interval := TaskAutomatorGui.Add("Edit", "vCoord2Interval x120 y376 w50 h20 +Number +Disabled")
+		EditPos2Interval := TaskAutomatorGui.Add("Edit", "vCoord2Interval x121 y369 w50 h20 +Number +Disabled")
 	}
 	EditPos2Interval.Opt("" . BackgroundMainColor . "")
 	TaskAutomatorGui.SetFont()
 	TaskAutomatorGui.SetFont("Bold " . MainFontColor, MainFontType)
 	EditPos2Interval.Value := Coord2Interval
 	
-	RadioPos2Yes := TaskAutomatorGui.Add("Radio", "x184 y376 h20", "Y")
-	RadioPos2No := TaskAutomatorGui.Add("Radio", "x216 y376 w30 h20 +Checked", "N")
+	RadioPos2Yes := TaskAutomatorGui.Add("Radio", "x179 y369 h20", "Y")
+	RadioPos2No := TaskAutomatorGui.Add("Radio", "x211 y369 w30 h20 +Checked", "N")
 	;----------------------------------------------------
+	TextPosX4 := TaskAutomatorGui.Add("Text","x10 y394 h20 +0x200", "4")
 	TaskAutomatorGui.SetFont()
 	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
 	if EditBoxesAvailable == true {
-		EditPosX3 := TaskAutomatorGui.Add("Edit", "vCoordX3 x10 y401 w40 h20 +Number")
+		EditPosX3 := TaskAutomatorGui.Add("Edit", "vCoordX3 x25 y394 w40 h20 +Number")
 	} else {
-		EditPosX3 := TaskAutomatorGui.Add("Edit", "vCoordX3 x10 y401 w40 h20 +Number +Disabled")
+		EditPosX3 := TaskAutomatorGui.Add("Edit", "vCoordX3 x25 y394 w40 h20 +Number +Disabled")
 	}
 	EditPosX3.Opt("" . BackgroundMainColor . "")
 	TaskAutomatorGui.SetFont()
@@ -667,9 +1194,9 @@ case SwitchClicker:
 	TaskAutomatorGui.SetFont()
 	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
 	if EditBoxesAvailable == true {
-		EditPosY3 := TaskAutomatorGui.Add("Edit", "vCoordY3 x65 y401 w40 h20 +Number")
+		EditPosY3 := TaskAutomatorGui.Add("Edit", "vCoordY3 x73 y394 w40 h20 +Number")
 	} else {
-		EditPosY3 := TaskAutomatorGui.Add("Edit", "vCoordY3 x65 y401 w40 h20 +Number +Disabled")
+		EditPosY3 := TaskAutomatorGui.Add("Edit", "vCoordY3 x73 y394 w40 h20 +Number +Disabled")
 	}
 	EditPosY3.Opt("" . BackgroundMainColor . "")
 	TaskAutomatorGui.SetFont()
@@ -678,24 +1205,25 @@ case SwitchClicker:
 	TaskAutomatorGui.SetFont()
 	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
 	if EditBoxesAvailable == true {
-		EditPos3Interval := TaskAutomatorGui.Add("Edit", "vCoord3Interval x120 y401 w50 h20 +Number")
+		EditPos3Interval := TaskAutomatorGui.Add("Edit", "vCoord3Interval x121 y394 w50 h20 +Number")
 	} else {
-		EditPos3Interval := TaskAutomatorGui.Add("Edit", "vCoord3Interval x120 y401 w50 h20 +Number +Disabled")
+		EditPos3Interval := TaskAutomatorGui.Add("Edit", "vCoord3Interval x121 y394 w50 h20 +Number +Disabled")
 	}
 	EditPos3Interval.Opt("" . BackgroundMainColor . "")
 	TaskAutomatorGui.SetFont()
 	TaskAutomatorGui.SetFont("Bold " . MainFontColor, MainFontType)
 	EditPos3Interval.Value := Coord3Interval
 	
-	RadioPos3Yes := TaskAutomatorGui.Add("Radio", "x184 y401 h20", "Y")
-	RadioPos3No := TaskAutomatorGui.Add("Radio", "x216 y401 w30 h20 +Checked", "N")
+	RadioPos3Yes := TaskAutomatorGui.Add("Radio", "x179 y394 h20", "Y")
+	RadioPos3No := TaskAutomatorGui.Add("Radio", "x211 y394 w30 h20 +Checked", "N")
 	;----------------------------------------------------
+	TextPosX5 := TaskAutomatorGui.Add("Text","x10 y419 h20 +0x200", "5")
 	TaskAutomatorGui.SetFont()
 	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
 	if EditBoxesAvailable == true {
-		EditPosX4 := TaskAutomatorGui.Add("Edit", "vCoordX4 x10 y426 w40 h20 +Number")
+		EditPosX4 := TaskAutomatorGui.Add("Edit", "vCoordX4 x25 y419 w40 h20 +Number")
 	} else {
-		EditPosX4 := TaskAutomatorGui.Add("Edit", "vCoordX4 x10 y426 w40 h20 +Number +Disabled")
+		EditPosX4 := TaskAutomatorGui.Add("Edit", "vCoordX4 x25 y419 w40 h20 +Number +Disabled")
 	}
 	EditPosX4.Opt("" . BackgroundMainColor . "")
 	TaskAutomatorGui.SetFont()
@@ -704,9 +1232,9 @@ case SwitchClicker:
 	TaskAutomatorGui.SetFont()
 	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
 	if EditBoxesAvailable == true {
-		EditPosY4 := TaskAutomatorGui.Add("Edit", "vCoordY4 x65 y426 w40 h20 +Number")
+		EditPosY4 := TaskAutomatorGui.Add("Edit", "vCoordY4 x73 y419 w40 h20 +Number")
 	} else {
-		EditPosY4 := TaskAutomatorGui.Add("Edit", "vCoordY4 x65 y426 w40 h20 +Number +Disabled")
+		EditPosY4 := TaskAutomatorGui.Add("Edit", "vCoordY4 x73 y419 w40 h20 +Number +Disabled")
 	}
 	EditPosY4.Opt("" . BackgroundMainColor . "")
 	TaskAutomatorGui.SetFont()
@@ -715,34 +1243,95 @@ case SwitchClicker:
 	TaskAutomatorGui.SetFont()
 	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
 	if EditBoxesAvailable == true {
-		EditPos4Interval := TaskAutomatorGui.Add("Edit", "vCoord4Interval x120 y426 w50 h20 +Number")
+		EditPos4Interval := TaskAutomatorGui.Add("Edit", "vCoord4Interval x121 y419 w50 h20 +Number")
 	} else {
-		EditPos4Interval := TaskAutomatorGui.Add("Edit", "vCoord4Interval x120 y426 w50 h20 +Number +Disabled")
+		EditPos4Interval := TaskAutomatorGui.Add("Edit", "vCoord4Interval x121 y419 w50 h20 +Number +Disabled")
 	}
 	EditPos4Interval.Opt("" . BackgroundMainColor . "")
 	TaskAutomatorGui.SetFont()
 	TaskAutomatorGui.SetFont("Bold " . MainFontColor, MainFontType)
 	EditPos4Interval.Value := Coord4Interval
 	
-	RadioPos4Yes := TaskAutomatorGui.Add("Radio", "x184 y426 h20", "Y")
-	RadioPos4No := TaskAutomatorGui.Add("Radio", "x216 y426 w30 h20 +Checked", "N")
+	RadioPos4Yes := TaskAutomatorGui.Add("Radio", "x179 y419 h20", "Y")
+	RadioPos4No := TaskAutomatorGui.Add("Radio", "x211 y419 w30 h20 +Checked", "N")
 	;----------------------------------------------------
-	TextLoop := TaskAutomatorGui.Add("Text","x10 y451 h20 +0x200", " Loop amount: ")
+	TextPosX6 := TaskAutomatorGui.Add("Text","x10 y444 h20 +0x200", "6")
 	TaskAutomatorGui.SetFont()
 	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
 	if EditBoxesAvailable == true {
-		EditLoopTimes := TaskAutomatorGui.Add("Edit", "vLoopAmount x100 y451 w70 h20 +Number")
+		EditPosX5 := TaskAutomatorGui.Add("Edit", "vCoordX5 x25 y444 w40 h20 +Number")
 	} else {
-		EditLoopTimes := TaskAutomatorGui.Add("Edit", "vLoopAmount x100 y451 w70 h20 +Number +Disabled")
+		EditPosX5 := TaskAutomatorGui.Add("Edit", "vCoordX5 x25 y444 w40 h20 +Number +Disabled")
 	}
-	EditLoopTimes.Opt("" . BackgroundMainColor . "")
+	EditPosX5.Opt("" . BackgroundMainColor . "")
 	TaskAutomatorGui.SetFont()
 	TaskAutomatorGui.SetFont("Bold " . MainFontColor, MainFontType)
-	EditLoopTimes.Value := LoopAmount
+	EditPosX5.Value := CoordX5
+	TaskAutomatorGui.SetFont()
+	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
+	if EditBoxesAvailable == true {
+		EditPosY5 := TaskAutomatorGui.Add("Edit", "vCoordY5 x73 y444 w40 h20 +Number")
+	} else {
+		EditPosY5 := TaskAutomatorGui.Add("Edit", "vCoordY5 x73 y444 w40 h20 +Number +Disabled")
+	}
+	EditPosY5.Opt("" . BackgroundMainColor . "")
+	TaskAutomatorGui.SetFont()
+	TaskAutomatorGui.SetFont("Bold " . MainFontColor, MainFontType)
+	EditPosY5.Value := CoordY5
+	TaskAutomatorGui.SetFont()
+	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
+	if EditBoxesAvailable == true {
+		EditPos5Interval := TaskAutomatorGui.Add("Edit", "vCoord5Interval x121 y444 w50 h20 +Number")
+	} else {
+		EditPos5Interval := TaskAutomatorGui.Add("Edit", "vCoord5Interval x121 y444 w50 h20 +Number +Disabled")
+	}
+	EditPos5Interval.Opt("" . BackgroundMainColor . "")
+	TaskAutomatorGui.SetFont()
+	TaskAutomatorGui.SetFont("Bold " . MainFontColor, MainFontType)
+	EditPos5Interval.Value := Coord5Interval
 	
-	RadioCountLoopsYes := TaskAutomatorGui.Add("Radio", "x184 y451 h20", "Y")
-	RadioCountLoopsNo := TaskAutomatorGui.Add("Radio", "x216 y451 w30 h20 +Checked", "N")
-	TaskAutomatorGui.Add("Text","x22 y485 h20 +0x100", " Time interval in ms (1 second = 1000) ")
+	RadioPos5Yes := TaskAutomatorGui.Add("Radio", "x179 y444 h20", "Y")
+	RadioPos5No := TaskAutomatorGui.Add("Radio", "x211 y444 w30 h20 +Checked", "N")
+	;----------------------------------------------------
+	TextPosX7 := TaskAutomatorGui.Add("Text","x10 y469 h20 +0x200", "7")
+	TaskAutomatorGui.SetFont()
+	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
+	if EditBoxesAvailable == true {
+		EditPosX6 := TaskAutomatorGui.Add("Edit", "vCoordX6 x25 y469 w40 h20 +Number")
+	} else {
+		EditPosX6 := TaskAutomatorGui.Add("Edit", "vCoordX6 x25 y469 w40 h20 +Number +Disabled")
+	}
+	EditPosX6.Opt("" . BackgroundMainColor . "")
+	TaskAutomatorGui.SetFont()
+	TaskAutomatorGui.SetFont("Bold " . MainFontColor, MainFontType)
+	EditPosX6.Value := CoordX6
+	TaskAutomatorGui.SetFont()
+	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
+	if EditBoxesAvailable == true {
+		EditPosY6 := TaskAutomatorGui.Add("Edit", "vCoordY6 x73 y469 w40 h20 +Number")
+	} else {
+		EditPosY6 := TaskAutomatorGui.Add("Edit", "vCoordY6 x73 y469 w40 h20 +Number +Disabled")
+	}
+	EditPosY6.Opt("" . BackgroundMainColor . "")
+	TaskAutomatorGui.SetFont()
+	TaskAutomatorGui.SetFont("Bold " . MainFontColor, MainFontType)
+	EditPosY6.Value := CoordY6
+	TaskAutomatorGui.SetFont()
+	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
+	if EditBoxesAvailable == true {
+		EditPos6Interval := TaskAutomatorGui.Add("Edit", "vCoord6Interval x121 y469 w50 h20 +Number")
+	} else {
+		EditPos6Interval := TaskAutomatorGui.Add("Edit", "vCoord6Interval x121 y469 w50 h20 +Number +Disabled")
+	}
+	EditPos6Interval.Opt("" . BackgroundMainColor . "")
+	TaskAutomatorGui.SetFont()
+	TaskAutomatorGui.SetFont("Bold " . MainFontColor, MainFontType)
+	EditPos6Interval.Value := Coord6Interval
+	
+	RadioPos6Yes := TaskAutomatorGui.Add("Radio", "x179 y469 h20", "Y")
+	RadioPos6No := TaskAutomatorGui.Add("Radio", "x211 y469 w30 h20 +Checked", "N")
+	;----------------------------------------------------
+	TaskAutomatorGui.Add("Text","x22 y493 +0x200", " Time interval in ms (1 second = 1000) ")
 case SwitchQuickAccess:
 	try {
 		OptionsMenu.SetIcon("2. Switch &Clicker", IconLib . "\Switch2.ico")
@@ -758,10 +1347,10 @@ case SwitchQuickAccess:
 	SwitchModulesOFF := 0
 	FlagReload := false
 	;----------------------------------------------------
-	TaskAutomatorGui.Add("Text", "x7 y233 h20", "1")
+	TaskAutomatorGui.Add("Text", "x7 y233 h20 +0x200", "1")
 	if EditBoxesAvailable == true {
 		try {
-			OptionsMenu.SetIcon("Switch Secure Edit &Boxes && Icons: On/Off", IconLib . "\EditBox2.ico")
+			OptionsMenu.SetIcon("Switch Secure Edit &Boxes && Icons: On/Off", IconLib . "\EditBox2.png")
 		}
 		catch {
 		}
@@ -776,7 +1365,7 @@ case SwitchQuickAccess:
 		EditQuickAcess1 := TaskAutomatorGui.Add("Edit", "vQuickAccess1 x45 y233 w160 h20")
 	} else {
 		try {
-			OptionsMenu.SetIcon("Switch Secure Edit &Boxes && Icons: On/Off", IconLib . "\EditBox1.ico")
+			OptionsMenu.SetIcon("Switch Secure Edit &Boxes && Icons: On/Off", IconLib . "\EditBox1.png")
 		}
 		catch {
 		}
@@ -798,14 +1387,44 @@ case SwitchQuickAccess:
 		QuickAccessButton1.OnEvent("Click", ProccessQuickAccessButton1) 
 	} else {
 		OptionsMenu.SetIcon("1b. Switch &Quick Access Hotkeys/Buttons", IconLib . "\Switch2.ico")
-		if SecureMode == true {
+		if HotkeyEditMode == true {
 			QuickAccessHk1 := TaskAutomatorGui.Add("Hotkey", "vQuickAccessHk1 x210 y233 w30 h20 +disabled", QuickAccessHk1)
 		} else {
-			QuickAccessHk1 := TaskAutomatorGui.Add("Hotkey", "vQuickAccessHk1 x210 y233 w30 h20", QuickAccessHk1).OnEvent("Change", SubmitQuickAccess)
+			CtrlQuickAccessHk1 := IniRead(AuxHkDataFile, "CtrlHkFlags", "CtrlQuickAccessHk1")
+			AltQuickAccessHk1 := IniRead(AuxHkDataFile, "AltHkFlags", "AltQuickAccessHk1")
+			ShiftQuickAccessHk1 := IniRead(AuxHkDataFile, "ShiftHkFlags", "ShiftQuickAccessHk1")
+			switch true {
+			case CtrlQuickAccessHk1 == 1:
+				if QuickAccessHk1 == "" {
+					QuickAccessHk1 := "Ctrl"
+					IniWrite QuickAccessHk1, IniFile, "SavedHotkey", "QuickAccessHk1"
+				}
+				CtrlQuickAccessHk1 := 0
+				IniWrite CtrlQuickAccessHk1, AuxHkDataFile, "CtrlHkFlags", "CtrlQuickAccessHk1"
+			case AltQuickAccessHk1 == 1:
+				if QuickAccessHk1 == "" {
+					QuickAccessHk1 := "Alt"
+					IniWrite QuickAccessHk1, IniFile, "SavedHotkey", "QuickAccessHk1"
+				}
+				AltQuickAccessHk1 := 0
+				IniWrite AltQuickAccessHk1, AuxHkDataFile, "AltHkFlags", "AltQuickAccessHk1"
+			case ShiftQuickAccessHk1 == 1:
+				if QuickAccessHk1 == "" {
+					QuickAccessHk1 := "Shift"
+					IniWrite QuickAccessHk1, IniFile, "SavedHotkey", "QuickAccessHk1"
+				}
+				ShiftQuickAccessHk1 := 0
+				IniWrite ShiftQuickAccessHk1, AuxHkDataFile, "ShiftHkFlags", "ShiftQuickAccessHk1" 
+			case QuickAccessHk1 == "":
+				QuickAccessHk1 := "Space"
+				IniWrite QuickAccessHk1, IniFile, "SavedHotkey", "QuickAccessHk1"
+			}
+			
+			QuickAccessHk1 := TaskAutomatorGui.Add("Hotkey", "vQuickAccessHk1 x210 y233 w30 h20", QuickAccessHk1).OnEvent("Change", SubmitQuickAccess1)
 		}
 	}
 	;----------------------------------------------------
-	TaskAutomatorGui.Add("Text", "x7 y264 h20", "2")
+	TaskAutomatorGui.Add("Text", "x7 y264 h20 +0x200", "2")
 	if EditBoxesAvailable == true {
 		try {
 			TaskAutomatorGui.Add("Picture", "x18 y264 w20 h20 +border", QuickIcon2).OnEvent("Click", SelectNewIcon2)
@@ -833,14 +1452,44 @@ case SwitchQuickAccess:
 		QuickAccessButton2 := TaskAutomatorGui.Add("Button", "x210 y264 w30 h20", "Go!")
 		QuickAccessButton2.OnEvent("Click", ProccessQuickAccessButton2) 
 	} else {
-		if SecureMode == true {
+		if HotkeyEditMode == true {
 			QuickAccessHk2 := TaskAutomatorGui.Add("Hotkey", "vQuickAccessHk2 x210 y264 w30 h20 +disabled", QuickAccessHk2)
 		} else {
-			QuickAccessHk2 := TaskAutomatorGui.Add("Hotkey", "vQuickAccessHk2 x210 y264 w30 h20", QuickAccessHk2).OnEvent("Change", SubmitQuickAccess)
+			CtrlQuickAccessHk2 := IniRead(AuxHkDataFile, "CtrlHkFlags", "CtrlQuickAccessHk2")
+			AltQuickAccessHk2 := IniRead(AuxHkDataFile, "AltHkFlags", "AltQuickAccessHk2")
+			ShiftQuickAccessHk2 := IniRead(AuxHkDataFile, "ShiftHkFlags", "ShiftQuickAccessHk2")
+			switch true {
+			case CtrlQuickAccessHk2 == 1:
+				if QuickAccessHk2 == "" {
+					QuickAccessHk2 := "Ctrl"
+					IniWrite QuickAccessHk2, IniFile, "SavedHotkey", "QuickAccessHk2"
+				}
+				CtrlQuickAccessHk2 := 0
+				IniWrite CtrlQuickAccessHk2, AuxHkDataFile, "CtrlHkFlags", "CtrlQuickAccessHk2"
+			case AltQuickAccessHk2 == 1:
+				if QuickAccessHk2 == "" {
+					QuickAccessHk2 := "Alt"
+					IniWrite QuickAccessHk2, IniFile, "SavedHotkey", "QuickAccessHk2"
+				}
+				AltQuickAccessHk2 := 0
+				IniWrite AltQuickAccessHk2, AuxHkDataFile, "AltHkFlags", "AltQuickAccessHk2"
+			case ShiftQuickAccessHk2 == 1:
+				if QuickAccessHk2 == "" {
+					QuickAccessHk2 := "Shift"
+					IniWrite QuickAccessHk2, IniFile, "SavedHotkey", "QuickAccessHk2"
+				}
+				ShiftQuickAccessHk2 := 0
+				IniWrite ShiftQuickAccessHk2, AuxHkDataFile, "ShiftHkFlags", "ShiftQuickAccessHk2" 
+			case QuickAccessHk2 == "":
+				QuickAccessHk2 := "Space"
+				IniWrite QuickAccessHk2, IniFile, "SavedHotkey", "QuickAccessHk2"
+			}
+			
+			QuickAccessHk2 := TaskAutomatorGui.Add("Hotkey", "vQuickAccessHk2 x210 y264 w30 h20", QuickAccessHk2).OnEvent("Change", SubmitQuickAccess2)
 		}
 	}
 	;----------------------------------------------------
-	TaskAutomatorGui.Add("Text", "x7 y295 h20", "3")
+	TaskAutomatorGui.Add("Text", "x7 y295 h20 +0x200", "3")
 	if EditBoxesAvailable == true {
 		try {
 			TaskAutomatorGui.Add("Picture", "x18 y295 w20 h20 +border", QuickIcon3).OnEvent("Click", SelectNewIcon3)
@@ -868,14 +1517,44 @@ case SwitchQuickAccess:
 		QuickAccessButton3 := TaskAutomatorGui.Add("Button", "x210 y295 w30 h20", "Go!")
 		QuickAccessButton3.OnEvent("Click", ProccessQuickAccessButton3) 
 	} else {
-		if SecureMode == true {
+		if HotkeyEditMode == true {
 			QuickAccessHk3 := TaskAutomatorGui.Add("Hotkey", "vQuickAccessHk3 x210 y295 w30 h20 +disabled", QuickAccessHk3)
 		} else {
-			QuickAccessHk3 := TaskAutomatorGui.Add("Hotkey", "vQuickAccessHk3 x210 y295 w30 h20", QuickAccessHk3).OnEvent("Change", SubmitQuickAccess)
+			CtrlQuickAccessHk3 := IniRead(AuxHkDataFile, "CtrlHkFlags", "CtrlQuickAccessHk3")
+			AltQuickAccessHk3 := IniRead(AuxHkDataFile, "AltHkFlags", "AltQuickAccessHk3")
+			ShiftQuickAccessHk3 := IniRead(AuxHkDataFile, "ShiftHkFlags", "ShiftQuickAccessHk3")
+			switch true {
+			case CtrlQuickAccessHk3 == 1:
+				if QuickAccessHk3 == "" {
+					QuickAccessHk3 := "Ctrl"
+					IniWrite QuickAccessHk3, IniFile, "SavedHotkey", "QuickAccessHk3"
+				}
+				CtrlQuickAccessHk3 := 0
+				IniWrite CtrlQuickAccessHk3, AuxHkDataFile, "CtrlHkFlags", "CtrlQuickAccessHk3"
+			case AltQuickAccessHk3 == 1:
+				if QuickAccessHk3 == "" {
+					QuickAccessHk3 := "Alt"
+					IniWrite QuickAccessHk3, IniFile, "SavedHotkey", "QuickAccessHk3"
+				}
+				AltQuickAccessHk3 := 0
+				IniWrite AltQuickAccessHk3, AuxHkDataFile, "AltHkFlags", "AltQuickAccessHk3"
+			case ShiftQuickAccessHk3 == 1:
+				if QuickAccessHk3 == "" {
+					QuickAccessHk3 := "Shift"
+					IniWrite QuickAccessHk3, IniFile, "SavedHotkey", "QuickAccessHk3"
+				}
+				ShiftQuickAccessHk3 := 0
+				IniWrite ShiftQuickAccessHk3, AuxHkDataFile, "ShiftHkFlags", "ShiftQuickAccessHk3" 
+			case QuickAccessHk3 == "":
+				QuickAccessHk3 := "Space"
+				IniWrite QuickAccessHk3, IniFile, "SavedHotkey", "QuickAccessHk3"
+			}
+			
+			QuickAccessHk3 := TaskAutomatorGui.Add("Hotkey", "vQuickAccessHk3 x210 y295 w30 h20", QuickAccessHk3).OnEvent("Change", SubmitQuickAccess3)
 		}
 	}
 	;----------------------------------------------------
-	TaskAutomatorGui.Add("Text", "x7 y326 h20", "4")
+	TaskAutomatorGui.Add("Text", "x7 y326 h20 +0x200", "4")
 	if EditBoxesAvailable == true {
 		try {
 			TaskAutomatorGui.Add("Picture", "x18 y326 w20 h20 +border", QuickIcon4).OnEvent("Click", SelectNewIcon4)
@@ -903,14 +1582,44 @@ case SwitchQuickAccess:
 		QuickAccessButton4 := TaskAutomatorGui.Add("Button", "x210 y326 w30 h20", "Go!")
 		QuickAccessButton4.OnEvent("Click", ProccessQuickAccessButton4) 
 	} else {
-		if SecureMode == true {
+		if HotkeyEditMode == true {
 			QuickAccessHk4 := TaskAutomatorGui.Add("Hotkey", "vQuickAccessHk4 x210 y326 w30 h20 +disabled", QuickAccessHk4)
 		} else {
-			QuickAccessHk4 := TaskAutomatorGui.Add("Hotkey", "vQuickAccessHk4 x210 y326 w30 h20", QuickAccessHk4).OnEvent("Change", SubmitQuickAccess)
+			CtrlQuickAccessHk4 := IniRead(AuxHkDataFile, "CtrlHkFlags", "CtrlQuickAccessHk4")
+			AltQuickAccessHk4 := IniRead(AuxHkDataFile, "AltHkFlags", "AltQuickAccessHk4")
+			ShiftQuickAccessHk4 := IniRead(AuxHkDataFile, "ShiftHkFlags", "ShiftQuickAccessHk4")
+			switch true {
+			case CtrlQuickAccessHk4 == 1:
+				if QuickAccessHk4 == "" {
+					QuickAccessHk4 := "Ctrl"
+					IniWrite QuickAccessHk4, IniFile, "SavedHotkey", "QuickAccessHk4"
+				}
+				CtrlQuickAccessHk4 := 0
+				IniWrite CtrlQuickAccessHk4, AuxHkDataFile, "CtrlHkFlags", "CtrlQuickAccessHk4"
+			case AltQuickAccessHk4 == 1:
+				if QuickAccessHk4 == "" {
+					QuickAccessHk4 := "Alt"
+					IniWrite QuickAccessHk4, IniFile, "SavedHotkey", "QuickAccessHk4"
+				}
+				AltQuickAccessHk4 := 0
+				IniWrite AltQuickAccessHk4, AuxHkDataFile, "AltHkFlags", "AltQuickAccessHk4"
+			case ShiftQuickAccessHk4 == 1:
+				if QuickAccessHk4 == "" {
+					QuickAccessHk4 := "Shift"
+					IniWrite QuickAccessHk4, IniFile, "SavedHotkey", "QuickAccessHk4"
+				}
+				ShiftQuickAccessHk4 := 0
+				IniWrite ShiftQuickAccessHk4, AuxHkDataFile, "ShiftHkFlags", "ShiftQuickAccessHk4" 
+			case QuickAccessHk4 == "":
+				QuickAccessHk4 := "Space"
+				IniWrite QuickAccessHk4, IniFile, "SavedHotkey", "QuickAccessHk4"
+			}
+			
+			QuickAccessHk4 := TaskAutomatorGui.Add("Hotkey", "vQuickAccessHk4 x210 y326 w30 h20", QuickAccessHk4).OnEvent("Change", SubmitQuickAccess4)
 		}
 	}
 	;----------------------------------------------------
-	TaskAutomatorGui.Add("Text", "x7 y357 h20", "5")
+	TaskAutomatorGui.Add("Text", "x7 y357 h20 +0x200", "5")
 	if EditBoxesAvailable == true {
 		try {
 			TaskAutomatorGui.Add("Picture", "x18 y357 w20 h20 +border", QuickIcon5).OnEvent("Click", SelectNewIcon5)
@@ -938,14 +1647,44 @@ case SwitchQuickAccess:
 		QuickAccessButton5 := TaskAutomatorGui.Add("Button", "x210 y357 w30 h20", "Go!")
 		QuickAccessButton5.OnEvent("Click", ProccessQuickAccessButton5) 
 	} else {
-		if SecureMode == true {
+		if HotkeyEditMode == true {
 			QuickAccessHk5 := TaskAutomatorGui.Add("Hotkey", "vQuickAccessHk5 x210 y357 w30 h20 +disabled", QuickAccessHk5)
 		} else {
-			QuickAccessHk5 := TaskAutomatorGui.Add("Hotkey", "vQuickAccessHk5 x210 y357 w30 h20", QuickAccessHk5).OnEvent("Change", SubmitQuickAccess)
+			CtrlQuickAccessHk5 := IniRead(AuxHkDataFile, "CtrlHkFlags", "CtrlQuickAccessHk5")
+			AltQuickAccessHk5 := IniRead(AuxHkDataFile, "AltHkFlags", "AltQuickAccessHk5")
+			ShiftQuickAccessHk5 := IniRead(AuxHkDataFile, "ShiftHkFlags", "ShiftQuickAccessHk5")
+			switch true {
+			case CtrlQuickAccessHk5 == 1:
+				if QuickAccessHk5 == "" {
+					QuickAccessHk5 := "Ctrl"
+					IniWrite QuickAccessHk5, IniFile, "SavedHotkey", "QuickAccessHk5"
+				}
+				CtrlQuickAccessHk5 := 0
+				IniWrite CtrlQuickAccessHk5, AuxHkDataFile, "CtrlHkFlags", "CtrlQuickAccessHk5"
+			case AltQuickAccessHk5 == 1:
+				if QuickAccessHk5 == "" {
+					QuickAccessHk5 := "Alt"
+					IniWrite QuickAccessHk5, IniFile, "SavedHotkey", "QuickAccessHk5"
+				}
+				AltQuickAccessHk5 := 0
+				IniWrite AltQuickAccessHk5, AuxHkDataFile, "AltHkFlags", "AltQuickAccessHk5"
+			case ShiftQuickAccessHk5 == 1:
+				if QuickAccessHk5 == "" {
+					QuickAccessHk5 := "Shift"
+					IniWrite QuickAccessHk5, IniFile, "SavedHotkey", "QuickAccessHk5"
+				}
+				ShiftQuickAccessHk5 := 0
+				IniWrite ShiftQuickAccessHk5, AuxHkDataFile, "ShiftHkFlags", "ShiftQuickAccessHk5" 
+			case QuickAccessHk5 == "":
+				QuickAccessHk5 := "Space"
+				IniWrite QuickAccessHk5, IniFile, "SavedHotkey", "QuickAccessHk5"
+			}
+			
+			QuickAccessHk5 := TaskAutomatorGui.Add("Hotkey", "vQuickAccessHk5 x210 y357 w30 h20", QuickAccessHk5).OnEvent("Change", SubmitQuickAccess5)
 		}
 	}
 	;----------------------------------------------------
-	TaskAutomatorGui.Add("Text", "x7 y388 h20", "6")
+	TaskAutomatorGui.Add("Text", "x7 y388 h20 +0x200", "6")
 	if EditBoxesAvailable == true {
 		try {
 			TaskAutomatorGui.Add("Picture", "x18 y388 w20 h20 +border", QuickIcon6).OnEvent("Click", SelectNewIcon6)
@@ -973,14 +1712,44 @@ case SwitchQuickAccess:
 		QuickAccessButton6 := TaskAutomatorGui.Add("Button", "x210 y388 w30 h20", "Go!")
 		QuickAccessButton6.OnEvent("Click", ProccessQuickAccessButton6) 
 	} else {
-		if SecureMode == true {
+		if HotkeyEditMode == true {
 			QuickAccessHk6 := TaskAutomatorGui.Add("Hotkey", "vQuickAccessHk6 x210 y388 w30 h20 +disabled", QuickAccessHk6)
 		} else {
-			QuickAccessHk6 := TaskAutomatorGui.Add("Hotkey", "vQuickAccessHk6 x210 y388 w30 h20", QuickAccessHk6).OnEvent("Change", SubmitQuickAccess)
+			CtrlQuickAccessHk6 := IniRead(AuxHkDataFile, "CtrlHkFlags", "CtrlQuickAccessHk6")
+			AltQuickAccessHk6 := IniRead(AuxHkDataFile, "AltHkFlags", "AltQuickAccessHk6")
+			ShiftQuickAccessHk6 := IniRead(AuxHkDataFile, "ShiftHkFlags", "ShiftQuickAccessHk6")
+			switch true {
+			case CtrlQuickAccessHk6 == 1:
+				if QuickAccessHk6 == "" {
+					QuickAccessHk6 := "Ctrl"
+					IniWrite QuickAccessHk6, IniFile, "SavedHotkey", "QuickAccessHk6"
+				}
+				CtrlQuickAccessHk6 := 0
+				IniWrite CtrlQuickAccessHk6, AuxHkDataFile, "CtrlHkFlags", "CtrlQuickAccessHk6"
+			case AltQuickAccessHk6 == 1:
+				if QuickAccessHk6 == "" {
+					QuickAccessHk6 := "Alt"
+					IniWrite QuickAccessHk6, IniFile, "SavedHotkey", "QuickAccessHk6"
+				}
+				AltQuickAccessHk6 := 0
+				IniWrite AltQuickAccessHk6, AuxHkDataFile, "AltHkFlags", "AltQuickAccessHk6"
+			case ShiftQuickAccessHk6 == 1:
+				if QuickAccessHk6 == "" {
+					QuickAccessHk6 := "Shift"
+					IniWrite QuickAccessHk6, IniFile, "SavedHotkey", "QuickAccessHk6"
+				}
+				ShiftQuickAccessHk6 := 0
+				IniWrite ShiftQuickAccessHk6, AuxHkDataFile, "ShiftHkFlags", "ShiftQuickAccessHk6" 
+			case QuickAccessHk6 == "":
+				QuickAccessHk6 := "Space"
+				IniWrite QuickAccessHk6, IniFile, "SavedHotkey", "QuickAccessHk6"
+			}
+			
+			QuickAccessHk6 := TaskAutomatorGui.Add("Hotkey", "vQuickAccessHk6 x210 y388 w30 h20", QuickAccessHk6).OnEvent("Change", SubmitQuickAccess6)
 		}
 	}
 	;----------------------------------------------------
-	TaskAutomatorGui.Add("Text", "x7 y419 h20", "7")
+	TaskAutomatorGui.Add("Text", "x7 y419 h20 +0x200", "7")
 	if EditBoxesAvailable == true {
 		try {
 			TaskAutomatorGui.Add("Picture", "x18 y419 w20 h20 +border", QuickIcon7).OnEvent("Click", SelectNewIcon7)
@@ -1008,14 +1777,44 @@ case SwitchQuickAccess:
 		QuickAccessButton7 := TaskAutomatorGui.Add("Button", "x210 y419 w30 h20", "Go!")
 		QuickAccessButton7.OnEvent("Click", ProccessQuickAccessButton7) 
 	} else {
-		if SecureMode == true {
+		if HotkeyEditMode == true {
 			QuickAccessHk7 := TaskAutomatorGui.Add("Hotkey", "vQuickAccessHk7 x210 y419 w30 h20 +disabled", QuickAccessHk7)
 		} else {
-			QuickAccessHk7 := TaskAutomatorGui.Add("Hotkey", "vQuickAccessHk7 x210 y419 w30 h20", QuickAccessHk7).OnEvent("Change", SubmitQuickAccess)
+			CtrlQuickAccessHk7 := IniRead(AuxHkDataFile, "CtrlHkFlags", "CtrlQuickAccessHk7")
+			AltQuickAccessHk7 := IniRead(AuxHkDataFile, "AltHkFlags", "AltQuickAccessHk7")
+			ShiftQuickAccessHk7 := IniRead(AuxHkDataFile, "ShiftHkFlags", "ShiftQuickAccessHk7")
+			switch true {
+			case CtrlQuickAccessHk7 == 1:
+				if QuickAccessHk7 == "" {
+					QuickAccessHk7 := "Ctrl"
+					IniWrite QuickAccessHk7, IniFile, "SavedHotkey", "QuickAccessHk7"
+				}
+				CtrlQuickAccessHk7 := 0
+				IniWrite CtrlQuickAccessHk7, AuxHkDataFile, "CtrlHkFlags", "CtrlQuickAccessHk7"
+			case AltQuickAccessHk7 == 1:
+				if QuickAccessHk7 == "" {
+					QuickAccessHk7 := "Alt"
+					IniWrite QuickAccessHk7, IniFile, "SavedHotkey", "QuickAccessHk7"
+				}
+				AltQuickAccessHk7 := 0
+				IniWrite AltQuickAccessHk7, AuxHkDataFile, "AltHkFlags", "AltQuickAccessHk7"
+			case ShiftQuickAccessHk7 == 1:
+				if QuickAccessHk7 == "" {
+					QuickAccessHk7 := "Shift"
+					IniWrite QuickAccessHk7, IniFile, "SavedHotkey", "QuickAccessHk7"
+				}
+				ShiftQuickAccessHk7 := 0
+				IniWrite ShiftQuickAccessHk7, AuxHkDataFile, "ShiftHkFlags", "ShiftQuickAccessHk7" 
+			case QuickAccessHk7 == "":
+				QuickAccessHk7 := "Space"
+				IniWrite QuickAccessHk7, IniFile, "SavedHotkey", "QuickAccessHk7"
+			}
+			
+			QuickAccessHk7 := TaskAutomatorGui.Add("Hotkey", "vQuickAccessHk7 x210 y419 w30 h20", QuickAccessHk7).OnEvent("Change", SubmitQuickAccess7)
 		}
 	}
 	;----------------------------------------------------
-	TaskAutomatorGui.Add("Text", "x7 y450 h20", "8")
+	TaskAutomatorGui.Add("Text", "x7 y450 h20 +0x200", "8")
 	if EditBoxesAvailable == true {
 		try {
 			TaskAutomatorGui.Add("Picture", "x18 y450 w20 h20 +border", QuickIcon8).OnEvent("Click", SelectNewIcon8)
@@ -1043,14 +1842,44 @@ case SwitchQuickAccess:
 		QuickAccessButton8 := TaskAutomatorGui.Add("Button", "x210 y450 w30 h20", "Go!")
 		QuickAccessButton8.OnEvent("Click", ProccessQuickAccessButton8) 
 	} else {
-		if SecureMode == true {
+		if HotkeyEditMode == true {
 			QuickAccessHk8 := TaskAutomatorGui.Add("Hotkey", "vQuickAccessHk8 x210 y450 w30 h20 +disabled", QuickAccessHk8)
 		} else {
-			QuickAccessHk8 := TaskAutomatorGui.Add("Hotkey", "vQuickAccessHk8 x210 y450 w30 h20", QuickAccessHk8).OnEvent("Change", SubmitQuickAccess)
+			CtrlQuickAccessHk8 := IniRead(AuxHkDataFile, "CtrlHkFlags", "CtrlQuickAccessHk8")
+			AltQuickAccessHk8 := IniRead(AuxHkDataFile, "AltHkFlags", "AltQuickAccessHk8")
+			ShiftQuickAccessHk8 := IniRead(AuxHkDataFile, "ShiftHkFlags", "ShiftQuickAccessHk8")
+			switch true {
+			case CtrlQuickAccessHk8 == 1:
+				if QuickAccessHk8 == "" {
+					QuickAccessHk8 := "Ctrl"
+					IniWrite QuickAccessHk8, IniFile, "SavedHotkey", "QuickAccessHk8"
+				}
+				CtrlQuickAccessHk8 := 0
+				IniWrite CtrlQuickAccessHk8, AuxHkDataFile, "CtrlHkFlags", "CtrlQuickAccessHk8"
+			case AltQuickAccessHk8 == 1:
+				if QuickAccessHk8 == "" {
+					QuickAccessHk8 := "Alt"
+					IniWrite QuickAccessHk8, IniFile, "SavedHotkey", "QuickAccessHk8"
+				}
+				AltQuickAccessHk8 := 0
+				IniWrite AltQuickAccessHk8, AuxHkDataFile, "AltHkFlags", "AltQuickAccessHk8"
+			case ShiftQuickAccessHk8 == 1:
+				if QuickAccessHk8 == "" {
+					QuickAccessHk8 := "Shift"
+					IniWrite QuickAccessHk8, IniFile, "SavedHotkey", "QuickAccessHk8"
+				}
+				ShiftQuickAccessHk8 := 0
+				IniWrite ShiftQuickAccessHk8, AuxHkDataFile, "ShiftHkFlags", "ShiftQuickAccessHk8" 
+			case QuickAccessHk8 == "":
+				QuickAccessHk8 := "Space"
+				IniWrite QuickAccessHk8, IniFile, "SavedHotkey", "QuickAccessHk8"
+			}
+			
+			QuickAccessHk8 := TaskAutomatorGui.Add("Hotkey", "vQuickAccessHk8 x210 y450 w30 h20", QuickAccessHk8).OnEvent("Change", SubmitQuickAccess8)
 		}
 	}
 	;----------------------------------------------------
-	TaskAutomatorGui.Add("Text", "x7 y481 h20", "9")
+	TaskAutomatorGui.Add("Text", "x7 y481 h20 +0x200", "9")
 	if EditBoxesAvailable == true {
 		try {
 			TaskAutomatorGui.Add("Picture", "x18 y481 w20 h20 +border", QuickIcon9).OnEvent("Click", SelectNewIcon9)
@@ -1081,10 +1910,40 @@ case SwitchQuickAccess:
 		QuickAccessButton9 := TaskAutomatorGui.Add("Button", "x210 y481 w30 h20", "Go!")
 		QuickAccessButton9.OnEvent("Click", ProccessQuickAccessButton9) 
 	} else {
-		if SecureMode == true {
+		if HotkeyEditMode == true {
 			QuickAccessHk9 := TaskAutomatorGui.Add("Hotkey", "vQuickAccessHk9 x210 y481 w30 h20 +disabled", QuickAccessHk9)
 		} else {
-			QuickAccessHk9 := TaskAutomatorGui.Add("Hotkey", "vQuickAccessHk9 x210 y481 w30 h20", QuickAccessHk9).OnEvent("Change", SubmitQuickAccess)
+			CtrlQuickAccessHk9 := IniRead(AuxHkDataFile, "CtrlHkFlags", "CtrlQuickAccessHk9")
+			AltQuickAccessHk9 := IniRead(AuxHkDataFile, "AltHkFlags", "AltQuickAccessHk9")
+			ShiftQuickAccessHk9 := IniRead(AuxHkDataFile, "ShiftHkFlags", "ShiftQuickAccessHk9")
+			switch true {
+			case CtrlQuickAccessHk9 == 1:
+				if QuickAccessHk9 == "" {
+					QuickAccessHk9 := "Ctrl"
+					IniWrite QuickAccessHk9, IniFile, "SavedHotkey", "QuickAccessHk9"
+				}
+				CtrlQuickAccessHk9 := 0
+				IniWrite CtrlQuickAccessHk9, AuxHkDataFile, "CtrlHkFlags", "CtrlQuickAccessHk9"
+			case AltQuickAccessHk9 == 1:
+				if QuickAccessHk9 == "" {
+					QuickAccessHk9 := "Alt"
+					IniWrite QuickAccessHk9, IniFile, "SavedHotkey", "QuickAccessHk9"
+				}
+				AltQuickAccessHk9 := 0
+				IniWrite AltQuickAccessHk9, AuxHkDataFile, "AltHkFlags", "AltQuickAccessHk9"
+			case ShiftQuickAccessHk9 == 1:
+				if QuickAccessHk9 == "" {
+					QuickAccessHk9 := "Shift"
+					IniWrite QuickAccessHk9, IniFile, "SavedHotkey", "QuickAccessHk9"
+				}
+				ShiftQuickAccessHk9 := 0
+				IniWrite ShiftQuickAccessHk9, AuxHkDataFile, "ShiftHkFlags", "ShiftQuickAccessHk9" 
+			case QuickAccessHk9 == "":
+				QuickAccessHk9 := "Space"
+				IniWrite QuickAccessHk9, IniFile, "SavedHotkey", "QuickAccessHk9"
+			}
+			
+			QuickAccessHk9 := TaskAutomatorGui.Add("Hotkey", "vQuickAccessHk9 x210 y481 w30 h20", QuickAccessHk9).OnEvent("Change", SubmitQuickAccess9)
 		}
 	}
 case SwitchModulesOFF:
@@ -1092,7 +1951,7 @@ case SwitchModulesOFF:
 		OptionsMenu.SetIcon("2. Switch &Clicker", IconLib . "\Switch2.ico")
 		OptionsMenu.SetIcon("3. Switch &Jumps", IconLib . "\Switch2.ico")
 		OptionsMenu.SetIcon("1. Switch Quick &Access", IconLib . "\Switch2.ico")
-		OptionsMenu.SetIcon("Switch Secure Edit &Boxes && Icons: On/Off", IconLib . "\EditBox2.ico")
+		OptionsMenu.SetIcon("Switch Secure Edit &Boxes && Icons: On/Off", IconLib . "\EditBox2.png")
 		OptionsMenu.SetIcon("4. Switch Bottom Mo&dules OFF", IconLib . "\Switch1.ico")
 	}
 	catch {
@@ -1102,7 +1961,7 @@ case SwitchModulesOFF:
 	SwitchJumps := 0
 	SwitchModulesOFF := 1
 	if EditBoxesAvailable == true {
-		OptionsMenu.SetIcon("Switch Secure Edit &Boxes && Icons: On/Off", IconLib . "\EditBox2.ico")
+		OptionsMenu.SetIcon("Switch Secure Edit &Boxes && Icons: On/Off", IconLib . "\EditBox2.png")
 		try {
 			TaskAutomatorGui.Add("Picture", "x9 y230 w230 h271 +border", BottomPicture).OnEvent("Click", SelectBottomPicture)
 		}
@@ -1112,7 +1971,7 @@ case SwitchModulesOFF:
 			Reload
 		}
 	} else {
-		OptionsMenu.SetIcon("Switch Secure Edit &Boxes && Icons: On/Off", IconLib . "\EditBox1.ico")
+		OptionsMenu.SetIcon("Switch Secure Edit &Boxes && Icons: On/Off", IconLib . "\EditBox1.png")
 		try {
 			TaskAutomatorGui.Add("Picture", "x9 y230 w230 h271 +border", BottomPicture)
 		}
@@ -1126,14 +1985,100 @@ case SwitchModulesOFF:
 ;----------------------------------------------------
 ; Save All EditBox Values
 TaskAutomatorGui.Add("Text", "x1 y510 w250 h2 +0x10") ; Separator
-SaveButton := TaskAutomatorGui.Add("Button", "x70 y520 h20", "Save Current Values")
-SaveButton.OnEvent("Click", SubmitValues) 
+SaveButton := TaskAutomatorGui.Add("Button", "x70 y516 h20", "Save Current Values")
+SaveButton.OnEvent("Click", SubmitValues)
+;----------------------------------------------------
+; Check for updates
+; A_Now - The current local time in YYYYMMDDHH24MISS format.
+;-------------------------------
+TaskAutomatorGui.Add("Text", "x1 y539 w250 h2 +0x10") ; Separator
+FlagCheckTime := false
+if CheckforUpdatesDaily == true and 
+	(LastUpdateCheckTimeStamp == "" or DateDiff(A_Now, LastUpdateCheckTimeStamp, "Days") > 0) {
+	FlagCheckTime := true
+} 
+;-------------------------------
+if CheckforupdatesWeekly == true and 
+	(LastUpdateCheckTimeStamp == "" or DateDiff(A_Now, LastUpdateCheckTimeStamp, "Days") > 6) {
+	FlagCheckTime := true
+}
+
+switch true {
+case NeverCheckForUpdates == true:
+	TaskAutomatorGui.Add("Text","x10 y544 h20 +0x200", "Update check: ")
+	TaskAutomatorGui.SetFont("s8 Bold c00A8F3", LicenseKeyFontType)
+	TaskAutomatorGui.Add("Text","x97 y544 w126 h20 +0x200", " Update check disabled ")
+	try {
+		TaskAutomatorGui.Add("Picture", "x230 y548 w10 h10 +border", IconLib . "\UpdateCheckDisabled.png")
+	}
+	catch {
+	}
+case NeedUpdate == true:
+	TaskAutomatorGui.Add("Text","x10 y544 h20 +0x200", "Update check: ")
+	TaskAutomatorGui.SetFont("s8 Bold cYellow", LicenseKeyFontType)
+	TaskAutomatorGui.Add("Text","x97 y544 w126 h20 +0x200", " New version available ")
+	try {
+		TaskAutomatorGui.Add("Picture", "x230 y548 w10 h10 +border", IconLib . "\NewVersionAvailable.png")
+	}
+	catch {
+	}
+case FlagCheckTime == false and NeedUpdate == false:
+	TaskAutomatorGui.Add("Text","x10 y544 h20 +0x200", "Update check: ")
+	TaskAutomatorGui.SetFont("s8 Bold cLime", LicenseKeyFontType)
+	TaskAutomatorGui.Add("Text","x97 y544 w126 h20 +0x200", " Version up to date ")
+	try {
+		TaskAutomatorGui.Add("Picture", "x230 y548 w10 h10 +border", IconLib . "\UpToDate.png")
+	}
+	catch {
+	}
+}
+;-------------------------------
+if FlagCheckTime == true {
+	Connected := CheckConnection()
+	if Connected != true {
+		TaskAutomatorGui.Add("Text","x10 y544 h20 +0x200", "Update check: ")
+		TaskAutomatorGui.SetFont("s8 Bold cRed", LicenseKeyFontType)
+		TaskAutomatorGui.Add("Text","x97 y544 h20 +0x200", " No internet connection ")
+		try {
+			TaskAutomatorGui.Add("Picture", "x230 y548 w10 h10 +border", IconLib . "\NoInternetConnection.png")
+		}
+		catch {
+		}
+	} else {
+		if !FileExist(DataFile) {
+			ParseRequest()
+		}
+		MLTALatestReleaseVersion := IniRead(DataFile, "GeneralData", "MLTALatestReleaseVersion")
+		if MLTALatestReleaseVersion == "" {
+			ParseRequest()
+		}
+		DownloadUrl := IniRead(DataFile, "EncriptedData", "MLTADownload")
+		MLTALatestReleaseVersion := IniRead(DataFile, "GeneralData", "MLTALatestReleaseVersion")
+		if MLTALatestReleaseVersion != CurrentVersion {
+			if DownloadUrl != "" {
+				TaskAutomatorGui.Add("Text","x10 y544 h20 +0x200", "Update check: ")
+				TaskAutomatorGui.SetFont("s8 Bold cYellow", LicenseKeyFontType)
+				TaskAutomatorGui.Add("Text","x101 y544 h20 +0x200", " New version available ")
+				TaskAutomatorGui.Add("Picture", "x230 y548 w10 h10 +border", IconLib . "\NewVersionAvailable.png")
+				NeedUpdate := true
+				IniWrite NeedUpdate, IniFile, "Settings", "NeedUpdate"
+			}
+		}
+		if MLTALatestReleaseVersion == CurrentVersion {
+			TaskAutomatorGui.Add("Text","x10 y544 h20 +0x200", "Update check: ")
+			TaskAutomatorGui.SetFont("s8 Bold cLime", LicenseKeyFontType)
+			TaskAutomatorGui.Add("Text","x130 y544 h20 +0x200", " Up to date ")
+			TaskAutomatorGui.Add("Picture", "x230 y548 w10 h10 +border", IconLib . "\UpToDate.png")
+		}
+		IniWrite A_Now, IniFile, "Settings", "LastUpdateCheckTimeStamp"
+	}
+}
 ;----------------------------------------------------
 SB := TaskAutomatorGui.Add("StatusBar", , "Ready.")
 ;----------------------------------------------------
 TaskAutomatorGui.OnEvent('Close', (*) => ExitApp())
 TaskAutomatorGui.Title := AppName
-TaskAutomatorGui.Show("w250 h570")
+TaskAutomatorGui.Show("x" . PositionX . " y" . PositionY . "w250 h590")
 Saved := TaskAutomatorGui.Submit(false)
 CoordMode "Mouse", "Screen"
 ;----------------------------------------------------
@@ -1141,13 +2086,21 @@ OnExit ExitMenu
 ExitMenu(ExitReason,ExitCode)
 {
 	SB.SetText("Quiting..")
-	SuspendHotkeys := IniRead(IniFile, "Properties", "SuspendHotkeys")
-	if SuspendHotkeys != 0 {
-		SuspendHotkeys := 0
-		IniWrite SuspendHotkeys, IniFile, "Properties", "SuspendHotkeys"
+	TaskAutomatorGui.GetPos(&PosX, &PosY)
+	if PosX != -32000 {
+		IniWrite PosX, IniFile, "Properties", "PositionX"
+	}
+	if PosY != -32000 {
+		IniWrite PosY, IniFile, "Properties", "PositionY"
 	}
 	If ExitReason == "Reload" {
 		return 0
+	}
+	try {
+		FileDelete DataFile
+		FileDelete TempCleanFileMLTA
+	}
+	catch {
 	}
 	If ExitCode == 2 {
 		InvalidLicenseMsg
@@ -1220,83 +2173,14 @@ Loop Read, TempFile
 	break
 }
 
-MixedPattern := "Az0By9Cx7Da8Eb2Fc4Gw3Hv5Ij6Js1KlLhMpNeOtPgQnRrSiTqUoVkWmXdYfZu"
 if FlagError == 0 {
 	StringMacAddress := MacAddress[Count]
 } else {
 	StringMacAddress := MacAddress
 }
-LicenseKey := ""
-Count := 0
-flag := 0
-Loop Parse StringMacAddress {
-	; 48 - 57
-	if ord(A_LoopField) == 45 {
-		if flag == 4 {
-			LicenseKey .= "\"
-		} else if flag == 3 {
-			LicenseKey .= "@"
-			flag := 4
-		} else if flag == 2 {
-			LicenseKey .= "["
-			flag := 3
-		} else if flag == 1 {
-			LicenseKey .= "!"
-			flag := 2
-		} else {
-			LicenseKey .= "."
-			flag := 1
-		}	
-	}
-	if ord(A_LoopField) == 46 {
-		LicenseKey .= "-"
-	}
-	if ord(A_LoopField) < 58 {
-		; (0,9)
-		EncriptedString := A_LoopField
-		for index, letter in StrSplit(MixedPattern) {
-			if (letter == A_LoopField) {
-				LicenseKey .= chr(index + 33)
-				LicenseKey .= chr(index + 39)
-				LicenseKey .= chr(index + 36)
-				break
-			}
-		}
-	}
-	
-	if ord(A_LoopField) == 58 {
-		LicenseKey .= ";"
-	}
-	if ord(A_LoopField) == 59 {
-		LicenseKey .= ":"
-	}
-	; 65 - 90
-	if ord(A_LoopField) > 66 and ord(A_LoopField) < 91 {
-		; (0,25) + 10 = (10,35)
-		EncriptedString := A_LoopField
-		for index, letter in StrSplit(MixedPattern) {
-			if (letter == A_LoopField) {
-				LicenseKey .= chr(index + 65)
-				LicenseKey .= chr(index + 33)
-				LicenseKey .= chr(index + 45)
-				break
-			}
-		}
-	}
-	; 97 - 122
-	if ord(A_LoopField) > 96 and ord(A_LoopField) < 123 {
-		; (0,26) + 10 + 26 = (36,61)
-		EncriptedString := A_LoopField
-		for index, letter in StrSplit(MixedPattern) {
-			if (letter == A_LoopField) {
-				LicenseKey .= chr(index + 33)
-				LicenseKey .= chr(index + 25)
-				LicenseKey .= chr(index + 45)
-				break
-			}
-		}
-	}
-}
+
+LicenseKey := EncriptMsg(StringMacAddress)
+
 try {
 	LicenseKeyInFile := IniRead(LicenseFile, "Data", "LicenseKey")
 }
@@ -1312,6 +2196,13 @@ case LicenseKeyInFile == LicenseKey:
 case LicenseKeyInFile != LicenseKey:
 	; Invalid License
 	ExitApp(2)
+}
+
+try {
+	FileDelete TempFile
+}
+catch {
+
 }
 ;----------------------------------------------------
 if SwitchKbAutoRun == true {
@@ -1374,7 +2265,7 @@ ExitMsg(*){
 		Exitmsg.SetFont("s20 W700 Q4 " . MessageAppNameFontColor, MessageAppNameFontType)
 		Exitmsg.Add("Text", "x80 y8", AppName)
 		Exitmsg.SetFont("s9 " . MessageFontColor, MessageFontType)
-		Exitmsg.Add("Text", "x80 y45", "Mean Little's Task Automator v" CurrentVersion)
+		Exitmsg.Add("Text", "x80 y45", "Mean Little's Task Automator " CurrentVersion)
 		Exitmsg.Add("Text", "x80 y65", "License key: ")
 		Exitmsg.SetFont()
 		Exitmsg.SetFont("s8 Bold " . LicenseKeyFontColor, LicenseKeyFontType)
@@ -1387,12 +2278,19 @@ ExitMsg(*){
 		Exitmsg.SetFont()
 		Exitmsg.SetFont("s9 " . MessageFontColor, MessageFontType)
 		Exitmsg.Add("Text", "x0 y180 w470 h1 +0x5")
-		Exitmsg.Add("Text", "x100 y190", "Copyright 2024 FDJ-Dash. All Rights Reserved.")
+		Exitmsg.Add("Text", "x107 y190", "Copyright 2024 FDJ-Dash. All Rights Reserved.")
 		Exitmsg.SetFont()
 		Exitmsg.SetFont("s8 " . MessageFontColor, MessageFontType)
-		Exitmsg.Add("Text", "x120 y212", "Made with AutoHotkey V" A_AhkVersion . " " . (1 ? "Unicode" : "ANSI") . " " . (A_PtrSize == 8 ? "64-bit" : "32-bit"))
+		Exitmsg.Add("Text", "x116 y212", "Made with AutoHotkey V" A_AhkVersion . " " . (1 ? "Unicode" : "ANSI") . " " . (A_PtrSize == 8 ? "64-bit" : "32-bit"))
         Exitmsg.Title := "Goodbye!"
-        Exitmsg.Show("w470 h240")
+		TaskAutomatorGui.GetPos(&PosX, &PosY)
+		if PosX == -32000 {
+			PosX := IniRead(IniFile, "Properties", "PositionX")
+		}
+		if PosY == -32000 {
+			PosY := IniRead(IniFile, "Properties", "PositionY")
+		}
+        Exitmsg.Show("x" . PosX - 150 . " y" . PosY + 220 . "w470 h240")
         Exitmsg.Opt("+LastFound")
     Return
 }
@@ -1430,7 +2328,7 @@ InvalidLicenseMsg(*){
 		InvLicMsg.SetFont("s20 W700 Q4 " . MessageAppNameFontColor, MessageAppNameFontType)
         InvLicMsg.Add("Text", "x80 y8", AppName)
 		InvLicMsg.SetFont("s9 " . MessageFontColor, MessageFontType)
-		InvLicMsg.Add("Text", "x80 y45", "Mean Little's Task Automator v" CurrentVersion)
+		InvLicMsg.Add("Text", "x80 y45", "Mean Little's Task Automator " CurrentVersion)
 		InvLicMsg.Add("Text", "x80 y65", "License key: ")
 		InvLicMsg.SetFont()
 		InvLicMsg.SetFont("s8 Bold cRed", LicenseKeyFontType)
@@ -1448,7 +2346,8 @@ InvalidLicenseMsg(*){
 		InvLicMsg.SetFont("s8 " . MessageFontColor, MessageFontType)
 		InvLicMsg.Add("Text", "x120 y212", "Made with AutoHotkey V" A_AhkVersion . " " . (1 ? "Unicode" : "ANSI") . " " . (A_PtrSize == 8 ? "64-bit" : "32-bit"))
         InvLicMsg.Title := "Invalid License Key!"
-        InvLicMsg.Show("w470 h240")
+		TaskAutomatorGui.GetPos(&PosX, &PosY)
+        InvLicMsg.Show("x" . PosX - 150 . " y" . PosY + 220 . "w470 h240")
         InvLicMsg.Opt("+LastFound")
     Return
 }
@@ -1486,7 +2385,7 @@ LicenseFileMissingMsg(*){
 		NoLicFileMsg.SetFont("s20 W700 Q4 " . MessageAppNameFontColor, MessageAppNameFontType)
         NoLicFileMsg.Add("Text", "x80 y8", AppName)
 		NoLicFileMsg.SetFont("s9 " . MessageFontColor, MessageFontType)
-		NoLicFileMsg.Add("Text", "x80 y45", "Mean Little's Task Automator v" CurrentVersion)
+		NoLicFileMsg.Add("Text", "x80 y45", "Mean Little's Task Automator " CurrentVersion)
 		NoLicFileMsg.Add("Text", "x80 y65", "License key: ")
 		NoLicFileMsg.SetFont()
 		NoLicFileMsg.SetFont("s8 Bold cRed", LicenseKeyFontType)
@@ -1504,7 +2403,8 @@ LicenseFileMissingMsg(*){
 		NoLicFileMsg.SetFont("s8 " . MessageFontColor, MessageFontType)
 		NoLicFileMsg.Add("Text", "x120 y212", "Made with AutoHotkey V" A_AhkVersion . " " . (1 ? "Unicode" : "ANSI") . " " . (A_PtrSize == 8 ? "64-bit" : "32-bit"))
         NoLicFileMsg.Title := "Invalid License Key!"
-        NoLicFileMsg.Show("w470 h240")
+		TaskAutomatorGui.GetPos(&PosX, &PosY)
+        NoLicFileMsg.Show("x" . PosX - 150 . " y" . PosY + 220 . "w470 h240")
         NoLicFileMsg.Opt("+LastFound")
     Return
 }
@@ -1542,7 +2442,7 @@ InvalidPath(*){
 		InvPathmsg.SetFont("s20 W700 Q4 " . MessageAppNameFontColor, MessageAppNameFontType)
         InvPathmsg.Add("Text", "x80 y8", AppName)
 		InvPathmsg.SetFont("s9 " . MessageFontColor, MessageFontType)
-		InvPathmsg.Add("Text", "x80 y45", "Mean Little's Task Automator v" CurrentVersion)
+		InvPathmsg.Add("Text", "x80 y45", "Mean Little's Task Automator " CurrentVersion)
 		InvPathmsg.Add("Text", "x80 y65", "License key: ")
 		InvPathmsg.SetFont()
 		InvPathmsg.SetFont("s8 Bold " . LicenseKeyFontColor, LicenseKeyFontType)
@@ -1561,12 +2461,77 @@ InvalidPath(*){
         ogcButtonOK := InvPathmsg.Add("Button", "x370 y200 w80 h24", "OK")
 		ogcButtonOK.OnEvent("Click", Destroy)
 		InvPathmsg.Title := "Invalid path"
-        InvPathmsg.Show("w470 h240")
+		TaskAutomatorGui.GetPos(&PosX, &PosY)
+        InvPathmsg.Show("x" . PosX - 150 . " y" . PosY + 220 . "w470 h240")
 		ControlFocus("Button1", "Invalid path")
         InvPathmsg.Opt("+LastFound")
     Return
 	Destroy(*){
 		InvPathmsg.Destroy()
+	}
+}
+;----------------------------------------------------
+DuplicatedHotkeyValue(*){
+	ShowDupHotkey:
+		if GuiPriorityAlwaysOnTop == true {
+			DupHkValue := Gui("+AlwaysOnTop")
+		} else {
+			DupHkValue := Gui()
+		}
+		DupHkValue.BackColor := "0x" . BackgroundColor
+		MessageBackgroundPicture := IniRead(IniFile, "Background", "MessageBackgroundPicture")
+		if MessageBackgroundPicture == "" {
+			try {
+				DupHkValue.Add("Picture", "x0 y0 w470 h240", ImageLib . DefaultMsgBackgroundImage)
+			}
+			catch {
+			}
+		} else {
+			try {
+				DupHkValue.Add("Picture", "x0 y0 w470 h240", MessageBackgroundPicture)
+			}
+			catch {
+				MessageBackgroundPicture := ""
+				IniWrite MessageBackgroundPicture, IniFile, "Background", "MessageBackgroundPicture"
+				Reload
+			}
+		}
+		try {
+			DupHkValue.Add("Picture", "x9 y14 w64 h64 +border", IconLib . MLSoftwareIcon)
+		}
+		catch {
+		}
+		DupHkValue.SetFont("s20 W700 Q4 " . MessageAppNameFontColor, MessageAppNameFontType)
+        DupHkValue.Add("Text", "x80 y8", AppName)
+		DupHkValue.SetFont("s9 " . MessageFontColor, MessageFontType)
+		DupHkValue.Add("Text", "x80 y45", "Mean Little's Task Automator " CurrentVersion)
+		DupHkValue.Add("Text", "x80 y65", "License key: ")
+		DupHkValue.SetFont()
+		DupHkValue.SetFont("s8 Bold " . LicenseKeyFontColor, LicenseKeyFontType)
+		DupHkValue.Add("Text", "x160 y65", LicenseKeyInFile)
+		DupHkValue.Add("Text", "x0 y90 w470 h1 +0x5")
+		DupHkValue.SetFont()
+		DupHkValue.SetFont("s12 cRed", MessageMainMsgFontType)
+		DupHkValue.Add("Text", "x40 y110", "Duplicated hotkey values is a dangerous configuration")
+		DupHkValue.Add("Text", "x135 y140", "Returning to default values")
+		DupHkValue.SetFont()
+		DupHkValue.SetFont("s9 " . MessageFontColor, MessageFontType)
+		DupHkValue.Add("Text", "x0 y180 w470 h1 +0x5")
+		DupHkValue.Add("Text", "x25 y190", "Copyright 2024 FDJ-Dash. All Rights Reserved.")
+		DupHkValue.SetFont()
+		DupHkValue.SetFont("s8 " . MessageFontColor, MessageFontType)
+		DupHkValue.Add("Text", "x25 y212", "Made with AutoHotkey V" A_AhkVersion . " " . (1 ? "Unicode" : "ANSI") . " " . (A_PtrSize == 8 ? "64-bit" : "32-bit"))
+        ogcButtonOK := DupHkValue.Add("Button", "x370 y200 w80 h24", "OK")
+		ogcButtonOK.OnEvent("Click", Destroy)
+		DupHkValue.Title := "Duplicated Hotkey Values"
+		PosX := IniRead(IniFile, "Properties", "PositionX")
+		PosY := IniRead(IniFile, "Properties", "PositionY")
+        DupHkValue.Show("x" . PosX - 150 . " y" . PosY + 220 . "w470 h240")
+		ControlFocus("Button1", "Duplicated Hotkey Values")
+        DupHkValue.Opt("+LastFound")
+    Return
+	Destroy(*){
+		DupHkValue.Destroy()
 	}
 }
 ;----------------------------------------------------
@@ -1603,7 +2568,7 @@ SaveMsg(*){
 		Savemsg.SetFont("s20 W700 Q4 " . MessageAppNameFontColor, MessageAppNameFontType)
         Savemsg.Add("Text", "x80 y8", AppName)
 		Savemsg.SetFont("s9 " . MessageFontColor, MessageFontType)
-		Savemsg.Add("Text", "x80 y45", "Mean Little's Task Automator v" CurrentVersion)
+		Savemsg.Add("Text", "x80 y45", "Mean Little's Task Automator " CurrentVersion)
 		Savemsg.Add("Text", "x80 y65", "License key: ")
 		Savemsg.SetFont()
 		Savemsg.SetFont("s8 Bold " . LicenseKeyFontColor, LicenseKeyFontType)
@@ -1622,7 +2587,8 @@ SaveMsg(*){
         ogcButtonOK := Savemsg.Add("Button", "x370 y200 w80 h24", "OK")
 		ogcButtonOK.OnEvent("Click", Destroy)
 		Savemsg.Title := "Save Successful!"
-        Savemsg.Show("w470 h240")
+		TaskAutomatorGui.GetPos(&PosX, &PosY)
+        Savemsg.Show("x" . PosX - 150 . " y" . PosY + 220 . "w470 h240")
 		ControlFocus("Button1", "Save Successful!")
         Savemsg.Opt("+LastFound")
     Return
@@ -1631,24 +2597,24 @@ SaveMsg(*){
 	}
 }
 ;----------------------------------------------------
-SecureModeOff(*){
-	ShowSecModeOff:
+ToggleHotkeysEnabled(*){
+	ShowTgHkEnabled:
 		if GuiPriorityAlwaysOnTop == true {
-			SecModeOff := Gui("+AlwaysOnTop")
+			HkEnabled := Gui("+AlwaysOnTop")
 		} else {
-			SecModeOff := Gui()
+			HkEnabled := Gui()
 		}
-		SecModeOff.BackColor := "0x" . BackgroundColor
+		HkEnabled.BackColor := "0x" . BackgroundColor
 		MessageBackgroundPicture := IniRead(IniFile, "Background", "MessageBackgroundPicture")
 		if MessageBackgroundPicture == "" {
 		try {
-				SecModeOff.Add("Picture", "x0 y0 w470 h240", ImageLib . DefaultMsgBackgroundImage)
+				HkEnabled.Add("Picture", "x0 y0 w470 h240", ImageLib . DefaultMsgBackgroundImage)
 			}
 			catch {
 			}
 		} else {
 			try {
-				SecModeOff.Add("Picture", "x0 y0 w470 h240", MessageBackgroundPicture)
+				HkEnabled.Add("Picture", "x0 y0 w470 h240", MessageBackgroundPicture)
 			}
 			catch {
 				MessageBackgroundPicture := ""
@@ -1657,39 +2623,169 @@ SecureModeOff(*){
 			}
 		}
 		try {
-			SecModeOff.Add("Picture", "x9 y14 w64 h64 +border", IconLib . MLSoftwareIcon)
+			HkEnabled.Add("Picture", "x9 y14 w64 h64 +border", IconLib . MLSoftwareIcon)
 		}
 		catch {
 		}
-		SecModeOff.SetFont("s20 W700 Q4 " . MessageAppNameFontColor, MessageAppNameFontType)
-        SecModeOff.Add("Text", "x80 y8", AppName)
-		SecModeOff.SetFont("s9 " . MessageFontColor, MessageFontType)
-		SecModeOff.Add("Text", "x80 y45", "Mean Little's Task Automator v" CurrentVersion)
-		SecModeOff.Add("Text", "x80 y65", "License key: ")
-		SecModeOff.SetFont()
-		SecModeOff.SetFont("s8 Bold " . LicenseKeyFontColor, LicenseKeyFontType)
-		SecModeOff.Add("Text", "x160 y65", LicenseKey)
-		SecModeOff.Add("Text", "x0 y90 w470 h1 +0x5")
-		SecModeOff.SetFont()
-		SecModeOff.SetFont("s12 " . MessageMainMsgFontColor, MessageMainMsgFontType)
-		SecModeOff.Add("Text", "x160 y110", "Secure Mode is OFF.")
-		SecModeOff.Add("Text", "x98 y140", "Switch Secure Mode ON and try again.")
-		SecModeOff.SetFont()
-		SecModeOff.SetFont("s9 " . MessageFontColor, MessageFontType)
-		SecModeOff.Add("Text", "x0 y180 w470 h1 +0x5")
-		SecModeOff.Add("Text", "x25 y190", "Copyright 2024 FDJ-Dash. All Rights Reserved.")
-		SecModeOff.SetFont()
-		SecModeOff.SetFont("s8 " . MessageFontColor, MessageFontType)
-		SecModeOff.Add("Text", "x25 y212", "Made with AutoHotkey V" A_AhkVersion . " " . (1 ? "Unicode" : "ANSI") . " " . (A_PtrSize == 8 ? "64-bit" : "32-bit"))
-        ogcButtonOK := SecModeOff.Add("Button", "x370 y200 w80 h24", "OK")
+		HkEnabled.SetFont("s20 W700 Q4 " . MessageAppNameFontColor, MessageAppNameFontType)
+        HkEnabled.Add("Text", "x80 y8", AppName)
+		HkEnabled.SetFont("s9 " . MessageFontColor, MessageFontType)
+		HkEnabled.Add("Text", "x80 y45", "Mean Little's Task Automator " CurrentVersion)
+		HkEnabled.Add("Text", "x80 y65", "License key: ")
+		HkEnabled.SetFont()
+		HkEnabled.SetFont("s8 Bold " . LicenseKeyFontColor, LicenseKeyFontType)
+		HkEnabled.Add("Text", "x160 y65", LicenseKey)
+		HkEnabled.Add("Text", "x0 y90 w470 h1 +0x5")
+		HkEnabled.SetFont()
+		HkEnabled.SetFont("s12 " . MessageMainMsgFontColor, MessageMainMsgFontType)
+		HkEnabled.Add("Text", "x170 y125", "Hotkeys Enabled")
+		HkEnabled.SetFont()
+		HkEnabled.SetFont("s9 " . MessageFontColor, MessageFontType)
+		HkEnabled.Add("Text", "x0 y180 w470 h1 +0x5")
+		HkEnabled.Add("Text", "x107 y190", "Copyright 2024 FDJ-Dash. All Rights Reserved.")
+		HkEnabled.SetFont()
+		HkEnabled.SetFont("s8 " . MessageFontColor, MessageFontType)
+		HkEnabled.Add("Text", "x116 y212", "Made with AutoHotkey V" A_AhkVersion . " " . (1 ? "Unicode" : "ANSI") . " " . (A_PtrSize == 8 ? "64-bit" : "32-bit"))
+		HkEnabled.Title := "Hotkeys Enabled"
+		TaskAutomatorGui.GetPos(&PosX, &PosY)
+		if PosX == -32000 {
+			PosX := IniRead(IniFile, "Properties", "PositionX")
+		}
+		if PosY == -32000 {
+			PosY := IniRead(IniFile, "Properties", "PositionY")
+		}
+        HkEnabled.Show("x" . PosX - 150 . " y" . PosY + 220 . "w470 h240")
+        HkEnabled.Opt("+LastFound")
+		sleep SuspendedHotkeysTimeWait
+		HkEnabled.Destroy()
+    Return
+}
+;----------------------------------------------------
+ToggleHotkeysDisabled(*){
+	ShowTgHkDisabled:
+		if GuiPriorityAlwaysOnTop == true {
+			HkDisabled := Gui("+AlwaysOnTop")
+		} else {
+			HkDisabled := Gui()
+		}
+		HkDisabled.BackColor := "0x" . BackgroundColor
+		MessageBackgroundPicture := IniRead(IniFile, "Background", "MessageBackgroundPicture")
+		if MessageBackgroundPicture == "" {
+		try {
+				HkDisabled.Add("Picture", "x0 y0 w470 h240", ImageLib . DefaultMsgBackgroundImage)
+			}
+			catch {
+			}
+		} else {
+			try {
+				HkDisabled.Add("Picture", "x0 y0 w470 h240", MessageBackgroundPicture)
+			}
+			catch {
+				MessageBackgroundPicture := ""
+				IniWrite MessageBackgroundPicture, IniFile, "Background", "MessageBackgroundPicture"
+				Reload
+			}
+		}
+		try {
+			HkDisabled.Add("Picture", "x9 y14 w64 h64 +border", IconLib . MLSoftwareIcon)
+		}
+		catch {
+		}
+		HkDisabled.SetFont("s20 W700 Q4 " . MessageAppNameFontColor, MessageAppNameFontType)
+        HkDisabled.Add("Text", "x80 y8", AppName)
+		HkDisabled.SetFont("s9 " . MessageFontColor, MessageFontType)
+		HkDisabled.Add("Text", "x80 y45", "Mean Little's Task Automator " CurrentVersion)
+		HkDisabled.Add("Text", "x80 y65", "License key: ")
+		HkDisabled.SetFont()
+		HkDisabled.SetFont("s8 Bold " . LicenseKeyFontColor, LicenseKeyFontType)
+		HkDisabled.Add("Text", "x160 y65", LicenseKey)
+		HkDisabled.Add("Text", "x0 y90 w470 h1 +0x5")
+		HkDisabled.SetFont()
+		HkDisabled.SetFont("s12 " . MessageMainMsgFontColor, MessageMainMsgFontType)
+		HkDisabled.Add("Text", "x167 y110", "Hotkeys Suspended")
+		HkDisabled.Add("Text", "x116 y140", "Press " . SuspendHotkeysKey . " again to anable them.")
+		HkDisabled.SetFont()
+		HkDisabled.SetFont("s9 " . MessageFontColor, MessageFontType)
+		HkDisabled.Add("Text", "x0 y180 w470 h1 +0x5")
+		HkDisabled.Add("Text", "x107 y190", "Copyright 2024 FDJ-Dash. All Rights Reserved.")
+		HkDisabled.SetFont()
+		HkDisabled.SetFont("s8 " . MessageFontColor, MessageFontType)
+		HkDisabled.Add("Text", "x116 y212", "Made with AutoHotkey V" A_AhkVersion . " " . (1 ? "Unicode" : "ANSI") . " " . (A_PtrSize == 8 ? "64-bit" : "32-bit"))
+		HkDisabled.Title := "Hotkeys Suspended"
+		TaskAutomatorGui.GetPos(&PosX, &PosY)
+		if PosX == -32000 {
+			PosX := IniRead(IniFile, "Properties", "PositionX")
+		}
+		if PosY == -32000 {
+			PosY := IniRead(IniFile, "Properties", "PositionY")
+		}
+        HkDisabled.Show("x" . PosX - 150 . " y" . PosY + 220 . "w470 h240")
+        HkDisabled.Opt("+LastFound")
+		sleep SuspendedHotkeysTimeWait
+		HkDisabled.Destroy()
+    Return
+}
+;----------------------------------------------------
+HotkeyEditModeOn(*){
+	ShowHkEditModeOn:
+		if GuiPriorityAlwaysOnTop == true {
+			HkEditModeOn := Gui("+AlwaysOnTop")
+		} else {
+			HkEditModeOn := Gui()
+		}
+		HkEditModeOn.BackColor := "0x" . BackgroundColor
+		MessageBackgroundPicture := IniRead(IniFile, "Background", "MessageBackgroundPicture")
+		if MessageBackgroundPicture == "" {
+		try {
+				HkEditModeOn.Add("Picture", "x0 y0 w470 h240", ImageLib . DefaultMsgBackgroundImage)
+			}
+			catch {
+			}
+		} else {
+			try {
+				HkEditModeOn.Add("Picture", "x0 y0 w470 h240", MessageBackgroundPicture)
+			}
+			catch {
+				MessageBackgroundPicture := ""
+				IniWrite MessageBackgroundPicture, IniFile, "Background", "MessageBackgroundPicture"
+				Reload
+			}
+		}
+		try {
+			HkEditModeOn.Add("Picture", "x9 y14 w64 h64 +border", IconLib . MLSoftwareIcon)
+		}
+		catch {
+		}
+		HkEditModeOn.SetFont("s20 W700 Q4 " . MessageAppNameFontColor, MessageAppNameFontType)
+        HkEditModeOn.Add("Text", "x80 y8", AppName)
+		HkEditModeOn.SetFont("s9 " . MessageFontColor, MessageFontType)
+		HkEditModeOn.Add("Text", "x80 y45", "Mean Little's Task Automator " CurrentVersion)
+		HkEditModeOn.Add("Text", "x80 y65", "License key: ")
+		HkEditModeOn.SetFont()
+		HkEditModeOn.SetFont("s8 Bold " . LicenseKeyFontColor, LicenseKeyFontType)
+		HkEditModeOn.Add("Text", "x160 y65", LicenseKey)
+		HkEditModeOn.Add("Text", "x0 y90 w470 h1 +0x5")
+		HkEditModeOn.SetFont()
+		HkEditModeOn.SetFont("s12 " . MessageMainMsgFontColor, MessageMainMsgFontType)
+		HkEditModeOn.Add("Text", "x148 y110", "Hotkey Edit Mode is ON")
+		HkEditModeOn.Add("Text", "x136 y140", "Switch it OFF and try again.")
+		HkEditModeOn.SetFont()
+		HkEditModeOn.SetFont("s9 " . MessageFontColor, MessageFontType)
+		HkEditModeOn.Add("Text", "x0 y180 w470 h1 +0x5")
+		HkEditModeOn.Add("Text", "x25 y190", "Copyright 2024 FDJ-Dash. All Rights Reserved.")
+		HkEditModeOn.SetFont()
+		HkEditModeOn.SetFont("s8 " . MessageFontColor, MessageFontType)
+		HkEditModeOn.Add("Text", "x25 y212", "Made with AutoHotkey V" A_AhkVersion . " " . (1 ? "Unicode" : "ANSI") . " " . (A_PtrSize == 8 ? "64-bit" : "32-bit"))
+        ogcButtonOK := HkEditModeOn.Add("Button", "x370 y200 w80 h24", "OK")
 		ogcButtonOK.OnEvent("Click", Destroy)
-        SecModeOff.Title := "Secure Mode Off"
-        SecModeOff.Show("w470 h240")
-        ControlFocus("Button1", "Secure Mode Off")
-        SecModeOff.Opt("+LastFound")
+        HkEditModeOn.Title := "Hotkey Edit Mode ON"
+		TaskAutomatorGui.GetPos(&PosX, &PosY)
+        HkEditModeOn.Show("x" . PosX - 150 . " y" . PosY + 220 . "w470 h240")
+        ControlFocus("Button1", "Hotkey Edit Mode ON")
+        HkEditModeOn.Opt("+LastFound")
     Return
 	Destroy(*){
-		SecModeOff.Destroy()
+		HkEditModeOn.Destroy()
 	}
 }
 ;----------------------------------------------------
@@ -1728,7 +2824,7 @@ MenuHandlerAbout(*)
 		About.SetFont("s20 W700 Q4 " . MessageAppNameFontColor, MessageAppNameFontType)
         About.Add("Text", "x80 y8", AppName)
 		About.SetFont("s9 " . MessageFontColor, MessageFontType)
-		About.Add("Text", "x80 y45", "Mean Little's Task Automator v" CurrentVersion)
+		About.Add("Text", "x80 y45", "Mean Little's Task Automator " CurrentVersion)
 		About.Add("Text", "x80 y65", "License key: ")
 		About.SetFont()
 		About.SetFont("s8 Bold " . LicenseKeyFontColor, LicenseKeyFontType)
@@ -1749,7 +2845,8 @@ MenuHandlerAbout(*)
 		ogcButtonOK := About.Add("Button", "x370 y200 w80 h24", "OK")
 		ogcButtonOK.OnEvent("Click", Destroy)
         About.Title := "About"
-        About.Show("w470 h240")
+		TaskAutomatorGui.GetPos(&PosX, &PosY)
+        About.Show("x" . PosX - 150 . " y" . PosY + 220 . "w470 h240")
         ControlFocus("Button1", "About")
         About.Opt("+LastFound")
     Return
@@ -1791,7 +2888,7 @@ MenuHandlerGuide(*) {
 		GuideMsg.SetFont("s20 W700 Q4 " . MessageAppNameFontColor, MessageAppNameFontType)
         GuideMsg.Add("Text", "x80 y8", AppName)
 		GuideMsg.SetFont("s9 " . MessageFontColor, MessageFontType)
-		GuideMsg.Add("Text", "x80 y45", "Mean Little's Task Automator v" CurrentVersion)
+		GuideMsg.Add("Text", "x80 y45", "Mean Little's Task Automator " CurrentVersion)
 		GuideMsg.Add("Text", "x80 y65", "License key: ")
 		GuideMsg.SetFont()
 		GuideMsg.SetFont("s8 Bold " . LicenseKeyFontColor, LicenseKeyFontType)
@@ -1811,7 +2908,8 @@ MenuHandlerGuide(*) {
         ogcButtonOK := GuideMsg.Add("Button", "x370 y200 w80 h24 Default", "OK")
 		ogcButtonOK.OnEvent("Click", Destroy)
         GuideMsg.Title := "Guide"
-        GuideMsg.Show("w470 h240")
+		TaskAutomatorGui.GetPos(&PosX, &PosY)
+        GuideMsg.Show("x" . PosX - 150 . " y" . PosY + 220 . "w470 h240")
         ControlFocus("Button1", "Guide")
         GuideMsg.Opt("+LastFound")
 		run HotkeyGuide
@@ -1856,7 +2954,7 @@ MenuHandlerQuickAccessMsg(*) {
 		QuickAccMsg.SetFont("s20 W700 Q4 " . MessageAppNameFontColor, MessageAppNameFontType)
         QuickAccMsg.Add("Text", "x80 y8", AppName)
 		QuickAccMsg.SetFont("s9 " . MessageFontColor, MessageFontType)
-		QuickAccMsg.Add("Text", "x80 y45", "Mean Little's Task Automator v" CurrentVersion)
+		QuickAccMsg.Add("Text", "x80 y45", "Mean Little's Task Automator " CurrentVersion)
 		QuickAccMsg.Add("Text", "x80 y65", "License key: ")
 		QuickAccMsg.SetFont()
 		QuickAccMsg.SetFont("s8 Bold " . LicenseKeyFontColor, LicenseKeyFontType)
@@ -1876,13 +2974,230 @@ MenuHandlerQuickAccessMsg(*) {
         ogcButtonOK := QuickAccMsg.Add("Button", "x370 y200 w80 h24 Default", "OK")
 		ogcButtonOK.OnEvent("Click", Destroy)
         QuickAccMsg.Title := "Guide"
-        QuickAccMsg.Show("w470 h240")
+		TaskAutomatorGui.GetPos(&PosX, &PosY)
+        QuickAccMsg.Show("x" . PosX - 150 . " y" . PosY + 220 . "w470 h240")
         ControlFocus("Button1", "Guide")
         QuickAccMsg.Opt("+LastFound")
     Return
 	
 	Destroy(*){
 		QuickAccMsg.Destroy()
+	}
+}
+;----------------------------------------------------
+ConnectionMessage(*) {
+	ShowConnection:
+		if GuiPriorityAlwaysOnTop == true {
+			ConnectionMsg := Gui("+AlwaysOnTop")
+		} else {
+			ConnectionMsg := Gui()
+		}
+		ConnectionMsg.BackColor := "0x" . BackgroundColor
+		MessageBackgroundPicture := IniRead(IniFile, "Background", "MessageBackgroundPicture")
+		if MessageBackgroundPicture == "" {
+		try {
+				ConnectionMsg.Add("Picture", "x0 y0 w470 h240", ImageLib . DefaultMsgBackgroundImage)
+			}
+			catch {
+			}
+		} else {
+			try {
+				ConnectionMsg.Add("Picture", "x0 y0 w470 h240", MessageBackgroundPicture)
+			}
+			catch {
+				MessageBackgroundPicture := ""
+				IniWrite MessageBackgroundPicture, IniFile, "Background", "MessageBackgroundPicture"
+				Reload
+			}
+		}
+		try {
+			ConnectionMsg.Add("Picture", "x9 y14 w64 h64 +border", IconLib . MLSoftwareIcon)
+		}
+		catch {
+		}
+		ConnectionMsg.SetFont("s20 W700 Q4 " . MessageAppNameFontColor, MessageAppNameFontType)
+		ConnectionMsg.Add("Text", "x80 y8", AppName)
+		ConnectionMsg.SetFont("s9 " . MessageFontColor, MessageFontType)
+		ConnectionMsg.Add("Text", "x80 y45", "Mean Little's Task Automator " CurrentVersion)
+		ConnectionMsg.Add("Text", "x80 y65", "License key: ")
+		ConnectionMsg.SetFont()
+		ConnectionMsg.SetFont("s8 Bold " . LicenseKeyFontColor, LicenseKeyFontType)
+		ConnectionMsg.Add("Text", "x160 y65", LicenseKey)
+		ConnectionMsg.Add("Text", "x0 y90 w470 h1 +0x5")
+		ConnectionMsg.SetFont()
+		ConnectionMsg.SetFont("s12 cRed", MessageMainMsgFontType)
+		ConnectionMsg.Add("Text", "x125 y110", "Unable to check for new updates.")
+		ConnectionMsg.Add("Text", "x135 y140", "Please verify your connection")		
+		ConnectionMsg.SetFont()
+		ConnectionMsg.SetFont("s9 " . MessageFontColor, MessageFontType)
+		ConnectionMsg.Add("Text", "x0 y180 w470 h1 +0x5")
+        ConnectionMsg.Add("Text", "x25 y190", "Copyright 2024 FDJ-Dash. All Rights Reserved.")
+		ConnectionMsg.SetFont()
+		ConnectionMsg.SetFont("s8 " . MessageFontColor, MessageFontType)
+		ConnectionMsg.Add("Text", "x25 y212", "Made with AutoHotkey V" A_AhkVersion . " " . (1 ? "Unicode" : "ANSI") . " " . (A_PtrSize == 8 ? "64-bit" : "32-bit"))
+		ogcButtonOK := ConnectionMsg.Add("Button", "x370 y200 w80 h24", "OK")
+		ogcButtonOK.OnEvent("Click", Destroy)
+        ConnectionMsg.Title := "Connection Failed!"
+		TaskAutomatorGui.GetPos(&PosX, &PosY)
+        ConnectionMsg.Show("x" . PosX - 150 . " y" . PosY + 220 . "w470 h240")
+        ControlFocus("Button1", "Connection Failed!")
+        ConnectionMsg.Opt("+LastFound")
+	Return
+	Destroy(*){
+		ConnectionMsg.Destroy()
+	}
+}
+;----------------------------------------------------
+UpToDateMessage(*) {
+	ShowUpToDate:
+		if GuiPriorityAlwaysOnTop == true {
+			UpToDateMsg := Gui("+AlwaysOnTop")
+		} else {
+			UpToDateMsg := Gui()
+		}
+		UpToDateMsg.BackColor := "0x" . BackgroundColor
+		MessageBackgroundPicture := IniRead(IniFile, "Background", "MessageBackgroundPicture")
+		if MessageBackgroundPicture == "" {
+		try {
+				UpToDateMsg.Add("Picture", "x0 y0 w470 h240", ImageLib . DefaultMsgBackgroundImage)
+			}
+			catch {
+			}
+		} else {
+			try {
+				UpToDateMsg.Add("Picture", "x0 y0 w470 h240", MessageBackgroundPicture)
+			}
+			catch {
+				MessageBackgroundPicture := ""
+				IniWrite MessageBackgroundPicture, IniFile, "Background", "MessageBackgroundPicture"
+				Reload
+			}
+		}
+		try {
+			UpToDateMsg.Add("Picture", "x9 y14 w64 h64 +border", IconLib . MLSoftwareIcon)
+		}
+		catch {
+		}
+		UpToDateMsg.SetFont("s20 W700 Q4 " . MessageAppNameFontColor, MessageAppNameFontType)
+		UpToDateMsg.Add("Text", "x80 y8", AppName)
+		UpToDateMsg.SetFont("s9 " . MessageFontColor, MessageFontType)
+		UpToDateMsg.Add("Text", "x80 y45", "Mean Little's Task Automator " CurrentVersion)
+		UpToDateMsg.Add("Text", "x80 y65", "License key: ")
+		UpToDateMsg.SetFont()
+		UpToDateMsg.SetFont("s8 Bold " . LicenseKeyFontColor, LicenseKeyFontType)
+		UpToDateMsg.Add("Text", "x160 y65", LicenseKey)
+		UpToDateMsg.Add("Text", "x0 y90 w470 h1 +0x5")
+		UpToDateMsg.SetFont()
+		UpToDateMsg.SetFont("s12 " . MessageMainMsgFontColor, MessageMainMsgFontType)
+		UpToDateMsg.Add("Text", "x135 y123", "Current version is up to date!")
+		UpToDateMsg.SetFont()
+		UpToDateMsg.SetFont("s9 " . MessageFontColor, MessageFontType)
+		UpToDateMsg.Add("Text", "x0 y180 w470 h1 +0x5")
+        UpToDateMsg.Add("Text", "x25 y190", "Copyright 2024 FDJ-Dash. All Rights Reserved.")
+		UpToDateMsg.SetFont()
+		UpToDateMsg.SetFont("s8 " . MessageFontColor, MessageFontType)
+		UpToDateMsg.Add("Text", "x25 y212", "Made with AutoHotkey V" A_AhkVersion . " " . (1 ? "Unicode" : "ANSI") . " " . (A_PtrSize == 8 ? "64-bit" : "32-bit"))
+		ogcButtonOK := UpToDateMsg.Add("Button", "x370 y200 w80 h24", "OK")
+		ogcButtonOK.OnEvent("Click", Destroy)
+        UpToDateMsg.Title := "Up To Date!"
+		TaskAutomatorGui.GetPos(&PosX, &PosY)
+        UpToDateMsg.Show("x" . PosX - 150 . " y" . PosY + 220 . "w470 h240")
+        ControlFocus("Button1", "Up To Date!")
+        UpToDateMsg.Opt("+LastFound")
+	Return
+	Destroy(*){
+		UpToDateMsg.Destroy()
+	}
+}
+;----------------------------------------------------
+NewVersionAvailableMessage(ReleaseVersion, *) {
+	ShowNewVerMsg:
+		if GuiPriorityAlwaysOnTop == true {
+			NewVerMsg := Gui("+AlwaysOnTop")
+		} else {
+			NewVerMsg := Gui()
+		}
+		NewVerMsg.BackColor := "0x" . BackgroundColor
+		MessageBackgroundPicture := IniRead(IniFile, "Background", "MessageBackgroundPicture")
+		if MessageBackgroundPicture == "" {
+		try {
+				NewVerMsg.Add("Picture", "x0 y0 w470 h240", ImageLib . DefaultMsgBackgroundImage)
+			}
+			catch {
+			}
+		} else {
+			try {
+				NewVerMsg.Add("Picture", "x0 y0 w470 h240", MessageBackgroundPicture)
+			}
+			catch {
+				MessageBackgroundPicture := ""
+				IniWrite MessageBackgroundPicture, IniFile, "Background", "MessageBackgroundPicture"
+				Reload
+			}
+		}
+		try {
+			NewVerMsg.Add("Picture", "x9 y14 w64 h64 +border", IconLib . MLSoftwareIcon)
+		}
+		catch {
+		}
+		NewVerMsg.SetFont("s20 W700 Q4 " . MessageAppNameFontColor, MessageAppNameFontType)
+		NewVerMsg.Add("Text", "x80 y8", AppName)
+		NewVerMsg.SetFont("s9 " . MessageFontColor, MessageFontType)
+		NewVerMsg.Add("Text", "x80 y45", "Mean Little's Task Automator " CurrentVersion)
+		NewVerMsg.Add("Text", "x80 y65", "License key: ")
+		NewVerMsg.SetFont()
+		NewVerMsg.SetFont("s8 Bold " . LicenseKeyFontColor, LicenseKeyFontType)
+		NewVerMsg.Add("Text", "x160 y65", LicenseKey)
+		NewVerMsg.Add("Text", "x0 y90 w470 h1 +0x5")
+		NewVerMsg.SetFont()
+		NewVerMsg.SetFont("s12 " . MessageMainMsgFontColor, MessageMainMsgFontType)
+		NewVerMsg.Add("Text", "x100 y115", "New release version " . ReleaseVersion . " is available")
+		NewVerMsg.SetFont()
+		NewVerMsg.SetFont("s9 " . MessageFontColor, MessageFontType)
+		ogcButtonUpdate := NewVerMsg.Add("Button", "x190 y145 w80 h24", "Download")
+		ogcButtonUpdate.OnEvent("Click", UpdateDownload)
+		NewVerMsg.Add("Text", "x0 y180 w470 h1 +0x5")
+        NewVerMsg.Add("Text", "x25 y190", "Copyright 2024 FDJ-Dash. All Rights Reserved.")
+		NewVerMsg.SetFont()
+		NewVerMsg.SetFont("s8 " . MessageFontColor, MessageFontType)
+		NewVerMsg.Add("Text", "x25 y212", "Made with AutoHotkey V" A_AhkVersion . " " . (1 ? "Unicode" : "ANSI") . " " . (A_PtrSize == 8 ? "64-bit" : "32-bit"))
+		ogcButtonOK := NewVerMsg.Add("Button", "x370 y200 w80 h24", "Close")
+		ogcButtonOK.OnEvent("Click", Destroy)
+        NewVerMsg.Title := "New Version Available!"
+		TaskAutomatorGui.GetPos(&PosX, &PosY)
+        NewVerMsg.Show("x" . PosX - 150 . " y" . PosY + 220 . "w470 h240")
+        ControlFocus("Button1", "New Version Available!")
+        NewVerMsg.Opt("+LastFound")
+		NewVerMsg.OnEvent("Close", NewVerMsg_Close)
+	Return
+	Destroy(*){
+		NewVerMsg.Destroy()
+	}
+	UpdateDownload(*){
+		MLTAName := IniRead(DataFile, "GeneralData", "MLTAName")
+		; Scaped character included: ``
+		MLTADownloadPart1 := "PLjr_f_[HF16S_KEBLbjHF16AJKEQ[23BIPLRZU\gc75EJ7?U\c_LTahPL7?Y``ok``h]d93so=EY``eaT\BLNUgcZbW^JFdlCAEJ71HTV``CA,5ovgcNVelmi\d3:JFT\ahsoX``49KEY``sobjW^kgV``V^ahgcNVovMIB@PX<Cgc?DFCGR23EQJS89amGU,5+(ZbKRJK<HDObkTUwsBNjr9@V_E?DRVW_kmiDMbj>?KWPYHOc_.6\]am\eNUGC.6``a]d6B=:;Fc_PYLTJXY``YUIQBI.+D@XYNV_k]dGC>GFNDEGRip6B5C;D>?Q]=:>I;DAOPQ6BfoPL\dno[bQ["
+		MLTADownloadPart1 := DecriptMsg(MLTADownloadPart1)
+		;------------------------
+		MLTADownloadPart2 := IniRead(DataFile, "EncriptedData", "MLTADownload")
+		MLTADownloadPart2 := DecriptMsg(MLTADownloadPart2)
+		;------------------------
+		MLTADownloadPart3 := "42so"
+		MLTADownloadPart3 := DecriptMsg(MLTADownloadPart3)
+		;------------------------
+		MLTADownloadPart4 := FileSelect("S16", A_MyDocuments . "\" . MLTAName , "Save File", "Executable files (*.exe)")
+		FullPathDownLoad := MLTADownloadPart1 . " " . MLTADownloadPart2 . " " . MLTADownloadPart3 . " " . MLTADownloadPart4
+		if MLTADownloadPart4 != "" {
+			RunWait(A_ComSpec " /c " . FullPathDownLoad . " > " TempCleanFileMLTA, , "Hide")
+		}
+	}
+	NewVerMsg_Close(*){
+		try {
+			FileDelete DataFile
+			FileDelete TempCleanFileMLTA
+		}
+		catch {
+		}
 	}
 }
 ;----------------------------------------------------
@@ -1896,8 +3211,8 @@ ProcessRunWalkHotkey(RunSelected, CurrentHotkey, *){
 		MsgBox "CurrentHotkey variable is empty: " CurrentHotkey
 		return
 	}
-	if SecureMode == false {
-		SecureModeOff
+	if HotkeyEditMode == false {
+		HotkeyEditModeOn
 		return
 	}
 	WalkSelected := true
@@ -1949,11 +3264,26 @@ ProcessRunWalkHotkey(RunSelected, CurrentHotkey, *){
 				}
 				break
 			}
+			if GetKeyState(ExitTaskAutomatorKey){
+				Send("{" . SprintKey . " up}")
+				Send("{" . ForwardKey . " up}")
+				TextOnOff1.Value := " OFF"
+				SB.SetText("Ready")
+				ExitApp()
+			}
+			if GetKeyState(SuspendHotkeysKey){
+				Send("{" . SprintKey . " up}")
+				Send("{" . ForwardKey . " up}")
+				TextOnOff1.Value := " OFF"
+				SB.SetText("Ready")
+				SuspendMenuHandler()
+			}
 			Sleep AutoRunLoopInterval
 		}
 	}
 }
 ;----------------------------------------------------
+CountClicker := 0
 ; General Loop
 Loop {
 	MouseGetPos(&x, &y)
@@ -1964,6 +3294,12 @@ Loop {
 			ControllerName.Value := GetKeyState(ControllerNumber "JoyName")
 			cont_info := GetKeyState(ControllerNumber "JoyInfo")
 			if RadioCtrlAuRunYes.Value == true {
+				if HotkeyEditMode == false {
+					HotkeyEditModeOn
+					RadioCtrlAuRunYes.Value := false
+					RadioCtrlAuRunNo.Value := true
+					continue
+				}
 				RadioCtrlAuRunNo.Value := false
 				if InStr(cont_info, "Z") {
 					try {
@@ -2048,6 +3384,27 @@ Loop {
 								}
 								break
 							} ; End JoyZ LT key
+							if GetKeyState(ExitTaskAutomatorKey){
+								RunSelected := false
+								WalkSelected := true
+								TextOnOffCtrlAuRun.Value := " OFF"
+								MouseGetPos(&x, &y)
+								SB.SetText("Ready.                        X:" . x . " Y:" . y )
+								Send("{" . SprintKey . " up}")
+								Send("{" . ButtonRT . " up}")
+								ExitApp()
+							}
+							if GetKeyState(SuspendHotkeysKey){
+								RunSelected := false
+								WalkSelected := true
+								TextOnOffCtrlAuRun.Value := " OFF"
+								MouseGetPos(&x, &y)
+								SB.SetText("Ready.                        X:" . x . " Y:" . y )
+								Send("{" . SprintKey . " up}")
+								Send("{" . ButtonRT . " up}")
+								SuspendMenuHandler()
+								break
+							}
 							Sleep AutoRunLoopInterval
 						} ; End AutoRun loop
 					} ; End JoyZ RT key
@@ -2063,11 +3420,24 @@ Loop {
 		RadioCtrlAuRunNo.Value := true
 	} ; End Controller Not Available
 	
+	if GetKeyState(ExitTaskAutomatorKey){
+		ExitApp()
+	}
+	if GetKeyState(SuspendHotkeysKey){
+		SuspendMenuHandler()
+	}
+	
 	if SwitchClicker == true {
 		if TextPatternClickerOnOff.Value == " ON" {
-			SB.SetText("Auto Clicker Active.           X:" . x . " Y:" . y )
+			SB.SetText("Infinite Clicker Active. Count: " . CountClicker)
+			CountClicker++
 		} else {
+			if CountClicker != 0 {
+				SB.SetText("Clicker Stopped. Count: " CountClicker)
+				sleep ClikerStopInterval
+			}
 			SB.SetText("Ready.                         X:" . x . " Y:" . y )
+			CountClicker := 0
 		}
 	} else {
 		SB.SetText("Ready.                         X:" . x . " Y:" . y )
@@ -2078,8 +3448,8 @@ Loop {
 ; Very Short Jump
 ProcessJumpHotkey0(*)
 {
-	if SecureMode == false {
-		SecureModeOff
+	if HotkeyEditMode == false {
+		HotkeyEditModeOn
 		return
 	}
 	SB.SetText("Very short jump active.")
@@ -2099,8 +3469,8 @@ ProcessJumpHotkey0(*)
 ; Short Jump
 ProcessJumpHotkey1(*)
 {	
-	if SecureMode == false {
-		SecureModeOff
+	if HotkeyEditMode == false {
+		HotkeyEditModeOn
 		return
 	}
 	SB.SetText("Short jump active.")
@@ -2120,8 +3490,8 @@ ProcessJumpHotkey1(*)
 ; Normal Jump
 ProcessJumpHotkey2(*)
 {
-	if SecureMode == false {
-		SecureModeOff
+	if HotkeyEditMode == false {
+		HotkeyEditModeOn
 		return
 	}
 	SB.SetText("Normal jump active.")
@@ -2141,8 +3511,8 @@ ProcessJumpHotkey2(*)
 ; Long Jump
 ProcessJumpHotkey3(*)
 {
-	if SecureMode == false {
-		SecureModeOff
+	if HotkeyEditMode == false {
+		HotkeyEditModeOn
 		return
 	}
 	SB.SetText("Long jump active.")
@@ -2162,8 +3532,8 @@ ProcessJumpHotkey3(*)
 ; Very Long Jump 
 ProcessJumpHotkey4(*)
 {
-	if SecureMode == false {
-		SecureModeOff
+	if HotkeyEditMode == false {
+		HotkeyEditModeOn
 		return
 	}
 	SB.SetText("Very long jump active.")
@@ -2182,8 +3552,8 @@ ProcessJumpHotkey4(*)
 ;----------------------------------------------------
 ProcessQuickAccess(CurrentHotkey, *) {
 	Saved := TaskAutomatorGui.Submit(false)
-	if SecureMode == false {
-		SecureModeOff
+	if HotkeyEditMode == false {
+		HotkeyEditModeOn
 		return
 	}
 	Switch true {
@@ -2256,8 +3626,8 @@ ProcessQuickAccess(CurrentHotkey, *) {
 ;----------------------------------------------------¨
 ProccessQuickAccessButton1(*){
 	Saved := TaskAutomatorGui.Submit(false)
-	if SecureMode == false {
-		SecureModeOff
+	if HotkeyEditMode == false {
+		HotkeyEditModeOn
 		return
 	}
 	try {
@@ -2271,8 +3641,8 @@ ProccessQuickAccessButton1(*){
 ;----------------------------------------------------¨
 ProccessQuickAccessButton2(*){
 	Saved := TaskAutomatorGui.Submit(false)
-	if SecureMode == false {
-		SecureModeOff
+	if HotkeyEditMode == false {
+		HotkeyEditModeOn
 		return
 	}
 	try {
@@ -2286,8 +3656,8 @@ ProccessQuickAccessButton2(*){
 ;----------------------------------------------------¨
 ProccessQuickAccessButton3(*){
 	Saved := TaskAutomatorGui.Submit(false)
-	if SecureMode == false {
-		SecureModeOff
+	if HotkeyEditMode == false {
+		HotkeyEditModeOn
 		return
 	}
 	try {
@@ -2301,8 +3671,8 @@ ProccessQuickAccessButton3(*){
 ;----------------------------------------------------¨
 ProccessQuickAccessButton4(*){
 	Saved := TaskAutomatorGui.Submit(false)
-	if SecureMode == false {
-		SecureModeOff
+	if HotkeyEditMode == false {
+		HotkeyEditModeOn
 		return
 	}
 	try {
@@ -2316,8 +3686,8 @@ ProccessQuickAccessButton4(*){
 ;----------------------------------------------------¨
 ProccessQuickAccessButton5(*){
 	Saved := TaskAutomatorGui.Submit(false)
-	if SecureMode == false {
-		SecureModeOff
+	if HotkeyEditMode == false {
+		HotkeyEditModeOn
 		return
 	}
 	try {
@@ -2331,8 +3701,8 @@ ProccessQuickAccessButton5(*){
 ;----------------------------------------------------¨
 ProccessQuickAccessButton6(*){
 	Saved := TaskAutomatorGui.Submit(false)
-	if SecureMode == false {
-		SecureModeOff
+	if HotkeyEditMode == false {
+		HotkeyEditModeOn
 		return
 	}
 	try {
@@ -2346,8 +3716,8 @@ ProccessQuickAccessButton6(*){
 ;----------------------------------------------------¨
 ProccessQuickAccessButton7(*){
 	Saved := TaskAutomatorGui.Submit(false)
-	if SecureMode == false {
-		SecureModeOff
+	if HotkeyEditMode == false {
+		HotkeyEditModeOn
 		return
 	}
 	try {
@@ -2361,8 +3731,8 @@ ProccessQuickAccessButton7(*){
 ;----------------------------------------------------¨
 ProccessQuickAccessButton8(*){
 	Saved := TaskAutomatorGui.Submit(false)
-	if SecureMode == false {
-		SecureModeOff
+	if HotkeyEditMode == false {
+		HotkeyEditModeOn
 		return
 	}
 	try {
@@ -2376,8 +3746,8 @@ ProccessQuickAccessButton8(*){
 ;----------------------------------------------------¨
 ProccessQuickAccessButton9(*){
 	Saved := TaskAutomatorGui.Submit(false)
-	if SecureMode == false {
-		SecureModeOff
+	if HotkeyEditMode == false {
+		HotkeyEditModeOn
 		return
 	}
 	try {
@@ -2391,8 +3761,8 @@ ProccessQuickAccessButton9(*){
 ;----------------------------------------------------
 ProcessPatternClicker(*){
 	Saved := TaskAutomatorGui.Submit(false)	
-	if SecureMode == false {
-		SecureModeOff
+	if HotkeyEditMode == false {
+		HotkeyEditModeOn
 		return
 	}
 	static toggle := false
@@ -2402,6 +3772,7 @@ ProcessPatternClicker(*){
 		TextPatternClickerOnOff.Value := " ON"
 		ClickInterval := Saved.ClickInterval
 		RandomOffset := Saved.RandomOffset
+		CoordMode "Mouse", "Screen"
 		Count := 0
 		LoopAmount := Saved.LoopAmount
 		CoordX0 := Saved.CoordX0
@@ -2424,21 +3795,32 @@ ProcessPatternClicker(*){
 		CoordY4 := Saved.CoordY4
 		Coord4Interval := Saved.Coord4Interval
 		
+		CoordX5 := Saved.CoordX5
+		CoordY5 := Saved.CoordY5
+		Coord5Interval := Saved.Coord5Interval
+		
+		CoordX6 := Saved.CoordX6
+		CoordY6 := Saved.CoordY6
+		Coord6Interval := Saved.Coord6Interval
+		
 		Switch true {
 		case RadioCountLoopsYes.Value:
-			if RadioPos0Yes.Value == false and RadioPos1Yes.Value == false and RadioPos2Yes.Value == false and RadioPos3Yes.Value == false and RadioPos4Yes.Value == false {
-				SB.SetText("Count Clicker Active. Count: " Count)
+			if RadioPos0Yes.Value == false and RadioPos1Yes.Value == false and RadioPos2Yes.Value == false and RadioPos3Yes.Value == false and 
+				RadioPos4Yes.Value == false and RadioPos5Yes.Value == false and RadioPos6Yes.Value == false {
+				SB.SetText("Clicker Active. Count: " Count)
+				sleep ClikerStartInterval
 				Loop LoopAmount {
-					if GetKeyState(StopPatternHotkey.Value, "P") {
+					if GetKeyState(PatternClickerHotkey.Value, "P") {
 						break
 					} 
 					SendKey
 					Count++
-					SB.SetText("Count Clicker Active. Count: " Count)
+					SB.SetText("Clicker Active. Count: " Count)
 					sleep Random(ClickInterval, ClickInterval + RandomOffset) 
 				}
 			} else {
-				SB.SetText("Count Pattern Clicker Active. Count: " Count)
+				SB.SetText("Pattern Clicker Active. Count: " Count)
+				sleep ClikerStartInterval
 				Loop LoopAmount {
 					if RadioPos0Yes.Value == true {
 						RadioPos0No.Value := false
@@ -2446,8 +3828,7 @@ ProcessPatternClicker(*){
 						SendKey
 						sleep Coord0Interval
 					}
-					if GetKeyState(StopPatternHotkey.Value, "P") or 
-						(RadioPos0No.Value == true and RadioPos1No.Value == true and RadioPos2No.Value == true and RadioPos3No.Value == true and RadioPos4No.Value == true) {
+					if GetKeyState(PatternClickerHotkey.Value, "P") {
 						break
 					}
 					if RadioPos1Yes.Value == true {
@@ -2456,8 +3837,7 @@ ProcessPatternClicker(*){
 						SendKey
 						sleep Coord1Interval
 					}
-					if GetKeyState(StopPatternHotkey.Value, "P") or 
-						(RadioPos0No.Value == true and RadioPos1No.Value == true and RadioPos2No.Value == true and RadioPos3No.Value == true and RadioPos4No.Value == true) {
+					if GetKeyState(PatternClickerHotkey.Value, "P") {
 						break
 					}
 					if RadioPos2Yes.Value == true {
@@ -2466,8 +3846,7 @@ ProcessPatternClicker(*){
 						SendKey
 						sleep Coord2Interval
 					}
-					if GetKeyState(StopPatternHotkey.Value, "P") or 
-						(RadioPos0No.Value == true and RadioPos1No.Value == true and RadioPos2No.Value == true and RadioPos3No.Value == true and RadioPos4No.Value == true) {
+					if GetKeyState(PatternClickerHotkey.Value, "P") {
 						break
 					}
 					if RadioPos3Yes.Value == true {
@@ -2476,8 +3855,7 @@ ProcessPatternClicker(*){
 						SendKey
 						sleep Coord3Interval
 					}
-					if GetKeyState(StopPatternHotkey.Value, "P") or 
-						(RadioPos0No.Value == true and RadioPos1No.Value == true and RadioPos2No.Value == true and RadioPos3No.Value == true and RadioPos4No.Value == true) {
+					if GetKeyState(PatternClickerHotkey.Value, "P") {
 						break
 					}
 					if RadioPos4Yes.Value == true {
@@ -2486,29 +3864,48 @@ ProcessPatternClicker(*){
 						SendKey
 						sleep Coord4Interval
 					}
-					if GetKeyState(StopPatternHotkey.Value, "P") or 
-						(RadioPos0No.Value == true and RadioPos1No.Value == true and RadioPos2No.Value == true and RadioPos3No.Value == true and RadioPos4No.Value == true) {
+					if GetKeyState(PatternClickerHotkey.Value, "P") {
+						break
+					}
+					if RadioPos5Yes.Value == true {
+						RadioPos5No.Value := false
+						DllCall("SetCursorPos", "int", CoordX5, "int", CoordY5)
+						SendKey
+						sleep Coord5Interval
+					}
+					if GetKeyState(PatternClickerHotkey.Value, "P") {
+						break
+					}
+					if RadioPos6Yes.Value == true {
+						RadioPos6No.Value := false
+						DllCall("SetCursorPos", "int", CoordX6, "int", CoordY6)
+						SendKey
+						sleep Coord6Interval
+					}
+					if GetKeyState(PatternClickerHotkey.Value, "P") {
 						break
 					}
 					Count++
-					SB.SetText("Count Pattern Clicker Active. Count: " Count)
+					SB.SetText("Pattern Clicker Active. Count: " Count)
 					sleep Random(ClickInterval, ClickInterval + RandomOffset)
 				} ; End Loop
 			}
 			toggle := !toggle
 			TextPatternClickerOnOff.Value := " OFF"
+			SB.SetText("Clicker Stopped. Count: " Count)
+			sleep ClikerStopInterval
 			return
-		case RadioPos0Yes.Value == true, RadioPos1Yes.Value == true, RadioPos2Yes.Value == true, RadioPos3Yes.Value == true, RadioPos4Yes.Value == true:
+		case RadioPos0Yes.Value == true, RadioPos1Yes.Value == true, RadioPos2Yes.Value == true, RadioPos3Yes.Value == true, RadioPos4Yes.Value == true, RadioPos5Yes.Value == true, RadioPos6Yes.Value == true:
+			SB.SetText("Infinite Pattern Clicker Active. Count: " Count)
+			sleep ClikerStartInterval
 			Loop {
-				SB.SetText("Pattern Clicker Active.")
 				if RadioPos0Yes.Value == true {
 					RadioPos0No.Value := false
 					DllCall("SetCursorPos", "int", CoordX0, "int", CoordY0)
 					SendKey
 					sleep Coord0Interval
 				}
-				if GetKeyState(StopPatternHotkey.Value, "P") or 
-					(RadioPos0No.Value == true and RadioPos1No.Value == true and RadioPos2No.Value == true and RadioPos3No.Value == true and RadioPos4No.Value == true) {
+				if GetKeyState(PatternClickerHotkey.Value, "P") {
 					break
 				}
 				if RadioPos1Yes.Value == true {
@@ -2517,8 +3914,7 @@ ProcessPatternClicker(*){
 					SendKey
 					sleep Coord1Interval
 				}
-				if GetKeyState(StopPatternHotkey.Value, "P") or 
-					(RadioPos0No.Value == true and RadioPos1No.Value == true and RadioPos2No.Value == true and RadioPos3No.Value == true and RadioPos4No.Value == true) {
+				if GetKeyState(PatternClickerHotkey.Value, "P") {
 					break
 				}
 				if RadioPos2Yes.Value == true {
@@ -2527,8 +3923,7 @@ ProcessPatternClicker(*){
 					SendKey
 					sleep Coord2Interval
 				}
-				if GetKeyState(StopPatternHotkey.Value, "P") or 
-					(RadioPos0No.Value == true and RadioPos1No.Value == true and RadioPos2No.Value == true and RadioPos3No.Value == true and RadioPos4No.Value == true) {
+				if GetKeyState(PatternClickerHotkey.Value, "P") {
 					break
 				}
 				if RadioPos3Yes.Value == true {
@@ -2537,8 +3932,7 @@ ProcessPatternClicker(*){
 					SendKey
 					sleep Coord3Interval
 				}
-				if GetKeyState(StopPatternHotkey.Value, "P") or 
-					(RadioPos0No.Value == true and RadioPos1No.Value == true and RadioPos2No.Value == true and RadioPos3No.Value == true and RadioPos4No.Value == true) {
+				if GetKeyState(PatternClickerHotkey.Value, "P") {
 					break
 				}
 				if RadioPos4Yes.Value == true {
@@ -2547,16 +3941,39 @@ ProcessPatternClicker(*){
 					SendKey
 					sleep Coord4Interval
 				}
-				if GetKeyState(StopPatternHotkey.Value, "P") or 
-					(RadioPos0No.Value == true and RadioPos1No.Value == true and RadioPos2No.Value == true and RadioPos3No.Value == true and RadioPos4No.Value == true) {
+				if GetKeyState(PatternClickerHotkey.Value, "P") {
 					break
 				}
+				if RadioPos5Yes.Value == true {
+					RadioPos5No.Value := false
+					DllCall("SetCursorPos", "int", CoordX5, "int", CoordY5)
+					SendKey
+					sleep Coord5Interval
+				}
+				if GetKeyState(PatternClickerHotkey.Value, "P") {
+					break
+				}
+				if RadioPos6Yes.Value == true {
+					RadioPos6No.Value := false
+					DllCall("SetCursorPos", "int", CoordX6, "int", CoordY6)
+					SendKey
+					sleep Coord6Interval
+				}
+				if GetKeyState(PatternClickerHotkey.Value, "P") {
+					break
+				}
+				Count++
+				SB.SetText("Infinite Pattern Clicker Active. Count: " Count)
 			} ; End Loop
 			toggle := !toggle
 			TextPatternClickerOnOff.Value := " OFF"
+			SB.SetText("Clicker Stopped. Count: " Count)
+			sleep ClikerStopInterval
 			return
 		Default:
-			SB.SetText("Auto Clicker Active.")
+			; SB.SetText("Auto Clicker Active.")
+			SB.SetText("Infinite Clicker Active. Count: 0")
+			sleep ClikerStartInterval
 			SetTimer(SendKey, Random(ClickInterval, ClickInterval + RandomOffset))
 			return
 		}
@@ -2564,6 +3981,527 @@ ProcessPatternClicker(*){
 		TextPatternClickerOnOff.Value := " OFF"
 		SetTimer(SendKey, 0)
 	}
+}
+;----------------------------------------------------
+EncriptMsg(OriginalMsg, *){
+	MixedPattern := "Az0By9Cx7Da8Eb2Fc4Gw3Hv5Ij6Js1KlLhMpNeOtPgQnRrSiTqUoVkWmXdYfZu"
+	PunctuationPattern := "!#$%&'()*+,-./:;<=>?@[\]^_`"{|}~ "
+	
+	EncriptedMsg := ""
+	FlagSignCount := 0
+	FlagNmCount := 0
+	Flag_az_Count := 0
+	Flag_AZ_Count2 := 0
+	Loop Parse OriginalMsg {
+		switch true {
+		case ord(A_LoopField) > 31 and ord(A_LoopField) < 48:
+			; punctuation signs
+			for index, letter in StrSplit(PunctuationPattern) {
+				switch true {
+				case FlagSignCount == 0:
+					if (letter == A_LoopField) {
+						EncriptedMsg .= chr(index + 34 + 6)
+						EncriptedMsg .= chr(index + 34 + 4)
+						FlagSignCount++
+						break
+					}
+				case FlagSignCount == 1:
+					if (letter == A_LoopField) {
+						EncriptedMsg .= chr(index + 34 + 3)
+						EncriptedMsg .= chr(index + 34 + 8)
+						FlagSignCount++
+						break
+					}
+				case FlagSignCount == 2:
+					if (letter == A_LoopField) {
+						EncriptedMsg .= chr(index + 34 + 9)
+						EncriptedMsg .= chr(index + 34 + 3)
+						FlagSignCount++
+						break
+					}
+				case FlagSignCount == 3:
+					if (letter == A_LoopField) {
+						EncriptedMsg .= chr(index + 34 + 20)
+						EncriptedMsg .= chr(index + 34 + 30)
+						FlagSignCount := 0
+						break
+					}
+				}
+			}
+		case ord(A_LoopField) > 47 and ord(A_LoopField) < 58:
+			; (0,9)
+			EncriptedString := A_LoopField
+			for index, letter in StrSplit(MixedPattern) {
+				switch true {
+				case FlagNmCount == 0:
+					if (letter == A_LoopField) {
+						EncriptedMsg .= chr(index + 34 + 6)
+						EncriptedMsg .= chr(index + 34 + 3)
+						FlagNmCount++
+						break
+					}
+				case FlagNmCount == 1:
+					if (letter == A_LoopField) {
+						EncriptedMsg .= chr(index + 34 + 7)
+						EncriptedMsg .= chr(index + 34 + 18)
+						FlagNmCount++
+						break
+					}
+				case FlagNmCount == 2:
+					if (letter == A_LoopField) {
+						EncriptedMsg .= chr(index + 34 + 10)
+						EncriptedMsg .= chr(index + 34 + 24)
+						FlagNmCount := 0
+						break
+					}
+				}
+			}
+		case ord(A_LoopField) > 57 and ord(A_LoopField) < 65:
+			; punctuation signs
+			for index, letter in StrSplit(PunctuationPattern) {
+				switch true {
+				case FlagSignCount == 0:
+					if (letter == A_LoopField) {
+						EncriptedMsg .= chr(index + 34 + 6)
+						EncriptedMsg .= chr(index + 34 + 4)
+						FlagSignCount++
+						break
+					}
+				case FlagSignCount == 1:
+					if (letter == A_LoopField) {
+						EncriptedMsg .= chr(index + 34 + 3)
+						EncriptedMsg .= chr(index + 34 + 8)
+						FlagSignCount++
+						break
+					}
+				case FlagSignCount == 2:
+					if (letter == A_LoopField) {
+						EncriptedMsg .= chr(index + 34 + 9)
+						EncriptedMsg .= chr(index + 34 + 3)
+						FlagSignCount++
+						break
+					}
+				case FlagSignCount == 3:
+					if (letter == A_LoopField) {
+						EncriptedMsg .= chr(index + 34 + 20)
+						EncriptedMsg .= chr(index + 34 + 30)
+						FlagSignCount := 0
+						break
+					}
+				}
+			}
+		case ord(A_LoopField) > 64 and ord(A_LoopField) < 91:
+			; (A-Z)
+			EncriptedString := A_LoopField
+			for index, letter in StrSplit(MixedPattern) {
+				switch true {
+				case Flag_AZ_Count2 == 0:
+					if (letter == A_LoopField) {
+						EncriptedMsg .= chr(index + 34 + 16)
+						EncriptedMsg .= chr(index + 34 + 28)
+						Flag_AZ_Count2++
+						break
+					}
+				case Flag_AZ_Count2 == 1:
+					if (letter == A_LoopField) {
+						EncriptedMsg .= chr(index + 34 + 9)
+						EncriptedMsg .= chr(index + 34 + 18)
+						Flag_AZ_Count2++
+						break
+					}
+				case Flag_AZ_Count2 == 2:
+					if (letter == A_LoopField) {
+						EncriptedMsg .= chr(index + 34 + 15)
+						EncriptedMsg .= chr(index + 34 + 16)
+						Flag_AZ_Count2 := 0
+						break
+					}
+				}
+			}
+		case ord(A_LoopField) > 90 and ord(A_LoopField) < 97:
+			; punctuation signs
+			for index, letter in StrSplit(PunctuationPattern) {
+				switch true {
+				case FlagSignCount == 0:
+					if (letter == A_LoopField) {
+						EncriptedMsg .= chr(index + 34 + 6)
+						EncriptedMsg .= chr(index + 34 + 4)
+						FlagSignCount++
+						break
+					}
+				case FlagSignCount == 1:
+					if (letter == A_LoopField) {
+						EncriptedMsg .= chr(index + 34 + 3)
+						EncriptedMsg .= chr(index + 34 + 8)
+						FlagSignCount++
+						break
+					}
+				case FlagSignCount == 2:
+					if (letter == A_LoopField) {
+						EncriptedMsg .= chr(index + 34 + 9)
+						EncriptedMsg .= chr(index + 34 + 3)
+						FlagSignCount++
+						break
+					}
+				case FlagSignCount == 3:
+					if (letter == A_LoopField) {
+						EncriptedMsg .= chr(index + 34 + 20)
+						EncriptedMsg .= chr(index + 34 + 30)
+						FlagSignCount := 0
+						break
+					}
+				}
+			}
+		case ord(A_LoopField) > 96 and ord(A_LoopField) < 123:
+			; (a-z)
+			EncriptedString := A_LoopField
+			for index, letter in StrSplit(MixedPattern) {
+				switch true {
+				case Flag_az_Count == 0:
+					if (letter == A_LoopField) {
+						EncriptedMsg .= chr(index + 34 + 29)
+						EncriptedMsg .= chr(index + 34 + 25)
+						Flag_az_Count++
+						break
+					}
+				case Flag_az_Count == 1:
+					if (letter == A_LoopField) {
+						EncriptedMsg .= chr(index + 34 + 10)
+						EncriptedMsg .= chr(index + 34 + 18)
+						Flag_az_Count++
+						break
+					}
+				case Flag_az_Count == 2:
+					if (letter == A_LoopField) {
+						EncriptedMsg .= chr(index + 34 + 15)
+						EncriptedMsg .= chr(index + 34 + 22)
+						Flag_az_Count := 0
+						break
+					}
+				}
+			}
+		case ord(A_LoopField) > 122 and ord(A_LoopField) < 127:
+			; punctuation signs
+			for index, letter in StrSplit(PunctuationPattern) {
+				switch true {
+				case FlagSignCount == 0:
+					if (letter == A_LoopField) {
+						EncriptedMsg .= chr(index + 34 + 6)
+						EncriptedMsg .= chr(index + 34 + 4)
+						FlagSignCount++
+						break
+					}
+				case FlagSignCount == 1:
+					if (letter == A_LoopField) {
+						EncriptedMsg .= chr(index + 34 + 3)
+						EncriptedMsg .= chr(index + 34 + 8)
+						FlagSignCount++
+						break
+					}
+				case FlagSignCount == 2:
+					if (letter == A_LoopField) {
+						EncriptedMsg .= chr(index + 34 + 9)
+						EncriptedMsg .= chr(index + 34 + 3)
+						FlagSignCount++
+						break
+					}
+				case FlagSignCount == 3:
+					if (letter == A_LoopField) {
+						EncriptedMsg .= chr(index + 34 + 20)
+						EncriptedMsg .= chr(index + 34 + 30)
+						FlagSignCount := 0
+						break
+					}
+				}
+			}
+		}
+	}
+	return EncriptedMsg
+}
+;----------------------------------------------------
+DecriptMsg(EncriptedMsgMLTA, *) {
+	MixedPattern := "Az0By9Cx7Da8Eb2Fc4Gw3Hv5Ij6Js1KlLhMpNeOtPgQnRrSiTqUoVkWmXdYfZu"
+	PunctuationPattern := "!#$%&'()*+,-./:;<=>?@[\]^_`"{|}~ "
+	DecriptedMsg := ""
+	
+	count := 1
+	DiffValue := 0
+	IndexKey := 0
+	Loop Parse EncriptedMsgMLTA {
+		if Mod(count, 2) == 1 {
+			RealKey := ord(A_LoopField)
+		}
+		
+		if Mod(count, 2) == 0 {
+			AddedKey1 := ord(A_LoopField)
+			DiffValue := Abs(RealKey - AddedKey1)
+			flagLetterFound := 0
+			switch true {
+			case DiffValue == 1:
+				IndexKey := RealKey - 34 - 15
+				for index, letter in StrSplit(MixedPattern) {
+					if IndexKey < 0 {
+						; continue
+					}
+					if index == IndexKey {
+						DecriptedMsg .= letter
+						break
+					}
+				}
+			case DiffValue == 2:
+				IndexKey := RealKey - 34 - 6
+				for index, letter in StrSplit(PunctuationPattern) {
+					if IndexKey < 0 {
+						; continue
+					}
+					if index == IndexKey {
+						DecriptedMsg .= letter
+						break
+					}
+				}
+			case DiffValue == 3:
+				IndexKey := RealKey - 34 - 6
+				for index, letter in StrSplit(MixedPattern) {
+					if IndexKey < 0 {
+						; continue
+					}
+					if index == IndexKey {
+						DecriptedMsg .= letter
+						break
+					}
+				}
+			case DiffValue == 4:
+				IndexKey := RealKey - 34 - 29
+				for index, letter in StrSplit(MixedPattern) {
+					if IndexKey < 0 {
+						continue
+					}
+					if index == IndexKey {
+						DecriptedMsg .= letter
+						break
+					}
+				}
+			case DiffValue == 5:
+				IndexKey := RealKey - 34 - 3
+				for index, letter in StrSplit(PunctuationPattern) {
+					if IndexKey < 0 {
+						; continue
+					}
+					if index == IndexKey {
+						DecriptedMsg .= letter
+						break
+					}
+				}
+			case DiffValue == 6:
+				IndexKey := RealKey - 34 - 9
+				for index, letter in StrSplit(PunctuationPattern) {
+					if IndexKey < 0 {
+						; continue
+					}
+					if index == IndexKey {
+						DecriptedMsg .= letter
+						break
+					}
+				}
+			case DiffValue == 7:
+				IndexKey := RealKey - 34 - 15
+				for index, letter in StrSplit(MixedPattern) {
+					if IndexKey < 0 {
+						; continue
+					}
+					if index == IndexKey {
+						DecriptedMsg .= letter
+						break
+					}
+				}
+			case DiffValue == 8:
+				IndexKey := RealKey - 34 - 10
+				for index, letter in StrSplit(MixedPattern) {
+					if IndexKey < 0 {
+						; continue
+					}
+					if index == IndexKey {
+						DecriptedMsg .= letter
+						break
+					}
+				}
+			case DiffValue == 9:
+				IndexKey := RealKey - 34 - 9
+				for index, letter in StrSplit(MixedPattern) {
+					if IndexKey < 0 {
+						; continue
+					}
+					if index == IndexKey {
+						DecriptedMsg .= letter
+						break
+					}
+				}
+			case DiffValue == 10:
+				IndexKey := RealKey - 34 - 20
+				for index, letter in StrSplit(PunctuationPattern) {
+					if IndexKey < 0 {
+						; continue
+					}
+					if index == IndexKey {
+						DecriptedMsg .= letter
+						break
+					}
+				}
+			case DiffValue == 11:
+				IndexKey := RealKey - 34 - 7
+				for index, letter in StrSplit(MixedPattern) {
+					if IndexKey < 0 {
+						continue
+					}
+					if index == IndexKey {
+						DecriptedMsg .= letter
+						break
+					}
+				}
+			case DiffValue == 12:
+				IndexKey := RealKey - 34 - 16
+				for index, letter in StrSplit(MixedPattern) {
+					if IndexKey < 0 {
+						continue
+					}
+					if index == IndexKey {
+						DecriptedMsg .= letter
+						break
+					}
+				}
+			case DiffValue == 14:
+				IndexKey := RealKey - 34 - 10
+				for index, letter in StrSplit(MixedPattern) {
+					if IndexKey < 0 {
+						continue
+					}
+					if index == IndexKey {
+						DecriptedMsg .= letter
+						break
+					}
+				}
+			}
+		}
+		count++
+	}
+	return DecriptedMsg
+}
+;----------------------------------------------------
+ParseRequest(*){
+	TempFileMLTA := A_Temp . "\MLTA_UpdateData.ini"
+	EncCurl := "PLjr_f_[HF16bjKEBLHTHF@E,5ovgcNVelmi\d3:JFT\ahsoX``:4V``Y``sobjW^kgHFV^ahgcNVovMI?DPX<CgcE?FCGR23EQJS89amGU,5+(ZbKRJK<HDObkTUwsBNjr9@V_PZDRVW_kmiDMbj>?KWPYHOc_.6\]am\eNUGC.6``a]d6B=:;Fc_PYLTJXY``YUIQBI.+D@XYNV_k]dGC>GFNDEGRip6B5C;D>?Q]=:>I;DAOPQ6BfoPL\dno[bCAEJa]T\Y``c_IQ:4DN64<Cc_\d27[bokT\SZ}y:B82BIsodlDN_feaPXel\X64BN5>MN16<H7?NUa]93NWRSBLco7?NUuq42,5jrY``sodl<Cgc``h_f38miRZQXea7?NUeaIQ93QXJFT\W^\XT\"
+	RunWait(A_ComSpec " /c " . DecriptMsg(EncCurl) . " > " TempFileMLTA, , "Hide")
+	
+	ReleaseVersion := ""
+	DownloadFile := ""
+	Count := 0
+
+	Loop Read, TempFileMLTA
+	{
+		; Check if the current line is empty
+		if !A_LoopReadLine {
+			Count++
+			continue
+		}
+		
+		; Process the non-empty line here
+		Flag1stLetter := 0
+		CountOrd34 := 0
+		FlagAddedSpace := 0
+		CleanLine := ""
+		Loop parse A_LoopReadLine {
+			if ord(A_LoopField) == 34 {
+				CountOrd34++
+				if CountOrd34 == 4 {
+					break
+				}
+			}
+			if Flag1stLetter == 1 {
+				Switch true {
+				case ord(A_LoopField) == 32 and FlagAddedSpace == 0:
+					CleanLine .= A_LoopField
+					FlagAddedSpace := 1
+				case ord(A_LoopField) == 34 and FlagAddedSpace == 0:
+					CleanLine .= " "
+					FlagAddedSpace := 1
+				case ord(A_LoopField) == 44:
+					break
+				case ord(A_LoopField) != 34:
+					CleanLine .= A_LoopField
+					FlagAddedSpace := 0
+				}	
+			} 
+			if ord(A_LoopField) != 32 and Flag1stLetter == 0 {
+				Flag1stLetter := 1
+				if ord(A_LoopField) != 34 {
+					break
+				}
+			}
+		}
+		FileAppend CleanLine . "`n", TempCleanFileMLTA
+		Match := RegExMatch(CleanLine, "tag_name : v\d+\.\d+", &tag_name)
+		Match2 := RegExMatch(CleanLine, "url : https://api.github.com/repos/FDJ-Dash/ML-Task-Automator/releases/assets/\d+", &download_url)
+		Match3 := RegExMatch(CleanLine, "name : \w+-\w+-\w+-\w+-v\d+\.\d+\.\w+", &name)
+		Switch true {
+		case Match == true:
+			for index, word in StrSplit(tag_name[0], A_Space) {
+				if index == 3 {
+					MLTALatestReleaseVersion := word
+					IniWrite MLTALatestReleaseVersion, DataFile, "GeneralData", "MLTALatestReleaseVersion"
+				}
+			}
+		case Match2 == true:
+			for index, word in StrSplit(download_url[0], A_Space) {
+				if index == 3 {
+					DownloadUrl := word
+					DownloadUrl := EncriptMsg(DownloadUrl)
+					IniWrite DownloadUrl, DataFile, "EncriptedData", "MLTADownload"
+				}
+			}
+		case Match3 == true:
+			for index, word in StrSplit(name[0], A_Space) {
+				if index == 3 {
+					Name := word
+					IniWrite Name, DataFile, "GeneralData", "MLTAName"
+				}
+			}
+		}
+	}
+	
+	try {
+		FileDelete TempFileMLTA
+	}
+	catch {
+
+	}
+}
+;----------------------------------------------------
+CheckConnection(*){
+	TempFileConnectionMLTA := A_Temp . "\MLTA_Connection.log"
+	RunWait(A_ComSpec " /c curl -k -L https://www.google.com > " TempFileConnectionMLTA, , "Hide")
+	Match := false
+	Count := 0
+	Loop Read, TempFileConnectionMLTA
+	{
+		; Check if the current line is empty
+		if !A_LoopReadLine {
+			Count++
+			continue
+		}
+		if Count > 0 {
+			Match := true
+			break
+		}
+		Count++
+	}
+	
+	try {
+		FileDelete TempFileConnectionMLTA
+	}
+	catch {
+
+	}
+	return Match
 }
 ;----------------------------------------------------
 MenuHandlerExit(*){
@@ -2574,16 +4512,71 @@ EditIniFileHandler(*) {
 	run IniFile
 }
 ;----------------------------------------------------
-SuspendMenuHandler(*){
-	SuspendHotkeys := IniRead(IniFile, "Properties", "SuspendHotkeys")
-	SuspendHotkeys := !SuspendHotkeys
-	IniWrite SuspendHotkeys, IniFile, "Properties", "SuspendHotkeys"
-	if SuspendHotkeys == true {
-		FileMenu.ToggleCheck("S&uspend Hotkeys`tCtrl+U")
-	} else {
-		FileMenu.Uncheck("S&uspend Hotkeys`tCtrl+U")
+MenuHandlerUpdate(*){
+	SB.SetText("Checking for updates..")
+	Connection := CheckConnection()
+	if Connection != true {
+		ConnectionMessage()
+		return
 	}
-	Suspend
+	ParseRequest()
+	DownloadUrl := IniRead(DataFile, "EncriptedData", "MLTADownload")
+	MLTALatestReleaseVersion := IniRead(DataFile, "GeneralData", "MLTALatestReleaseVersion")
+	IniWrite A_Now, IniFile, "Settings", "LastUpdateCheckTimeStamp"
+	if MLTALatestReleaseVersion != CurrentVersion {
+		if DownloadUrl != "" {
+			IniWrite true, IniFile, "Settings", "NeedUpdate"
+			NewVersionAvailableMessage(MLTALatestReleaseVersion)
+		}
+	}
+	If MLTALatestReleaseVersion == CurrentVersion {
+		UpToDateMessage()
+	}
+}
+;----------------------------------------------------
+MenuHandlerCheckUptDaily(*){
+	CheckforUpdatesDaily := true
+	CheckforupdatesWeekly := false
+	NeverCheckForUpdates := false
+	IniWrite CheckforUpdatesDaily, IniFile, "Settings", "CheckforUpdatesDaily"
+	IniWrite CheckforupdatesWeekly, IniFile, "Settings", "CheckforupdatesWeekly"
+	IniWrite NeverCheckForUpdates, IniFile, "Settings", "NeverCheckForUpdates"
+	Reload
+}
+;----------------------------------------------------
+MenuHandlerCheckUptWeekly(*){
+	CheckforUpdatesDaily := false
+	CheckforupdatesWeekly := true
+	NeverCheckForUpdates := false
+	IniWrite CheckforUpdatesDaily, IniFile, "Settings", "CheckforUpdatesDaily"
+	IniWrite CheckforupdatesWeekly, IniFile, "Settings", "CheckforupdatesWeekly"
+	IniWrite NeverCheckForUpdates, IniFile, "Settings", "NeverCheckForUpdates"
+	Reload
+}
+;----------------------------------------------------
+MenuHandlerNeverCheckUpt(*){
+	CheckforUpdatesDaily := false
+	CheckforupdatesWeekly := false
+	NeverCheckForUpdates := true
+	IniWrite CheckforUpdatesDaily, IniFile, "Settings", "CheckforUpdatesDaily"
+	IniWrite CheckforupdatesWeekly, IniFile, "Settings", "CheckforupdatesWeekly"
+	IniWrite NeverCheckForUpdates, IniFile, "Settings", "NeverCheckForUpdates"
+	Reload
+}
+;----------------------------------------------------
+SuspendMenuHandler(*){
+	AuxSuspend := A_IsSuspended
+	AuxSuspend := !AuxSuspend
+	if AuxSuspend == true {
+		FileMenu.ToggleCheck("Suspend Hotkeys`t" . SuspendHotkeysKey)
+		ToggleHotkeysDisabled()
+		sleep 500
+	} else {
+		FileMenu.Uncheck("Suspend Hotkeys`t" . SuspendHotkeysKey)
+		ToggleHotkeysEnabled()
+		sleep 500
+	}
+	Suspend()
 }
 ;----------------------------------------------------
 MenuHandlerQuickFix(*) {
@@ -2593,10 +4586,10 @@ MenuHandlerQuickFix(*) {
 }
 ;----------------------------------------------------
 ; Save to ini file and reload
-SecureModeHandler(*) {
-	SecureMode := IniRead(IniFile, "Properties", "SecureMode")
-	SecureMode := !SecureMode
-	IniWrite SecureMode, IniFile, "Properties", "SecureMode"
+HotkeyEditModeHandler(*) {
+	HotkeyEditMode := IniRead(IniFile, "Properties", "HotkeyEditMode")
+	HotkeyEditMode := !HotkeyEditMode
+	IniWrite HotkeyEditMode, IniFile, "Properties", "HotkeyEditMode"
 	Reload
 }
 ;----------------------------------------------------
@@ -2781,74 +4774,321 @@ SelectBottomPicture(*) {
 	Reload
 }
 ;----------------------------------------------------
-SubmitJumpHotkey(*){
-	Saved := TaskAutomatorGui.Submit(false)
+SubmitJumpHotkey0(*){
+	if GetKeyState("Ctrl", "P") {
+		CtrlJumpHotkey0 := 1
+		IniWrite CtrlJumpHotkey0, AuxHkDataFile, "CtrlHkFlags", "CtrlJumpHotkey0"
+	}
+	if GetKeyState("Alt", "P") {
+		AltJumpHotkey0 := 1
+		IniWrite AltJumpHotkey0, AuxHkDataFile, "AltHkFlags", "AltJumpHotkey0"
+	}
 	if GetKeyState("Shift", "P") {
-		return
+		ShiftJumpHotkey0 := 1
+		IniWrite ShiftJumpHotkey0, AuxHkDataFile, "ShiftHkFlags", "ShiftJumpHotkey0"
 	}
-	if Saved.JumpHotkey0 == "" or Saved.JumpHotkey1 == "" 
-		or Saved.JumpHotkey2 == "" or Saved.JumpHotkey3 == ""
-		or Saved.JumpHotkey4 == ""{
-		return
-	}
+	sleep 500
+	Saved := TaskAutomatorGui.Submit(false)
 	IniWrite Saved.JumpHotkey0, IniFile, "SavedHotkey", "JumpHotkey0"
+	Reload
+}
+SubmitJumpHotkey1(*){
+	if GetKeyState("Ctrl", "P") {
+		CtrlJumpHotkey1 := 1
+		IniWrite CtrlJumpHotkey1, AuxHkDataFile, "CtrlHkFlags", "CtrlJumpHotkey1"
+	}
+	if GetKeyState("Alt", "P") {
+		AltJumpHotkey1 := 1
+		IniWrite AltJumpHotkey1, AuxHkDataFile, "AltHkFlags", "AltJumpHotkey1"
+	}
+	if GetKeyState("Shift", "P") {
+		ShiftJumpHotkey1 := 1
+		IniWrite ShiftJumpHotkey1, AuxHkDataFile, "ShiftHkFlags", "ShiftJumpHotkey1"
+	}
+	sleep 500
+	Saved := TaskAutomatorGui.Submit(false)
 	IniWrite Saved.JumpHotkey1, IniFile, "SavedHotkey", "JumpHotkey1"
+	Reload
+}
+SubmitJumpHotkey2(*){
+	if GetKeyState("Ctrl", "P") {
+		CtrlJumpHotkey2 := 1
+		IniWrite CtrlJumpHotkey2, AuxHkDataFile, "CtrlHkFlags", "CtrlJumpHotkey2"
+	}
+	if GetKeyState("Alt", "P") {
+		AltJumpHotkey2 := 1
+		IniWrite AltJumpHotkey2, AuxHkDataFile, "AltHkFlags", "AltJumpHotkey2"
+	}
+	if GetKeyState("Shift", "P") {
+		ShiftJumpHotkey2 := 1
+		IniWrite ShiftJumpHotkey2, AuxHkDataFile, "ShiftHkFlags", "ShiftJumpHotkey2"
+	}
+	sleep 500
+	Saved := TaskAutomatorGui.Submit(false)
 	IniWrite Saved.JumpHotkey2, IniFile, "SavedHotkey", "JumpHotkey2"
+	Reload
+}
+SubmitJumpHotkey3(*){
+	if GetKeyState("Ctrl", "P") {
+		CtrlJumpHotkey3 := 1
+		IniWrite CtrlJumpHotkey3, AuxHkDataFile, "CtrlHkFlags", "CtrlJumpHotkey3"
+	}
+	if GetKeyState("Alt", "P") {
+		AltJumpHotkey3 := 1
+		IniWrite AltJumpHotkey3, AuxHkDataFile, "AltHkFlags", "AltJumpHotkey3"
+	}
+	if GetKeyState("Shift", "P") {
+		ShiftJumpHotkey3 := 1
+		IniWrite ShiftJumpHotkey3, AuxHkDataFile, "ShiftHkFlags", "ShiftJumpHotkey3"
+	}
+	sleep 500
+	Saved := TaskAutomatorGui.Submit(false)
 	IniWrite Saved.JumpHotkey3, IniFile, "SavedHotkey", "JumpHotkey3"
+	Reload
+}
+SubmitJumpHotkey4(*){
+	if GetKeyState("Ctrl", "P") {
+		CtrlJumpHotkey4 := 1
+		IniWrite CtrlJumpHotkey4, AuxHkDataFile, "CtrlHkFlags", "CtrlJumpHotkey4"
+	}
+	if GetKeyState("Alt", "P") {
+		AltJumpHotkey4 := 1
+		IniWrite AltJumpHotkey4, AuxHkDataFile, "AltHkFlags", "AltJumpHotkey4"
+	}
+	if GetKeyState("Shift", "P") {
+		ShiftJumpHotkey4 := 1
+		IniWrite ShiftJumpHotkey4, AuxHkDataFile, "ShiftHkFlags", "ShiftJumpHotkey4"
+	}
+	sleep 500
+	Saved := TaskAutomatorGui.Submit(false)
 	IniWrite Saved.JumpHotkey4, IniFile, "SavedHotkey", "JumpHotkey4"
 	Reload
 }
 ;----------------------------------------------------
-SubmitQuickAccess(*){
-	Saved := TaskAutomatorGui.Submit(false)
+SubmitQuickAccess1(*){
+	if GetKeyState("Ctrl", "P") {
+		CtrlQuickAccessHk1 := 1
+		IniWrite CtrlQuickAccessHk1, AuxHkDataFile, "CtrlHkFlags", "CtrlQuickAccessHk1"
+	}
+	if GetKeyState("Alt", "P") {
+		AltQuickAccessHk1 := 1
+		IniWrite AltQuickAccessHk1, AuxHkDataFile, "AltHkFlags", "AltQuickAccessHk1"
+	}
 	if GetKeyState("Shift", "P") {
-		return
+		ShiftQuickAccessHk1 := 1
+		IniWrite ShiftQuickAccessHk1, AuxHkDataFile, "ShiftHkFlags", "ShiftQuickAccessHk1"
 	}
-	if Saved.QuickAccessHk1 == "" or Saved.QuickAccessHk2 == "" 
-		or Saved.QuickAccessHk3 == "" or Saved.QuickAccessHk4 == ""
-		or Saved.QuickAccessHk5 == "" or Saved.QuickAccessHk6 == ""
-		or Saved.QuickAccessHk7 == "" or Saved.QuickAccessHk8 == ""
-		or Saved.QuickAccessHk9 == ""{
-		return
-	}
+	sleep 500
+	Saved := TaskAutomatorGui.Submit(false)
 	IniWrite Saved.QuickAccessHk1, IniFile, "SavedHotkey", "QuickAccessHk1"
+	Reload
+}
+;----------------------------------------------------
+SubmitQuickAccess2(*){
+	if GetKeyState("Ctrl", "P") {
+		CtrlQuickAccessHk2 := 1
+		IniWrite CtrlQuickAccessHk2, AuxHkDataFile, "CtrlHkFlags", "CtrlQuickAccessHk2"
+	}
+	if GetKeyState("Alt", "P") {
+		AltQuickAccessHk2 := 1
+		IniWrite AltQuickAccessHk2, AuxHkDataFile, "AltHkFlags", "AltQuickAccessHk2"
+	}
+	if GetKeyState("Shift", "P") {
+		ShiftQuickAccessHk2 := 1
+		IniWrite ShiftQuickAccessHk2, AuxHkDataFile, "ShiftHkFlags", "ShiftQuickAccessHk2"
+	}
+	sleep 500
+	Saved := TaskAutomatorGui.Submit(false)
 	IniWrite Saved.QuickAccessHk2, IniFile, "SavedHotkey", "QuickAccessHk2"
+	Reload
+}
+;----------------------------------------------------
+SubmitQuickAccess3(*){
+	if GetKeyState("Ctrl", "P") {
+		CtrlQuickAccessHk3 := 1
+		IniWrite CtrlQuickAccessHk3, AuxHkDataFile, "CtrlHkFlags", "CtrlQuickAccessHk3"
+	}
+	if GetKeyState("Alt", "P") {
+		AltQuickAccessHk3 := 1
+		IniWrite AltQuickAccessHk3, AuxHkDataFile, "AltHkFlags", "AltQuickAccessHk3"
+	}
+	if GetKeyState("Shift", "P") {
+		ShiftQuickAccessHk3 := 1
+		IniWrite ShiftQuickAccessHk3, AuxHkDataFile, "ShiftHkFlags", "ShiftQuickAccessHk3"
+	}
+	sleep 500
+	Saved := TaskAutomatorGui.Submit(false)
 	IniWrite Saved.QuickAccessHk3, IniFile, "SavedHotkey", "QuickAccessHk3"
+	Reload
+}
+;----------------------------------------------------
+SubmitQuickAccess4(*){
+	if GetKeyState("Ctrl", "P") {
+		CtrlQuickAccessHk4 := 1
+		IniWrite CtrlQuickAccessHk4, AuxHkDataFile, "CtrlHkFlags", "CtrlQuickAccessHk4"
+	}
+	if GetKeyState("Alt", "P") {
+		AltQuickAccessHk4 := 1
+		IniWrite AltQuickAccessHk4, AuxHkDataFile, "AltHkFlags", "AltQuickAccessHk4"
+	}
+	if GetKeyState("Shift", "P") {
+		ShiftQuickAccessHk4 := 1
+		IniWrite ShiftQuickAccessHk4, AuxHkDataFile, "ShiftHkFlags", "ShiftQuickAccessHk4"
+	}
+	sleep 500
+	Saved := TaskAutomatorGui.Submit(false)
 	IniWrite Saved.QuickAccessHk4, IniFile, "SavedHotkey", "QuickAccessHk4"
+	Reload
+}
+;----------------------------------------------------
+SubmitQuickAccess5(*){
+	if GetKeyState("Ctrl", "P") {
+		CtrlQuickAccessHk5 := 1
+		IniWrite CtrlQuickAccessHk5, AuxHkDataFile, "CtrlHkFlags", "CtrlQuickAccessHk5"
+	}
+	if GetKeyState("Alt", "P") {
+		AltQuickAccessHk5 := 1
+		IniWrite AltQuickAccessHk5, AuxHkDataFile, "AltHkFlags", "AltQuickAccessHk5"
+	}
+	if GetKeyState("Shift", "P") {
+		ShiftQuickAccessHk5 := 1
+		IniWrite ShiftQuickAccessHk5, AuxHkDataFile, "ShiftHkFlags", "ShiftQuickAccessHk5"
+	}
+	sleep 500
+	Saved := TaskAutomatorGui.Submit(false)
 	IniWrite Saved.QuickAccessHk5, IniFile, "SavedHotkey", "QuickAccessHk5"
+	Reload
+}
+;----------------------------------------------------
+SubmitQuickAccess6(*){
+	if GetKeyState("Ctrl", "P") {
+		CtrlQuickAccessHk6 := 1
+		IniWrite CtrlQuickAccessHk6, AuxHkDataFile, "CtrlHkFlags", "CtrlQuickAccessHk6"
+	}
+	if GetKeyState("Alt", "P") {
+		AltQuickAccessHk6 := 1
+		IniWrite AltQuickAccessHk6, AuxHkDataFile, "AltHkFlags", "AltQuickAccessHk6"
+	}
+	if GetKeyState("Shift", "P") {
+		ShiftQuickAccessHk6 := 1
+		IniWrite ShiftQuickAccessHk6, AuxHkDataFile, "ShiftHkFlags", "ShiftQuickAccessHk6"
+	}
+	sleep 500
+	Saved := TaskAutomatorGui.Submit(false)
 	IniWrite Saved.QuickAccessHk6, IniFile, "SavedHotkey", "QuickAccessHk6"
+	Reload
+}
+;----------------------------------------------------
+SubmitQuickAccess7(*){
+	if GetKeyState("Ctrl", "P") {
+		CtrlQuickAccessHk7 := 1
+		IniWrite CtrlQuickAccessHk7, AuxHkDataFile, "CtrlHkFlags", "CtrlQuickAccessHk7"
+	}
+	if GetKeyState("Alt", "P") {
+		AltQuickAccessHk7 := 1
+		IniWrite AltQuickAccessHk7, AuxHkDataFile, "AltHkFlags", "AltQuickAccessHk7"
+	}
+	if GetKeyState("Shift", "P") {
+		ShiftQuickAccessHk7 := 1
+		IniWrite ShiftQuickAccessHk7, AuxHkDataFile, "ShiftHkFlags", "ShiftQuickAccessHk7"
+	}
+	sleep 500
+	Saved := TaskAutomatorGui.Submit(false)
 	IniWrite Saved.QuickAccessHk7, IniFile, "SavedHotkey", "QuickAccessHk7"
+	Reload
+}
+;----------------------------------------------------
+SubmitQuickAccess8(*){
+	if GetKeyState("Ctrl", "P") {
+		CtrlQuickAccessHk8 := 1
+		IniWrite CtrlQuickAccessHk8, AuxHkDataFile, "CtrlHkFlags", "CtrlQuickAccessHk8"
+	}
+	if GetKeyState("Alt", "P") {
+		AltQuickAccessHk8 := 1
+		IniWrite AltQuickAccessHk8, AuxHkDataFile, "AltHkFlags", "AltQuickAccessHk8"
+	}
+	if GetKeyState("Shift", "P") {
+		ShiftQuickAccessHk8 := 1
+		IniWrite ShiftQuickAccessHk8, AuxHkDataFile, "ShiftHkFlags", "ShiftQuickAccessHk8"
+	}
+	sleep 500
+	Saved := TaskAutomatorGui.Submit(false)
 	IniWrite Saved.QuickAccessHk8, IniFile, "SavedHotkey", "QuickAccessHk8"
+	Reload
+}
+;----------------------------------------------------
+SubmitQuickAccess9(*){
+	if GetKeyState("Ctrl", "P") {
+		CtrlQuickAccessHk9 := 1
+		IniWrite CtrlQuickAccessHk9, AuxHkDataFile, "CtrlHkFlags", "CtrlQuickAccessHk9"
+	}
+	if GetKeyState("Alt", "P") {
+		AltQuickAccessHk9 := 1
+		IniWrite AltQuickAccessHk9, AuxHkDataFile, "AltHkFlags", "AltQuickAccessHk9"
+	}
+	if GetKeyState("Shift", "P") {
+		ShiftQuickAccessHk9 := 1
+		IniWrite ShiftQuickAccessHk9, AuxHkDataFile, "ShiftHkFlags", "ShiftQuickAccessHk9"
+	}
+	sleep 500
+	Saved := TaskAutomatorGui.Submit(false)
 	IniWrite Saved.QuickAccessHk9, IniFile, "SavedHotkey", "QuickAccessHk9"
 	Reload
 }
 ;----------------------------------------------------
 SubmitAutoRunHotkey(*){
-	Saved := TaskAutomatorGui.Submit(false)
+	if GetKeyState("Ctrl", "P") {
+		CtrlStartAutoRunHotkey := 1
+		IniWrite CtrlStartAutoRunHotkey, AuxHkDataFile, "CtrlHkFlags", "CtrlStartAutoRunHotkey"
+	}
+	if GetKeyState("Alt", "P") {
+		AltStartAutoRunHotkey := 1
+		IniWrite AltStartAutoRunHotkey, AuxHkDataFile, "AltHkFlags", "AltStartAutoRunHotkey"
+	}
 	if GetKeyState("Shift", "P") {
-		return
+		ShiftStartAutoRunHotkey := 1
+		IniWrite ShiftStartAutoRunHotkey, AuxHkDataFile, "ShiftHkFlags", "ShiftStartAutoRunHotkey"
 	}
-	; MsgBox "ini variable: " Saved.JumpHotkey0
-	if Saved.StartAutoRunHotkey == "" or Saved.StopAutoRunHotKey == "" {
-		return
-	}
+	sleep 500
+	Saved := TaskAutomatorGui.Submit(false)
 	IniWrite Saved.StartAutoRunHotkey, IniFile, "SavedHotkey", "StartAutoRunHotkey"
+	Reload
+}
+SubmitStopAutoRunHotkey(*){
+	if GetKeyState("Ctrl", "P") {
+		CtrlStopAutoRunHotKey := 1
+		IniWrite CtrlStopAutoRunHotKey, AuxHkDataFile, "CtrlHkFlags", "CtrlStopAutoRunHotKey"
+	}
+	if GetKeyState("Alt", "P") {
+		AltStopAutoRunHotKey := 1
+		IniWrite AltStopAutoRunHotKey, AuxHkDataFile, "AltHkFlags", "AltStopAutoRunHotKey"
+	}
+	if GetKeyState("Shift", "P") {
+		ShiftStopAutoRunHotKey := 1
+		IniWrite ShiftStopAutoRunHotKey, AuxHkDataFile, "ShiftHkFlags", "ShiftStopAutoRunHotKey"
+	}
+	sleep 500
+	Saved := TaskAutomatorGui.Submit(false)
 	IniWrite Saved.StopAutoRunHotKey, IniFile, "SavedHotkey", "StopAutoRunHotKey"
 	Reload
 }
 ;----------------------------------------------------
 SubmitPatternClickerHotkey(*){
+	if GetKeyState("Ctrl", "P") {
+		CtrlPatternClickerHotkey := 1
+		IniWrite CtrlPatternClickerHotkey, AuxHkDataFile, "CtrlHkFlags", "CtrlPatternClickerHotkey"
+	}
+	if GetKeyState("Alt", "P") {
+		AltPatternClickerHotkey := 1
+		IniWrite AltPatternClickerHotkey, AuxHkDataFile, "AltHkFlags", "AltPatternClickerHotkey"
+	}
 	if GetKeyState("Shift", "P") {
-		return
+		ShiftPatternClickerHotkey := 1
+		IniWrite ShiftPatternClickerHotkey, AuxHkDataFile, "ShiftHkFlags", "ShiftPatternClickerHotkey"
 	}
+	sleep 500
 	Saved := TaskAutomatorGui.Submit(false)
-	if Saved.PatternClickerHotkey == "" or Saved.StopPatternHotkey == "" {
-		return
-	}
 	IniWrite Saved.PatternClickerHotkey, IniFile, "SavedHotkey", "PatternClickerHotkey"
-	IniWrite Saved.StopPatternHotkey, IniFile, "SavedHotkey", "StopPatternHotkey"
-	IniWrite Saved.ClickInterval, IniFile, "AutoClicker", "ClickInterval"
-	IniWrite Saved.RandomOffset, IniFile, "AutoClicker", "RandomOffset"
 	Reload
 }
 ;----------------------------------------------------
@@ -2878,6 +5118,14 @@ SubmitValues(*){
 		IniWrite Saved.CoordX4, IniFile, "CursorLocationClicker", "CoordX4"
 		IniWrite Saved.CoordY4, IniFile, "CursorLocationClicker", "CoordY4"
 		IniWrite Saved.Coord4Interval, IniFile, "CursorLocationClicker", "Coord4Interval"
+		;----------------------------------------------------
+		IniWrite Saved.CoordX5, IniFile, "CursorLocationClicker", "CoordX5"
+		IniWrite Saved.CoordY5, IniFile, "CursorLocationClicker", "CoordY5"
+		IniWrite Saved.Coord5Interval, IniFile, "CursorLocationClicker", "Coord5Interval"
+		;----------------------------------------------------
+		IniWrite Saved.CoordX6, IniFile, "CursorLocationClicker", "CoordX6"
+		IniWrite Saved.CoordY6, IniFile, "CursorLocationClicker", "CoordY6"
+		IniWrite Saved.Coord6Interval, IniFile, "CursorLocationClicker", "Coord6Interval"
 		SaveMsg
 	}
 	if SwitchQuickAccess == true {
@@ -2895,38 +5143,68 @@ SubmitValues(*){
 }
 ;----------------------------------------------------
 CreateNewIniFile(*) {
+	FileAppend "; ------------ Credits ------------`n" , IniFile
+	FileAppend "; Creator: Fernando Daniel Jaime.`n" , IniFile
+	FileAppend "; Programmer Alias: FDJ-Dash.`n" , IniFile
+	FileAppend "; Gamer Alias: Mean Little, Grey Dash, Dash.`n" , IniFile
+	FileAppend "; ------------ App Details ------------`n" , IniFile
+	FileAppend "; App Full Name: Mean Little's Task Automator.`n" , IniFile
+	FileAppend "; Description: This is an app aimed towards repetitive tasks like holding a`n" , IniFile
+	FileAppend "; button down for extended time, mouse clicks or even click patterns.`n" , IniFile
+	FileAppend "; Additionally, it brings interchangeable modules like jumps for certain`n" , IniFile
+	FileAppend "; games and Quick access module to store and run any program in your computer`n" , IniFile
+	FileAppend "; or load a web page on your browser easily.`n" , IniFile
 	FileAppend ";--------------------------------------------------`n" , IniFile
 	FileAppend "; NOTE: For all numpad keys, verify that NumLock key is activated / deactivated in order to trigger them.`n" , IniFile
 	FileAppend ";--------------------------------------------------`n" , IniFile
 	FileAppend "; HINT: If you delete this file or move it away from its forder,`n" , IniFile 
-	FileAppend "; Task Automator will generate a new file on the spot.`n" , IniFile
+	FileAppend "; Task Automator will generate a new file with dafault values on the spot`n" , IniFile
 	FileAppend ";--------------------------------------------------`n" , IniFile
-	FileAppend "; ADVISE: If you need a specific Module its a good idea to turn all other modules off.`n" , IniFile
+	FileAppend "; ADVISE: If you need to use a specific Module, its a good idea to turn all`n" , IniFile
+	FileAppend "; other modules OFF from the Options menu bar.`n" , IniFile
 	FileAppend ";--------------------------------------------------`n" , IniFile
-	FileAppend "; WARNING 1: When asigning hotkeys, make sure none of them are the same as other asigned hotkeys.`n" , IniFile
-	FileAppend ";--------------------------------------------------`n" , IniFile
-	FileAppend "; WARNING 2: Don't set this file as read only!`n" , IniFile
+	FileAppend "; Find the list of key names here: https://www.autohotkey.com/docs/v2/KeyList.htm`n" , IniFile
+	FileAppend ";-------------------------------`n" , IniFile
+	FileAppend "; See the list of recommended fonts here: https://www.autohotkey.com/docs/v2/misc/FontsStandard.htm`n" , IniFile
+	FileAppend ";-------------------------------`n" , IniFile
+	FileAppend "; See the list of color names and RGB values here: https://www.autohotkey.com/docs/v2/misc/Colors.htm`n" , IniFile
+	FileAppend "; Black Silver Gray White Maroon Red Purple Fuchsia Green Lime Olive Yellow Navy Blue Teal Aqua`n" , IniFile
+	FileAppend "; If the color name you need is not listed you can still write its RGB value`n" , IniFile
 	FileAppend ";--------------------------------------------------`n" , IniFile
 	FileAppend "[Modules]`n" , IniFile
 	FileAppend "SwitchKbAutoRun=1`n" , IniFile
 	FileAppend "SwitchControllerAutoRun=1`n" , IniFile
 	FileAppend "SwitchTopModulesOFF=1`n" , IniFile
 	FileAppend ";-------------------------------`n" , IniFile
-	FileAppend "SwitchQuickAccess=1`n" , IniFile
+	FileAppend "SwitchQuickAccess=0`n" , IniFile
 	FileAppend "QuickAccessButtons=1`n" , IniFile
-	FileAppend "SwitchClicker=0`n" , IniFile
+	FileAppend "SwitchClicker=1`n" , IniFile
 	FileAppend "SwitchJumps=0`n" , IniFile
 	FileAppend "SwitchModulesOFF=0`n" , IniFile
 	FileAppend ";--------------------------------------------------`n" , IniFile
 	FileAppend "[Properties]`n" , IniFile
 	FileAppend "ExitMessageTimeWait=3000`n" , IniFile
-	FileAppend "SecureMode=1`n" , IniFile
+	FileAppend "SuspendedHotkeysTimeWait=1000`n" , IniFile
+	FileAppend "HotkeyEditMode=1`n" , IniFile
 	FileAppend "EditBoxesAvailable=1`n" , IniFile
-	FileAppend "SuspendHotkeys=0`n" , IniFile
 	FileAppend "AutoRunLoopInterval=100`n" , IniFile
 	FileAppend "GeneralLoopInterval=100`n" , IniFile
 	FileAppend "LoopAmount=100`n" , IniFile
-	FileAppend "GuiPriorityAlwaysOnTop=1`n" , IniFile
+	FileAppend "GuiPriorityAlwaysOnTop=0`n" , IniFile
+	FileAppend ";-------------------------------`n" , IniFile
+	FileAppend "PositionX=928`n" , IniFile
+	FileAppend "PositionY=115`n" , IniFile
+	FileAppend ";-------------------------------`n" , IniFile
+	FileAppend "ExitTaskAutomatorKey=Esc`n" , IniFile
+	FileAppend "SuspendHotkeysKey=Enter`n" , IniFile
+	FileAppend ";--------------------------------------------------`n" , IniFile
+	FileAppend "[Settings]`n" , IniFile
+	FileAppend "CheckforUpdatesDaily=1`n" , IniFile
+	FileAppend "CheckforupdatesWeekly=0`n" , IniFile
+	FileAppend "NeverCheckForUpdates=0`n" , IniFile
+	FileAppend "NeedUpdate=0`n" , IniFile
+	FileAppend ";-------------------------------`n" , IniFile
+	FileAppend "LastUpdateCheckTimeStamp=`n" , IniFile
 	FileAppend ";--------------------------------------------------`n" , IniFile
 	FileAppend "[PaceProperties]`n" , IniFile
 	FileAppend "ScrlUpCount=33`n" , IniFile
@@ -2938,8 +5216,7 @@ CreateNewIniFile(*) {
 	FileAppend "StartAutoRunHotkey=r`n" , IniFile
 	FileAppend "StopAutoRunHotKey=t`n" , IniFile
 	FileAppend ";-------------------------------`n" , IniFile
-	FileAppend "PatternClickerHotkey=Numpad8`n" , IniFile
-	FileAppend "StopPatternHotkey=Numpad9`n" , IniFile
+	FileAppend "PatternClickerHotkey=Shift`n" , IniFile
 	FileAppend ";-------------------------------`n" , IniFile
 	FileAppend "JumpHotkey0=Numpad0`n" , IniFile
 	FileAppend "JumpHotkey1=Numpad1`n" , IniFile
@@ -2973,23 +5250,31 @@ CreateNewIniFile(*) {
 	FileAppend "[CursorLocationClicker]`n" , IniFile
 	FileAppend "CoordX0=950`n" , IniFile
 	FileAppend "CoordY0=240`n" , IniFile
-	FileAppend "Coord0Interval=1000`n" , IniFile
+	FileAppend "Coord0Interval=450`n" , IniFile
 	FileAppend ";-------------------------------`n" , IniFile
 	FileAppend "CoordX1=950`n" , IniFile
 	FileAppend "CoordY1=770`n" , IniFile
-	FileAppend "Coord1Interval=1000`n" , IniFile
+	FileAppend "Coord1Interval=450`n" , IniFile
 	FileAppend ";-------------------------------`n" , IniFile
 	FileAppend "CoordX2=840`n" , IniFile
 	FileAppend "CoordY2=474`n" , IniFile
-	FileAppend "Coord2Interval=1000`n" , IniFile
+	FileAppend "Coord2Interval=450`n" , IniFile
 	FileAppend ";-------------------------------`n" , IniFile
 	FileAppend "CoordX3=1076`n" , IniFile
 	FileAppend "CoordY3=474`n" , IniFile
-	FileAppend "Coord3Interval=1000`n" , IniFile
+	FileAppend "Coord3Interval=450`n" , IniFile
 	FileAppend ";-------------------------------`n" , IniFile
 	FileAppend "CoordX4=949`n" , IniFile
 	FileAppend "CoordY4=463`n" , IniFile
-	FileAppend "Coord4Interval=1000`n" , IniFile
+	FileAppend "Coord4Interval=450`n" , IniFile
+	FileAppend ";-------------------------------`n" , IniFile
+	FileAppend "CoordX5=698`n" , IniFile
+	FileAppend "CoordY5=336`n" , IniFile
+	FileAppend "Coord5Interval=450`n" , IniFile
+	FileAppend ";-------------------------------`n" , IniFile
+	FileAppend "CoordX6=854`n" , IniFile
+	FileAppend "CoordY6=175`n" , IniFile
+	FileAppend "Coord6Interval=450`n" , IniFile
 	FileAppend ";--------------------------------------------------`n" , IniFile
 	FileAppend "[QuickAccessPath]`n" , IniFile
 	FileAppend "QuickAccess1=https://mean-littles-app.gitbook.io/mean-littles-software`n" , IniFile
@@ -3035,21 +5320,15 @@ CreateNewIniFile(*) {
 	FileAppend "LicenseKeyFontType=Comic Sans MS`n" , IniFile
 	FileAppend "MessageMainMsgFontType=Georgia`n" , IniFile
 	FileAppend "MessageFontType=Georgia`n" , IniFile
-	FileAppend ";-------------------------------`n" , IniFile
-	FileAppend "; See the list of recommended fonts here: https://www.autohotkey.com/docs/v2/misc/FontsStandard.htm`n" , IniFile
 	FileAppend ";--------------------------------------------------`n" , IniFile
 	FileAppend "[FontColors]`n" , IniFile
 	FileAppend "MainFontColor=Lime`n" , IniFile
 	FileAppend "FontClickerPatternColor=70A0FA`n" , IniFile
 	FileAppend ";-------------------------------`n" , IniFile
 	FileAppend "MessageAppNameFontColor=Lime`n" , IniFile
+	FileAppend "LicenseKeyFontColor=70A0FA`n" , IniFile
 	FileAppend "MessageMainMsgFontColor=Lime`n" , IniFile
 	FileAppend "MessageFontColor=Lime`n" , IniFile
-	FileAppend "LicenseKeyFontColor=70A0FA`n" , IniFile
-	FileAppend ";-------------------------------`n" , IniFile
-	FileAppend "; See the list of color names and RGB values here: https://www.autohotkey.com/docs/v2/misc/Colors.htm`n" , IniFile
-	FileAppend "; Black Silver Gray White Maroon Red Purple Fuchsia Green Lime Olive Yellow Navy Blue Teal Aqua`n" , IniFile
-	FileAppend "; If the color name you need is not listed you can still write its RGB value`n" , IniFile
 	FileAppend ";--------------------------------------------------`n" , IniFile
 	FileAppend "[Background]`n" , IniFile
 	FileAppend "BackgroundColor=2F2F2F`n" , IniFile
@@ -3060,4 +5339,67 @@ CreateNewIniFile(*) {
 	FileAppend "TopPicture=`n" , IniFile
 	FileAppend "BottomPicture=`n" , IniFile
 }
-
+;----------------------------------------------------
+CreateNewAuxHkDataFile(*){
+	FileAppend ";--------------------------------------------------`n" , AuxHkDataFile
+	FileAppend "; Hotkey Flags`n" , AuxHkDataFile
+	FileAppend ";--------------------------------------------------`n" , AuxHkDataFile
+	FileAppend "[CtrlHkFlags]`n" , AuxHkDataFile
+	FileAppend "CtrlStartAutoRunHotkey=0`n" , AuxHkDataFile
+	FileAppend "CtrlStopAutoRunHotKey=0`n" , AuxHkDataFile
+	FileAppend "CtrlPatternClickerHotkey=0`n" , AuxHkDataFile
+	FileAppend "CtrlJumpHotkey0=0`n" , AuxHkDataFile
+	FileAppend "CtrlJumpHotkey1=0`n" , AuxHkDataFile
+	FileAppend "CtrlJumpHotkey2=0`n" , AuxHkDataFile
+	FileAppend "CtrlJumpHotkey3=0`n" , AuxHkDataFile
+	FileAppend "CtrlJumpHotkey4=0`n" , AuxHkDataFile
+	FileAppend "CtrlQuickAccessHk1=0`n" , AuxHkDataFile
+	FileAppend "CtrlQuickAccessHk2=0`n" , AuxHkDataFile
+	FileAppend "CtrlQuickAccessHk3=0`n" , AuxHkDataFile
+	FileAppend "CtrlQuickAccessHk4=0`n" , AuxHkDataFile
+	FileAppend "CtrlQuickAccessHk5=0`n" , AuxHkDataFile
+	FileAppend "CtrlQuickAccessHk6=0`n" , AuxHkDataFile
+	FileAppend "CtrlQuickAccessHk7=0`n" , AuxHkDataFile
+	FileAppend "CtrlQuickAccessHk8=0`n" , AuxHkDataFile
+	FileAppend "CtrlQuickAccessHk9=0`n" , AuxHkDataFile
+	FileAppend ";--------------------------------------------------`n" , AuxHkDataFile
+	FileAppend "[AltHkFlags]`n" , AuxHkDataFile
+	FileAppend "AltStartAutoRunHotkey=0`n" , AuxHkDataFile
+	FileAppend "AltStopAutoRunHotKey=0`n" , AuxHkDataFile
+	FileAppend "AltPatternClickerHotkey=0`n" , AuxHkDataFile
+	FileAppend "AltStopPatternHotkey=0`n" , AuxHkDataFile
+	FileAppend "AltJumpHotkey0=0`n" , AuxHkDataFile
+	FileAppend "AltJumpHotkey1=0`n" , AuxHkDataFile
+	FileAppend "AltJumpHotkey2=0`n" , AuxHkDataFile
+	FileAppend "AltJumpHotkey3=0`n" , AuxHkDataFile
+	FileAppend "AltJumpHotkey4=0`n" , AuxHkDataFile
+	FileAppend "AltQuickAccessHk1=0`n" , AuxHkDataFile
+	FileAppend "AltQuickAccessHk2=0`n" , AuxHkDataFile
+	FileAppend "AltQuickAccessHk3=0`n" , AuxHkDataFile
+	FileAppend "AltQuickAccessHk4=0`n" , AuxHkDataFile
+	FileAppend "AltQuickAccessHk5=0`n" , AuxHkDataFile
+	FileAppend "AltQuickAccessHk6=0`n" , AuxHkDataFile
+	FileAppend "AltQuickAccessHk7=0`n" , AuxHkDataFile
+	FileAppend "AltQuickAccessHk8=0`n" , AuxHkDataFile
+	FileAppend "AltQuickAccessHk9=0`n" , AuxHkDataFile
+	FileAppend ";--------------------------------------------------`n" , AuxHkDataFile
+	FileAppend "[ShiftHkFlags]`n" , AuxHkDataFile
+	FileAppend "ShiftStartAutoRunHotkey=0`n" , AuxHkDataFile
+	FileAppend "ShiftStopAutoRunHotKey=0`n" , AuxHkDataFile
+	FileAppend "ShiftPatternClickerHotkey=0`n" , AuxHkDataFile
+	FileAppend "ShiftStopPatternHotkey=0`n" , AuxHkDataFile
+	FileAppend "ShiftJumpHotkey0=0`n" , AuxHkDataFile
+	FileAppend "ShiftJumpHotkey1=0`n" , AuxHkDataFile
+	FileAppend "ShiftJumpHotkey2=0`n" , AuxHkDataFile
+	FileAppend "ShiftJumpHotkey3=0`n" , AuxHkDataFile
+	FileAppend "ShiftJumpHotkey4=0`n" , AuxHkDataFile
+	FileAppend "ShiftQuickAccessHk1=0`n" , AuxHkDataFile
+	FileAppend "ShiftQuickAccessHk2=0`n" , AuxHkDataFile
+	FileAppend "ShiftQuickAccessHk3=0`n" , AuxHkDataFile
+	FileAppend "ShiftQuickAccessHk4=0`n" , AuxHkDataFile
+	FileAppend "ShiftQuickAccessHk5=0`n" , AuxHkDataFile
+	FileAppend "ShiftQuickAccessHk6=0`n" , AuxHkDataFile
+	FileAppend "ShiftQuickAccessHk7=0`n" , AuxHkDataFile
+	FileAppend "ShiftQuickAccessHk8=0`n" , AuxHkDataFile
+	FileAppend "ShiftQuickAccessHk9=0`n" , AuxHkDataFile
+}
