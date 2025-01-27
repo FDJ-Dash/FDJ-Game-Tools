@@ -3,19 +3,19 @@
 Auto Clicker Module
 
 
-![MLAutoClicker-TA](https://mean-littles-app.gitbook.io/~gitbook/image?url=https%3A%2F%2F4188136884-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-x-prod.appspot.com%2Fo%2Fspaces%252FS1x31hC3oLxNMMnroww1%252Fuploads%252FeyqidkSBBTyyh5z2Sr3l%252FMLTA1.png%3Falt%3Dmedia%26token%3Dbe1cf87c-55e2-4370-aff1-12de88b69dd0&width=768&dpr=4&quality=100&sign=6dc6080c&sv=2)
+![MLAutoClicker-TA](https://mean-littles-app.gitbook.io/~gitbook/image?url=https%3A%2F%2F4188136884-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-x-prod.appspot.com%2Fo%2Fspaces%252FS1x31hC3oLxNMMnroww1%252Fuploads%252FWR8ybm4Kq4ZaWXyLPIAG%252FMLTA1.png%3Falt%3Dmedia%26token%3D8a74800a-22a3-42b6-a37e-4c75f89d7940&width=768&dpr=4&quality=100&sign=5264e46&sv=2)
 
 Quick Access Module
 
-![MLQuickAccess-TA](https://mean-littles-app.gitbook.io/~gitbook/image?url=https%3A%2F%2F4188136884-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-x-prod.appspot.com%2Fo%2Fspaces%252FS1x31hC3oLxNMMnroww1%252Fuploads%252FhMXR15IofZRXHa99KdRG%252FMLTA4.png%3Falt%3Dmedia%26token%3De9b7d7ea-1b32-4149-84a7-2a98b329f4b1&width=768&dpr=4&quality=100&sign=9c822150&sv=2)
+![MLQuickAccess-TA](https://mean-littles-app.gitbook.io/~gitbook/image?url=https%3A%2F%2F4188136884-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-x-prod.appspot.com%2Fo%2Fspaces%252FS1x31hC3oLxNMMnroww1%252Fuploads%252FHPmEqaBCWLBjmoJYV9xI%252FMLTA5.png%3Falt%3Dmedia%26token%3D923dd648-23d4-47d3-ae37-6263243d3adb&width=768&dpr=4&quality=100&sign=54c24dde&sv=2)
 
 Jumps Module
 
-![MLJumps-TA](https://mean-littles-app.gitbook.io/~gitbook/image?url=https%3A%2F%2F4188136884-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-x-prod.appspot.com%2Fo%2Fspaces%252FS1x31hC3oLxNMMnroww1%252Fuploads%252FslTDQIUNxYiFentj6HVC%252FMLTA6.png%3Falt%3Dmedia%26token%3D7b96f6f5-3648-41c9-a909-2685f3ea53b5&width=768&dpr=4&quality=100&sign=19fe0ef2&sv=2)
+![MLJumps-TA](https://mean-littles-app.gitbook.io/~gitbook/image?url=https%3A%2F%2F4188136884-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-x-prod.appspot.com%2Fo%2Fspaces%252FS1x31hC3oLxNMMnroww1%252Fuploads%252FnFAQXWbReYaoRqvRFN3v%252FMLTA6.png%3Falt%3Dmedia%26token%3Dc8df6ef7-2084-4a87-9f48-58b4ebf69058&width=768&dpr=4&quality=100&sign=c1ced0a6&sv=2)
 
 ## How does it work?
 - The App will read the ML_TaskAutomator.ini file with hotkeys and values stored and will try to detect any game controller device on your computer in case you have one.
-- Hotkeys can be customized from the app itself for basic keys (Remove secure mode to do so). But if you want to set key combinations you should modify  ML_TaskAutomator.ini file instead.
+- Hotkeys can be customized from the app itself (Turn ON Hotkey Edit Mode to do so).
 - Many other variables can be also be customized from the ini file, so give it a look if you are curious about it.
 - Each module is divided by an horizontal white line. The auto Clicker module is also interchangeable.
 ------------------------------------------
