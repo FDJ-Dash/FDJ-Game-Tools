@@ -1,0 +1,359 @@
+;------------- Credits ------------
+; Creator: Fernando Daniel Jaime.
+; Programmer Alias: FDJ-Dash.
+;------------- File Details ------------
+; App Name: Task Automator.
+; File Description: This file contains file creations needed.
+;----------------------------------------------------
+; Header list:
+;----------------------------------------------------
+; CreateNewIniFile(*)
+; CreateNewAuxHkDataFile(*)
+;----------------------------------------------------
+CreateNewIniFile(*) {
+	FileAppend "; ------------ Credits ------------`n" , IniFile
+	FileAppend "; Creator: Fernando Daniel Jaime.`n" , IniFile
+	FileAppend "; Programmer Alias: FDJ-Dash.`n" , IniFile
+	FileAppend "; ------------ App Details ------------`n" , IniFile
+	FileAppend "; App Name: Task Automator.`n" , IniFile
+	FileAppend "; Description: This is an app aimed towards repetitive tasks like holding a`n" , IniFile
+	FileAppend "; button down for extended time, mouse clicks or even click patterns.`n" , IniFile
+	FileAppend "; Additionally, it brings interchangeable modules like jumps for certain`n" , IniFile
+	FileAppend "; games and Quick access module to store and run any program in your computer`n" , IniFile
+	FileAppend "; or load a web page on your browser easily.`n" , IniFile
+	FileAppend ";--------------------------------------------------`n" , IniFile
+	FileAppend "; NOTE: For all numpad keys, verify that NumLock key is activated / deactivated in order to trigger them.`n" , IniFile
+	FileAppend ";--------------------------------------------------`n" , IniFile
+	FileAppend "; HINT: If you delete this file or move it away from its forder,`n" , IniFile 
+	FileAppend "; Task Automator will generate a new file with dafault values on the spot`n" , IniFile
+	FileAppend ";--------------------------------------------------`n" , IniFile
+	FileAppend "; Find the list of key names here: https://www.autohotkey.com/docs/v2/KeyList.htm`n" , IniFile
+	FileAppend ";-------------------------------`n" , IniFile
+	FileAppend "; See the list of recommended fonts here: https://www.autohotkey.com/docs/v2/misc/FontsStandard.htm`n" , IniFile
+	FileAppend ";-------------------------------`n" , IniFile
+	FileAppend "; See the list of color names and RGB values here: https://www.autohotkey.com/docs/v2/misc/Colors.htm`n" , IniFile
+	FileAppend "; Black Silver Gray White Maroon Red Purple Fuchsia Green Lime Olive Yellow Navy Blue Teal Aqua`n" , IniFile
+	FileAppend "; If the color name you need is not listed you can still write its RGB value`n" , IniFile
+	FileAppend ";--------------------------------------------------`n" , IniFile
+	FileAppend "[FontType]`n" , IniFile
+	FileAppend "MainFontType=Comic Sans MS`n" , IniFile
+	FileAppend "MessageAppNameFontType=Georgia`n" , IniFile
+	FileAppend "LicenseKeyFontType=Comic Sans MS`n" , IniFile
+	FileAppend "MessageMainMsgFontType=Georgia`n" , IniFile
+	FileAppend "MessageFontType=Georgia`n" , IniFile
+	FileAppend ";--------------------------------------------------`n" , IniFile
+	FileAppend "[FontColors]`n" , IniFile
+	FileAppend "MainFontColor=Lime`n" , IniFile
+	FileAppend "FontClickerPatternColor=70A0FA`n" , IniFile
+	FileAppend ";----------`n" , IniFile
+	FileAppend "MessageAppNameFontColor=Lime`n" , IniFile
+	FileAppend "LicenseKeyFontColor=70A0FA`n" , IniFile
+	FileAppend "MessageMainMsgFontColor=Lime`n" , IniFile
+	FileAppend "MessageFontColor=Lime`n" , IniFile
+	FileAppend ";--------------------------------------------------`n" , IniFile
+	FileAppend "[Background]`n" , IniFile
+	FileAppend "BackgroundColor=2F2F2F`n" , IniFile
+	FileAppend "BackgroundPicture=`n" , IniFile
+	FileAppend "MessageBackgroundPicture=`n" , IniFile
+	FileAppend ";--------------------------------------------------`n" , IniFile
+	FileAppend "[Modules]`n" , IniFile
+	FileAppend "SwitchKbAutoRun=1`n" , IniFile
+	FileAppend "SwitchControllerAutoRun=0`n" , IniFile
+	FileAppend "SwitchQuickAccess=0`n" , IniFile
+	FileAppend "QuickAccessButtons=1`n" , IniFile
+	FileAppend "SwitchClicker=1`n" , IniFile
+	FileAppend "SwitchJumps=0`n" , IniFile
+	FileAppend ";--------------------------------------------------`n" , IniFile
+	FileAppend "[Properties]`n" , IniFile
+	FileAppend "ExitMessageTimeWait=3000`n" , IniFile
+	FileAppend "SuspendedHotkeysTimeWait=1000`n" , IniFile
+	FileAppend "SaveSuccesfullTimeWait=1000`n" , IniFile
+	FileAppend ";----------`n" , IniFile
+	FileAppend "AutoRunLoopInterval=100`n" , IniFile
+	FileAppend "GeneralLoopInterval=100`n" , IniFile
+	FileAppend "LoopAmount=100`n" , IniFile
+	FileAppend "GuiPriorityAlwaysOnTop=0`n" , IniFile
+	FileAppend ";----------`n" , IniFile
+	FileAppend "PositionX=928`n" , IniFile
+	FileAppend "PositionY=115`n" , IniFile
+	FileAppend ";----------`n" , IniFile
+	FileAppend "ExitTaskAutomatorKey=Esc`n" , IniFile
+	FileAppend "SuspendHotkeysKey=Enter`n" , IniFile
+	FileAppend ";--------------------------------------------------`n" , IniFile
+	FileAppend "[Settings]`n" , IniFile
+	FileAppend "HotkeyEditMode=0`n" , IniFile
+	FileAppend "EditBoxesAvailable=0`n" , IniFile
+	FileAppend ";----------`n" , IniFile
+	FileAppend "CheckforUpdatesDaily=1`n" , IniFile
+	FileAppend "CheckforupdatesWeekly=0`n" , IniFile
+	FileAppend "NeverCheckForUpdates=0`n" , IniFile
+	FileAppend "NeedUpdate=0`n" , IniFile
+	FileAppend "LastUpdateCheckTimeStamp=`n" , IniFile
+	FileAppend ";--------------------------------------------------`n" , IniFile
+	FileAppend "[PaceProperties]`n" , IniFile
+	FileAppend "ScrlUpCount=33`n" , IniFile
+	FileAppend "ScrlUpInterval=150`n" , IniFile
+	FileAppend "ScrlDownCount=33`n" , IniFile
+	FileAppend "ScrlDownInterval=150`n" , IniFile
+	FileAppend ";--------------------------------------------------`n" , IniFile
+	FileAppend "[SavedHotkey]`n" , IniFile
+	FileAppend "KbAutoRunHotkey=r`n" , IniFile
+	FileAppend "PatternClickerHotkey=Shift`n" , IniFile
+	FileAppend ";----------`n" , IniFile
+	FileAppend "JumpHotkey0=Numpad0`n" , IniFile
+	FileAppend "JumpHotkey1=Numpad1`n" , IniFile
+	FileAppend "JumpHotkey2=Numpad2`n" , IniFile
+	FileAppend "JumpHotkey3=Numpad3`n" , IniFile
+	FileAppend "JumpHotkey4=Numpad4`n" , IniFile
+	FileAppend ";----------`n" , IniFile
+	FileAppend "QuickAccessHk1=1`n" , IniFile
+	FileAppend "QuickAccessHk2=2`n" , IniFile
+	FileAppend "QuickAccessHk3=3`n" , IniFile
+	FileAppend "QuickAccessHk4=4`n" , IniFile
+	FileAppend "QuickAccessHk5=5`n" , IniFile
+	FileAppend "QuickAccessHk6=6`n" , IniFile
+	FileAppend "QuickAccessHk7=7`n" , IniFile
+	FileAppend "QuickAccessHk8=8`n" , IniFile
+	FileAppend "QuickAccessHk9=9`n" , IniFile
+	FileAppend ";--------------------------------------------------`n" , IniFile
+	FileAppend "[AutoRun]`n" , IniFile
+	FileAppend "SprintKey=Shift`n" , IniFile
+	FileAppend "ForwardKey=w`n" , IniFile
+	FileAppend ";---------- Pseudo Hotkey (works similar to a hotkey)`n" , IniFile
+	FileAppend "SelectedButton=ButtonRT`n" , IniFile
+	FileAppend "ControllerKey=Joy1`n" , IniFile
+	FileAppend ";--------------------------------------------------`n" , IniFile
+	FileAppend "[QuickAccessPath]`n" , IniFile
+	FileAppend "QuickAccess1=https://mean-littles-app.gitbook.io/mean-littles-software`n" , IniFile
+	FileAppend "QuickAccess2=https://cornucopias.io/`n" , IniFile
+	FileAppend "QuickAccess3=C:\Users\`n" , IniFile
+	FileAppend "QuickAccess4=https://outlook.live.com/mail/`n" , IniFile
+	FileAppend "QuickAccess5=https://drive.google.com/drive/`n" , IniFile
+	FileAppend "QuickAccess6=`n" , IniFile
+	FileAppend "QuickAccess7=`n" , IniFile
+	FileAppend "QuickAccess8=`n" , IniFile
+	FileAppend "QuickAccess9=`n" , IniFile
+	FileAppend ";--------------------------------------------------`n" , IniFile
+	FileAppend "[QuickAccessIcons]`n" , IniFile
+	FileAppend "QuickIcon1=`n" , IniFile
+	FileAppend "QuickIcon2=`n" , IniFile
+	FileAppend "QuickIcon3=`n" , IniFile
+	FileAppend "QuickIcon4=`n" , IniFile
+	FileAppend "QuickIcon5=`n" , IniFile
+	FileAppend "QuickIcon6=`n" , IniFile
+	FileAppend "QuickIcon7=`n" , IniFile
+	FileAppend "QuickIcon8=`n" , IniFile
+	FileAppend "QuickIcon9=`n" , IniFile
+	FileAppend ";--------------------------------------------------`n" , IniFile
+	FileAppend "[JumpProperties]`n" , IniFile
+	FileAppend "VeryShortJumpRace=400`n" , IniFile
+	FileAppend "VeryShortJumpLenght=500`n" , IniFile
+	FileAppend ";----------`n" , IniFile
+	FileAppend "ShortJumpRace=550`n" , IniFile
+	FileAppend "ShortJumpLenght=500`n" , IniFile
+	FileAppend ";----------`n" , IniFile
+	FileAppend "NormalJumpRace=550`n" , IniFile
+	FileAppend "NormalJumpLenght=600`n" , IniFile
+	FileAppend ";----------`n" , IniFile
+	FileAppend "LongJumpRace=550`n" , IniFile
+	FileAppend "LongJumpLenght=700`n" , IniFile
+	FileAppend ";----------`n" , IniFile
+	FileAppend "VeryLongJumpRace=600`n" , IniFile
+	FileAppend "VeryLongJumpLenght=750`n" , IniFile
+	FileAppend ";--------------------------------------------------`n" , IniFile
+	FileAppend "[AutoClicker]`n" , IniFile
+	FileAppend "ClickInterval=50`n" , IniFile
+	FileAppend "RandomOffset=50`n" , IniFile
+	FileAppend ";--------------------------------------------------`n" , IniFile
+	FileAppend "[CursorLocationClicker]`n" , IniFile
+	FileAppend "CoordX1=`n" , IniFile
+	FileAppend "CoordY1=`n" , IniFile
+	FileAppend "Coord1Interval=100`n" , IniFile
+	FileAppend "Radio1Yes=0`n" , IniFile
+	FileAppend "Radio1No=1`n" , IniFile
+	FileAppend ";----------`n" , IniFile
+	FileAppend "CoordX2=`n" , IniFile
+	FileAppend "CoordY2=`n" , IniFile
+	FileAppend "Coord2Interval=100`n" , IniFile
+	FileAppend "Radio2Yes=0`n" , IniFile
+	FileAppend "Radio2No=1`n" , IniFile
+	FileAppend ";----------`n" , IniFile
+	FileAppend "CoordX3=`n" , IniFile
+	FileAppend "CoordY3=`n" , IniFile
+	FileAppend "Coord3Interval=100`n" , IniFile
+	FileAppend "Radio3Yes=0`n" , IniFile
+	FileAppend "Radio3No=1`n" , IniFile
+	FileAppend ";----------`n" , IniFile
+	FileAppend "CoordX4=`n" , IniFile
+	FileAppend "CoordY4=`n" , IniFile
+	FileAppend "Coord4Interval=100`n" , IniFile
+	FileAppend "Radio4Yes=0`n" , IniFile
+	FileAppend "Radio4No=1`n" , IniFile
+	FileAppend ";----------`n" , IniFile
+	FileAppend "CoordX5=`n" , IniFile
+	FileAppend "CoordY5=`n" , IniFile
+	FileAppend "Coord5Interval=100`n" , IniFile
+	FileAppend "Radio5Yes=0`n" , IniFile
+	FileAppend "Radio5No=1`n" , IniFile
+	FileAppend ";----------`n" , IniFile
+	FileAppend "CoordX6=`n" , IniFile
+	FileAppend "CoordY6=`n" , IniFile
+	FileAppend "Coord6Interval=100`n" , IniFile
+	FileAppend "Radio6Yes=0`n" , IniFile
+	FileAppend "Radio6No=1`n" , IniFile
+	FileAppend ";----------`n" , IniFile
+	FileAppend "CoordX7=`n" , IniFile
+	FileAppend "CoordY7=`n" , IniFile
+	FileAppend "Coord7Interval=100`n" , IniFile
+	FileAppend "Radio7Yes=0`n" , IniFile
+	FileAppend "Radio7No=1`n" , IniFile
+	FileAppend ";----------`n" , IniFile
+	FileAppend "CoordX8=`n" , IniFile
+	FileAppend "CoordY8=`n" , IniFile
+	FileAppend "Coord8Interval=100`n" , IniFile
+	FileAppend "Radio8Yes=0`n" , IniFile
+	FileAppend "Radio8No=1`n" , IniFile
+	FileAppend ";----------`n" , IniFile
+	FileAppend "CoordX9=`n" , IniFile
+	FileAppend "CoordY9=`n" , IniFile
+	FileAppend "Coord9Interval=100`n" , IniFile
+	FileAppend "Radio9Yes=0`n" , IniFile
+	FileAppend "Radio9No=1`n" , IniFile
+	FileAppend ";----------`n" , IniFile
+	FileAppend "CoordX10=`n" , IniFile
+	FileAppend "CoordY10=`n" , IniFile
+	FileAppend "Coord10Interval=100`n" , IniFile
+	FileAppend "Radio10Yes=0`n" , IniFile
+	FileAppend "Radio10No=1`n" , IniFile
+	FileAppend ";----------`n" , IniFile
+	FileAppend "CoordX11=`n" , IniFile
+	FileAppend "CoordY11=`n" , IniFile
+	FileAppend "Coord11Interval=100`n" , IniFile
+	FileAppend "Radio11Yes=0`n" , IniFile
+	FileAppend "Radio11No=1`n" , IniFile
+	FileAppend ";----------`n" , IniFile
+	FileAppend "CoordX12=`n" , IniFile
+	FileAppend "CoordY12=`n" , IniFile
+	FileAppend "Coord12Interval=100`n" , IniFile
+	FileAppend "Radio12Yes=0`n" , IniFile
+	FileAppend "Radio12No=1`n" , IniFile
+	FileAppend ";----------`n" , IniFile
+	FileAppend "CoordX13=`n" , IniFile
+	FileAppend "CoordY13=`n" , IniFile
+	FileAppend "Coord13Interval=100`n" , IniFile
+	FileAppend "Radio13Yes=0`n" , IniFile
+	FileAppend "Radio13No=1`n" , IniFile
+	FileAppend ";----------`n" , IniFile
+	FileAppend "CoordX14=`n" , IniFile
+	FileAppend "CoordY14=`n" , IniFile
+	FileAppend "Coord14Interval=100`n" , IniFile
+	FileAppend "Radio14Yes=0`n" , IniFile
+	FileAppend "Radio14No=1`n" , IniFile
+	FileAppend ";----------`n" , IniFile
+	FileAppend "CoordX15=`n" , IniFile
+	FileAppend "CoordY15=`n" , IniFile
+	FileAppend "Coord15Interval=100`n" , IniFile
+	FileAppend "Radio15Yes=0`n" , IniFile
+	FileAppend "Radio15No=1`n" , IniFile
+	FileAppend ";----------`n" , IniFile
+	FileAppend "CoordX16=`n" , IniFile
+	FileAppend "CoordY16=`n" , IniFile
+	FileAppend "Coord16Interval=100`n" , IniFile
+	FileAppend "Radio16Yes=0`n" , IniFile
+	FileAppend "Radio16No=1`n" , IniFile
+	FileAppend ";----------`n" , IniFile
+	FileAppend "CoordX17=`n" , IniFile
+	FileAppend "CoordY17=`n" , IniFile
+	FileAppend "Coord17Interval=100`n" , IniFile
+	FileAppend "Radio17Yes=0`n" , IniFile
+	FileAppend "Radio17No=1`n" , IniFile
+	FileAppend ";----------`n" , IniFile
+	FileAppend "CoordX18=`n" , IniFile
+	FileAppend "CoordY18=`n" , IniFile
+	FileAppend "Coord18Interval=100`n" , IniFile
+	FileAppend "Radio18Yes=0`n" , IniFile
+	FileAppend "Radio18No=1`n" , IniFile
+	FileAppend ";----------`n" , IniFile
+	FileAppend "CoordX19=`n" , IniFile
+	FileAppend "CoordY19=`n" , IniFile
+	FileAppend "Coord19Interval=100`n" , IniFile
+	FileAppend "Radio19Yes=0`n" , IniFile
+	FileAppend "Radio19No=1`n" , IniFile
+	FileAppend ";----------`n" , IniFile
+	FileAppend "CoordX20=`n" , IniFile
+	FileAppend "CoordY20=`n" , IniFile
+	FileAppend "Coord20Interval=100`n" , IniFile
+	FileAppend "Radio20Yes=0`n" , IniFile
+	FileAppend "Radio20No=1`n" , IniFile
+	FileAppend ";----------`n" , IniFile
+	FileAppend "CoordX21=`n" , IniFile
+	FileAppend "CoordY21=`n" , IniFile
+	FileAppend "Coord21Interval=100`n" , IniFile
+	FileAppend "Radio21Yes=0`n" , IniFile
+	FileAppend "Radio21No=1`n" , IniFile
+	FileAppend ";----------`n" , IniFile
+	FileAppend "CoordX22=`n" , IniFile
+	FileAppend "CoordY22=`n" , IniFile
+	FileAppend "Coord22Interval=100`n" , IniFile
+	FileAppend "Radio22Yes=0`n" , IniFile
+	FileAppend "Radio22No=1`n" , IniFile
+}
+;----------------------------------------------------
+CreateNewAuxHkDataFile(*){
+	FileAppend ";--------------------------------------------------`n" , AuxHkDataFile
+	FileAppend "; Hotkey Flags`n" , AuxHkDataFile
+	FileAppend ";--------------------------------------------------`n" , AuxHkDataFile
+	FileAppend "[CtrlHkFlags]`n" , AuxHkDataFile
+	FileAppend "CtrlKbAutoRunHotkey=0`n" , AuxHkDataFile
+	FileAppend "CtrlPatternClickerHotkey=0`n" , AuxHkDataFile
+	FileAppend "CtrlJumpHotkey0=0`n" , AuxHkDataFile
+	FileAppend "CtrlJumpHotkey1=0`n" , AuxHkDataFile
+	FileAppend "CtrlJumpHotkey2=0`n" , AuxHkDataFile
+	FileAppend "CtrlJumpHotkey3=0`n" , AuxHkDataFile
+	FileAppend "CtrlJumpHotkey4=0`n" , AuxHkDataFile
+	FileAppend "CtrlQuickAccessHk1=0`n" , AuxHkDataFile
+	FileAppend "CtrlQuickAccessHk2=0`n" , AuxHkDataFile
+	FileAppend "CtrlQuickAccessHk3=0`n" , AuxHkDataFile
+	FileAppend "CtrlQuickAccessHk4=0`n" , AuxHkDataFile
+	FileAppend "CtrlQuickAccessHk5=0`n" , AuxHkDataFile
+	FileAppend "CtrlQuickAccessHk6=0`n" , AuxHkDataFile
+	FileAppend "CtrlQuickAccessHk7=0`n" , AuxHkDataFile
+	FileAppend "CtrlQuickAccessHk8=0`n" , AuxHkDataFile
+	FileAppend "CtrlQuickAccessHk9=0`n" , AuxHkDataFile
+	FileAppend ";--------------------------------------------------`n" , AuxHkDataFile
+	FileAppend "[AltHkFlags]`n" , AuxHkDataFile
+	FileAppend "AltKbAutoRunHotkey=0`n" , AuxHkDataFile
+	FileAppend "AltPatternClickerHotkey=0`n" , AuxHkDataFile
+	FileAppend "AltJumpHotkey0=0`n" , AuxHkDataFile
+	FileAppend "AltJumpHotkey1=0`n" , AuxHkDataFile
+	FileAppend "AltJumpHotkey2=0`n" , AuxHkDataFile
+	FileAppend "AltJumpHotkey3=0`n" , AuxHkDataFile
+	FileAppend "AltJumpHotkey4=0`n" , AuxHkDataFile
+	FileAppend "AltQuickAccessHk1=0`n" , AuxHkDataFile
+	FileAppend "AltQuickAccessHk2=0`n" , AuxHkDataFile
+	FileAppend "AltQuickAccessHk3=0`n" , AuxHkDataFile
+	FileAppend "AltQuickAccessHk4=0`n" , AuxHkDataFile
+	FileAppend "AltQuickAccessHk5=0`n" , AuxHkDataFile
+	FileAppend "AltQuickAccessHk6=0`n" , AuxHkDataFile
+	FileAppend "AltQuickAccessHk7=0`n" , AuxHkDataFile
+	FileAppend "AltQuickAccessHk8=0`n" , AuxHkDataFile
+	FileAppend "AltQuickAccessHk9=0`n" , AuxHkDataFile
+	FileAppend ";--------------------------------------------------`n" , AuxHkDataFile
+	FileAppend "[ShiftHkFlags]`n" , AuxHkDataFile
+	FileAppend "ShiftKbAutoRunHotkey=0`n" , AuxHkDataFile
+	FileAppend "ShiftPatternClickerHotkey=0`n" , AuxHkDataFile
+	FileAppend "ShiftJumpHotkey0=0`n" , AuxHkDataFile
+	FileAppend "ShiftJumpHotkey1=0`n" , AuxHkDataFile
+	FileAppend "ShiftJumpHotkey2=0`n" , AuxHkDataFile
+	FileAppend "ShiftJumpHotkey3=0`n" , AuxHkDataFile
+	FileAppend "ShiftJumpHotkey4=0`n" , AuxHkDataFile
+	FileAppend "ShiftQuickAccessHk1=0`n" , AuxHkDataFile
+	FileAppend "ShiftQuickAccessHk2=0`n" , AuxHkDataFile
+	FileAppend "ShiftQuickAccessHk3=0`n" , AuxHkDataFile
+	FileAppend "ShiftQuickAccessHk4=0`n" , AuxHkDataFile
+	FileAppend "ShiftQuickAccessHk5=0`n" , AuxHkDataFile
+	FileAppend "ShiftQuickAccessHk6=0`n" , AuxHkDataFile
+	FileAppend "ShiftQuickAccessHk7=0`n" , AuxHkDataFile
+	FileAppend "ShiftQuickAccessHk8=0`n" , AuxHkDataFile
+	FileAppend "ShiftQuickAccessHk9=0`n" , AuxHkDataFile
+}
