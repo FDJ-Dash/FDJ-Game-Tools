@@ -2,28 +2,43 @@
 ### This is an app aimed towards repetitive tasks like holding a button down for extended time, mouse clicks or even click patterns. Each functionality is divided into modules that you can pick from the options bar menu like jumps module for certain games and Quick access module to run any program in your computer or load a web page on your browser easily.
 Keyboard Autorun Module
 
-
-![KbAutorun-TA](https://fdj-software.gitbook.io/~gitbook/image?url=https%3A%2F%2F4188136884-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-x-prod.appspot.com%2Fo%2Fspaces%252FS1x31hC3oLxNMMnroww1%252Fuploads%252FAABUOItCrOcxouLN6LMv%252FMLTA1b.png%3Falt%3Dmedia%26token%3Dfbb767ef-5f0c-406f-982f-db9f093eb5f9&width=768&dpr=1&quality=100&sign=653c837c&sv=2) ![AutoClicker-TA](https://fdj-software.gitbook.io/~gitbook/image?url=https%3A%2F%2F4188136884-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-x-prod.appspot.com%2Fo%2Fspaces%252FS1x31hC3oLxNMMnroww1%252Fuploads%252F5RE9zIFWmTxfROie6bcO%252FMLTA1.png%3Falt%3Dmedia%26token%3Df31592da-e9c6-42de-91f0-d12008473fb6&width=768&dpr=1&quality=100&sign=8e9b7906&sv=2)
+| KB1 | KB2 |
+| ------ | ------ |
+![KbAutorun-TA](https://fdj-software.gitbook.io/~gitbook/image?url=https%3A%2F%2F4188136884-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-x-prod.appspot.com%2Fo%2Fspaces%252FS1x31hC3oLxNMMnroww1%252Fuploads%252FVa19GHTlqVCJAZxDpdsf%252FTa01.png%3Falt%3Dmedia%26token%3D8442f14b-bf95-4158-972c-94db5f8a7656&width=768&dpr=1&quality=100&sign=52f9b69&sv=2) | ![AutoClicker-TA](https://fdj-software.gitbook.io/~gitbook/image?url=https%3A%2F%2F4188136884-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-x-prod.appspot.com%2Fo%2Fspaces%252FS1x31hC3oLxNMMnroww1%252Fuploads%252F53FfqrdUju73PmUJlgIu%252FTA02.png%3Falt%3Dmedia%26token%3Dcfce66af-0659-4073-a86d-7007b3be2926&width=768&dpr=1&quality=100&sign=75643aef&sv=2)
 
 Controller Autorun Module
 
-![ControllerAutorun-TA](https://fdj-software.gitbook.io/~gitbook/image?url=https%3A%2F%2F4188136884-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-x-prod.appspot.com%2Fo%2Fspaces%252FS1x31hC3oLxNMMnroww1%252Fuploads%252FRKsJwQ7W3Mebd0ld8Ogt%252FMLTA2.png%3Falt%3Dmedia%26token%3Da02a40f2-f4b9-4594-9146-4daf82a2a1d2&width=768&dpr=1&quality=100&sign=c9043e3a&sv=2) ![QuickAccess-TA](https://fdj-software.gitbook.io/~gitbook/image?url=https%3A%2F%2F4188136884-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-x-prod.appspot.com%2Fo%2Fspaces%252FS1x31hC3oLxNMMnroww1%252Fuploads%252F3hJ8I0AGLO2rHqpkxcwM%252FMLTA2b.png%3Falt%3Dmedia%26token%3D0287697b-fa87-426e-aef7-af66b377b920&width=768&dpr=1&quality=100&sign=bd03b060&sv=2)
+| Controller1 | Controller2 |
+| ------ | ------ |
+![ControllerAutorun-TA](https://fdj-software.gitbook.io/~gitbook/image?url=https%3A%2F%2F4188136884-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-x-prod.appspot.com%2Fo%2Fspaces%252FS1x31hC3oLxNMMnroww1%252Fuploads%252FnPVPEYegBXCKE20KbVIH%252FTA03.png%3Falt%3Dmedia%26token%3D02242a28-36f7-484a-b7ee-f9795e145c86&width=768&dpr=1&quality=100&sign=4e61db0c&sv=2) | ![QuickAccess-TA](https://fdj-software.gitbook.io/~gitbook/image?url=https%3A%2F%2F4188136884-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-x-prod.appspot.com%2Fo%2Fspaces%252FS1x31hC3oLxNMMnroww1%252Fuploads%252F6iU6B0wXja6DITD70leF%252FTA04.png%3Falt%3Dmedia%26token%3D69f3029c-b9b1-48f7-a92e-e71a1569ad25&width=768&dpr=1&quality=100&sign=3189a88d&sv=2)
 
 Quick Access Module with buttons
-
-![QuickAccess-TA](https://fdj-software.gitbook.io/~gitbook/image?url=https%3A%2F%2F4188136884-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-x-prod.appspot.com%2Fo%2Fspaces%252FS1x31hC3oLxNMMnroww1%252Fuploads%252F6rx1mHXqJnpf6N1HQZFJ%252FMLTA3.png%3Falt%3Dmedia%26token%3D4cda8993-dba5-49f1-87ca-046bab29f981&width=768&dpr=1&quality=100&sign=f708bea2&sv=2) ![QuickAccess-TA](https://fdj-software.gitbook.io/~gitbook/image?url=https%3A%2F%2F4188136884-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-x-prod.appspot.com%2Fo%2Fspaces%252FS1x31hC3oLxNMMnroww1%252Fuploads%252FJBIFVTiUX7fkjSso29tC%252FMLTA3c.png%3Falt%3Dmedia%26token%3D58c7b575-6d33-4e1b-9cc4-f685a1499a0b&width=768&dpr=1&quality=100&sign=ee396cb1&sv=2) 
+| QuickAccess1 | QuickAccess2 |
+| ------ | ------ |
+![QuickAccess-TA](https://fdj-software.gitbook.io/~gitbook/image?url=https%3A%2F%2F4188136884-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-x-prod.appspot.com%2Fo%2Fspaces%252FS1x31hC3oLxNMMnroww1%252Fuploads%252FFsZHLWKfAQz2VLQkPb02%252FTA05.png%3Falt%3Dmedia%26token%3D33ef598d-0621-4d73-8146-7ccba7b86b80&width=768&dpr=1&quality=100&sign=4d74ff33&sv=2) | ![QuickAccess-TA](https://fdj-software.gitbook.io/~gitbook/image?url=https%3A%2F%2F4188136884-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-x-prod.appspot.com%2Fo%2Fspaces%252FS1x31hC3oLxNMMnroww1%252Fuploads%252F8Fs0f6zgUVBun0fKa1YT%252FTA06.png%3Falt%3Dmedia%26token%3D17ed9c2b-90ca-42d3-a67f-d9a12b87a3cf&width=768&dpr=1&quality=100&sign=e99e9d7&sv=2)
 
 Quick Access Module with hotkeys
 
-![QuickAccess-TA](https://fdj-software.gitbook.io/~gitbook/image?url=https%3A%2F%2F4188136884-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-x-prod.appspot.com%2Fo%2Fspaces%252FS1x31hC3oLxNMMnroww1%252Fuploads%252FxnCfrLRVUQFrVptABBEc%252FMLTA3b.png%3Falt%3Dmedia%26token%3D5be0f732-30c4-49ee-91fb-5c91bbbab8d2&width=768&dpr=1&quality=100&sign=b6390e6f&sv=2)
+![QuickAccess-TA](https://fdj-software.gitbook.io/~gitbook/image?url=https%3A%2F%2F4188136884-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-x-prod.appspot.com%2Fo%2Fspaces%252FS1x31hC3oLxNMMnroww1%252Fuploads%252FWDONRFmazXCF5UnBiWsg%252FTA07b.png%3Falt%3Dmedia%26token%3D38f2b4e6-c20c-4b41-a431-8ebca96155a5&width=768&dpr=1&quality=100&sign=f6e418fe&sv=2)
 
 Jumps Module
 
-![Jumps-TA](https://fdj-software.gitbook.io/~gitbook/image?url=https%3A%2F%2F4188136884-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-x-prod.appspot.com%2Fo%2Fspaces%252FS1x31hC3oLxNMMnroww1%252Fuploads%252FWuSqWDxGboVUIrVKXE5U%252FMLTA4.png%3Falt%3Dmedia%26token%3D556170d0-d9ea-4ff1-aa05-cb0c17ef27e4&width=768&dpr=1&quality=100&sign=8b6a3b65&sv=2) ![Jumps-TA](https://fdj-software.gitbook.io/~gitbook/image?url=https%3A%2F%2F4188136884-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-x-prod.appspot.com%2Fo%2Fspaces%252FS1x31hC3oLxNMMnroww1%252Fuploads%252FJrQIIXZoYLmWjKyGCSCl%252FMLTA4b.png%3Falt%3Dmedia%26token%3D6c764765-767e-46be-bba9-770f16ac598f&width=768&dpr=1&quality=100&sign=5f47bde6&sv=2)
+| Jumps1 | Jumps2 |
+| ------ | ------ |
+![Jumps-TA](https://fdj-software.gitbook.io/~gitbook/image?url=https%3A%2F%2F4188136884-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-x-prod.appspot.com%2Fo%2Fspaces%252FS1x31hC3oLxNMMnroww1%252Fuploads%252FxqNgwlbp1pE0mN24EDIO%252FTA08.png%3Falt%3Dmedia%26token%3De8eb89fc-b424-49a8-993b-77c0b957281f&width=768&dpr=1&quality=100&sign=1fa33f2&sv=2) | ![Jumps-TA](https://fdj-software.gitbook.io/~gitbook/image?url=https%3A%2F%2F4188136884-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-x-prod.appspot.com%2Fo%2Fspaces%252FS1x31hC3oLxNMMnroww1%252Fuploads%252F0FAIbBm7nlprxn2iOkqc%252FTA09.png%3Falt%3Dmedia%26token%3Ddc493baa-cb9f-4a6a-a66f-07b7299b687a&width=768&dpr=1&quality=100&sign=954e44b&sv=2)
 
 Clicker Module
 
-![Clicker-TA](https://fdj-software.gitbook.io/~gitbook/image?url=https%3A%2F%2F4188136884-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-x-prod.appspot.com%2Fo%2Fspaces%252FS1x31hC3oLxNMMnroww1%252Fuploads%252FXuea25LNsDYjYyMM3SyY%252FMLTA5.png%3Falt%3Dmedia%26token%3D4e75c5e1-df51-4e72-91c6-f12c8ef36cb9&width=768&dpr=1&quality=100&sign=1fe9e461&sv=2) ![Clicker-TA](https://fdj-software.gitbook.io/~gitbook/image?url=https%3A%2F%2F4188136884-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-x-prod.appspot.com%2Fo%2Fspaces%252FS1x31hC3oLxNMMnroww1%252Fuploads%252FNcNeC8Yg7qOXSkeJ9kgS%252FMLTA5b.png%3Falt%3Dmedia%26token%3Dcd33a302-c0af-4982-87ba-fe8f85bd20ee&width=768&dpr=1&quality=100&sign=773dc0b4&sv=2)
+| Clicker1 | Clicker2 |
+| ------ | ------ |
+![Clicker-TA](https://fdj-software.gitbook.io/~gitbook/image?url=https%3A%2F%2F4188136884-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-x-prod.appspot.com%2Fo%2Fspaces%252FS1x31hC3oLxNMMnroww1%252Fuploads%252FDTIz04ZpYKK22ZQC64AE%252FTA10.png%3Falt%3Dmedia%26token%3D1e826f19-9cdb-4070-ac7f-4e2afcb68722&width=768&dpr=1&quality=100&sign=85aa2d1c&sv=2) | ![Clicker-TA](https://fdj-software.gitbook.io/~gitbook/image?url=https%3A%2F%2F4188136884-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-x-prod.appspot.com%2Fo%2Fspaces%252FS1x31hC3oLxNMMnroww1%252Fuploads%252FzTkbo4BQQZqL3HPnXKho%252FTA11.png%3Falt%3Dmedia%26token%3Deadc2433-7db0-4829-9f95-f67a89b3d258&width=768&dpr=1&quality=100&sign=52cdce9a&sv=2)
+
+Resized Clicker
+
+![Clicker-TA](https://fdj-software.gitbook.io/~gitbook/image?url=https%3A%2F%2F4188136884-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-x-prod.appspot.com%2Fo%2Fspaces%252FS1x31hC3oLxNMMnroww1%252Fuploads%252Fp3embFtm9yQRbYVGLqPj%252FTA12b.png%3Falt%3Dmedia%26token%3D3cb93ff5-691e-4657-938f-4dbbf0bf6af8&width=768&dpr=1&quality=100&sign=a3a39c5&sv=2)
+
+![Clicker-TA](https://fdj-software.gitbook.io/~gitbook/image?url=https%3A%2F%2F4188136884-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-x-prod.appspot.com%2Fo%2Fspaces%252FS1x31hC3oLxNMMnroww1%252Fuploads%252FXMSeMu1kjwN1ujyhZDzs%252FTA13.png%3Falt%3Dmedia%26token%3D6e04abf4-316d-4989-acc1-de9f8d274a64&width=768&dpr=1&quality=100&sign=a9951e5&sv=2)
+
 
 ## How does it work?
 - The app is composed of several modules (each with different functionalities).
@@ -35,4 +50,3 @@ Clicker Module
 [Task Automator](https://fdj-software.gitbook.io/apps)
 ## Support Mail
 - fdj.software@gmail.com
-
