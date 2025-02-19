@@ -16,8 +16,6 @@
 ; SelectNewIcon7(*)
 ; SelectNewIcon8(*)
 ; SelectNewIcon9(*)
-; SelectTopPicture(*)
-; SelectBottomPicture(*)
 ; ChangeBackgroundHandler(*)
 ; ChangeMessageBackgroundHandler(*)
 ;----------------------------------------------------
@@ -144,36 +142,6 @@ SelectNewIcon8(*) {
 SelectNewIcon9(*) {
 	SelectedFile := FileSelect(3, "", "Open a file", "Text Documents (*.ico; *.png; *.jpg)")
 	IniWrite SelectedFile, IniFile, "QuickAccessIcons", "QuickIcon9"
-	; Reload
-	GuiName := IniRead(TempSystemFile, "GeneralData", "GuiName")
-	if GuiName == "TaskAutomatorGui1" {
-		TaskAutomatorGui1.GetPos(&PosX, &PosY)
-	} else {
-		TaskAutomatorGui2.GetPos(&PosX, &PosY)
-	}
-	IniWrite PosX, IniFile, "Properties", "PositionX"
-	IniWrite PosY, IniFile, "Properties", "PositionY"
-	IniWrite true, TempSystemFile, "GeneralData", "DinamicReload"
-}
-;----------------------------------------------------
-SelectTopPicture(*) {
-	SelectedFile := FileSelect(3, "", "Open a file", "Text Documents (*.ico; *.png; *.jpg)")
-	IniWrite SelectedFile, IniFile, "Pictures", "TopPicture"
-	; Reload
-	GuiName := IniRead(TempSystemFile, "GeneralData", "GuiName")
-	if GuiName == "TaskAutomatorGui1" {
-		TaskAutomatorGui1.GetPos(&PosX, &PosY)
-	} else {
-		TaskAutomatorGui2.GetPos(&PosX, &PosY)
-	}
-	IniWrite PosX, IniFile, "Properties", "PositionX"
-	IniWrite PosY, IniFile, "Properties", "PositionY"
-	IniWrite true, TempSystemFile, "GeneralData", "DinamicReload"
-}
-;----------------------------------------------------
-SelectBottomPicture(*) {
-	SelectedFile := FileSelect(3, "", "Open a file", "Text Documents (*.ico; *.png; *.jpg)")
-	IniWrite SelectedFile, IniFile, "Pictures", "BottomPicture"
 	; Reload
 	GuiName := IniRead(TempSystemFile, "GeneralData", "GuiName")
 	if GuiName == "TaskAutomatorGui1" {

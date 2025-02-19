@@ -84,6 +84,8 @@ CreateNewIniFile(*) {
 	FileAppend "HotkeyEditMode=0`n" , IniFile
 	FileAppend "EditBoxesAvailable=0`n" , IniFile
 	FileAppend ";----------`n" , IniFile
+	FileAppend "ResizeModule=1`n" , IniFile
+	FileAppend ";----------`n" , IniFile
 	FileAppend "CheckforUpdatesDaily=1`n" , IniFile
 	FileAppend "CheckforupdatesWeekly=0`n" , IniFile
 	FileAppend "NeverCheckForUpdates=0`n" , IniFile
@@ -95,6 +97,10 @@ CreateNewIniFile(*) {
 	FileAppend "ScrlUpInterval=150`n" , IniFile
 	FileAppend "ScrlDownCount=33`n" , IniFile
 	FileAppend "ScrlDownInterval=150`n" , IniFile
+	FileAppend "ScrlUpYes=1`n" , IniFile
+	FileAppend "ScrlUpNo=0`n" , IniFile
+	FileAppend "ScrlDownYes=0`n" , IniFile
+	FileAppend "ScrlDownNo=1`n" , IniFile
 	FileAppend ";--------------------------------------------------`n" , IniFile
 	FileAppend "[SavedHotkey]`n" , IniFile
 	FileAppend "KbAutoRunHotkey=r`n" , IniFile
@@ -124,7 +130,7 @@ CreateNewIniFile(*) {
 	FileAppend "ControllerKey=Joy1`n" , IniFile
 	FileAppend ";--------------------------------------------------`n" , IniFile
 	FileAppend "[QuickAccessPath]`n" , IniFile
-	FileAppend "QuickAccess1=https://mean-littles-app.gitbook.io/mean-littles-software`n" , IniFile
+	FileAppend "QuickAccess1=https://fdj-software.gitbook.io/apps`n" , IniFile
 	FileAppend "QuickAccess2=https://cornucopias.io/`n" , IniFile
 	FileAppend "QuickAccess3=C:\Users\`n" , IniFile
 	FileAppend "QuickAccess4=https://outlook.live.com/mail/`n" , IniFile
