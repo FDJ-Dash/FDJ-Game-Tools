@@ -22,7 +22,7 @@ Global IconLib := A_ScriptDir . "\Icons"
 , TempSystemFile := A_Temp . "\TA_SystemFile.ini"
 , AuxHkDataFile := A_Temp . "\TA_AuxHkData.ini"
 , AppName := "Task Automator"
-, CurrentVersion := "v1.5"
+, CurrentVersion := "v1.6"
 , FDJ_SoftwareIcon := "\Logo-FDJ-Dash.png"
 , DefaultMsgBackgroundImage := "\Lightning2.jpg"
 , Creator := " Fernando Daniel Jaime "
@@ -34,6 +34,7 @@ Global IconLib := A_ScriptDir . "\Icons"
 #Include "*i %A_ScriptDir%\Include\ReadIniFile.ahk"
 #Include "*i %A_ScriptDir%\Include\SetupMenu.ahk"
 #Include "*i %A_ScriptDir%\Include\TaskAutomatorGui.ahk"
+#Include "*i %A_ScriptDir%\Include\TaskAutomatorGuiResize.ahk"
 #Include "*i %A_ScriptDir%\Include\Message_Handlers.ahk"
 #Include "*i %A_ScriptDir%\Include\Submit_Handlers.ahk"
 #Include "*i %A_ScriptDir%\Include\Menu_Handlers.ahk"
@@ -127,6 +128,7 @@ Loop {
 		;----------------------------------------------------
 		ReadSetting(&HotkeyEditMode,
 					&EditBoxesAvailable,
+					&ResizeModule,
 					&CheckforUpdatesDaily, 
 					&CheckforupdatesWeekly, 
 					&NeverCheckForUpdates,
@@ -138,7 +140,11 @@ Loop {
 		ReadPaceProperties(&ScrlUpCount, 
 						   &ScrlUpInterval, 
 						   &ScrlDownCount,
-						   &ScrlDownInterval)
+						   &ScrlDownInterval,
+						   &ScrlUpYes,
+						   &ScrlUpNo,
+						   &ScrlDownYes,
+						   &ScrlDownNo)
 		;----------------------------------------------------
 		; Read Ini Saved Hotkey - ReadIniFile.ahk
 		;----------------------------------------------------
@@ -251,19 +257,34 @@ Loop {
 			TaskAutomatorGui1.SetFont("Bold " . MainFontColor, MainFontType)
 			TaskAutomatorGui1.BackColor := "0x" . BackgroundColor
 			if BackgroundPicture == "" {
-				try {
-					TaskAutomatorGui1.Add("Picture", "x-16 y0 w304 h712", ImageLib . "\Lightning1.jpg")
-				}
-				catch {
+				if ResizeModule == true and SwitchClicker == true {
+					try {
+						TaskAutomatorGui1.Add("Picture", "x0 y0 w750", ImageLib . "\Lightning2.jpg")
+					}
+					catch {
+					}
+				} else {
+					TaskAutomatorGui1.Add("Picture", "x0 y0 w250", ImageLib . "\Lightning1.jpg")
 				}
 			} else {
-				try {
-					TaskAutomatorGui1.Add("Picture", "x0 y0 w250 h590", BackgroundPicture)
-				}
-				catch {
-					BackgroundPicture := ""
-					IniWrite BackgroundPicture, IniFile, "Background", "BackgroundPicture"
-					Reload
+				if ResizeModule == true and SwitchClicker == true {
+					try {
+						TaskAutomatorGui1.Add("Picture", "x0 y0 w750", BackgroundPicture)
+					}
+					catch {
+						BackgroundPicture := ""
+						IniWrite BackgroundPicture, IniFile, "Background", "BackgroundPicture"
+						Reload
+					}
+				} else {
+					try {
+						TaskAutomatorGui1.Add("Picture", "x0 y0 w250", BackgroundPicture)
+					}
+					catch {
+						BackgroundPicture := ""
+						IniWrite BackgroundPicture, IniFile, "Background", "BackgroundPicture"
+						Reload
+					}
 				}
 			}
 			;----------------------------------------------------
@@ -325,6 +346,14 @@ Loop {
 								&AltKbAutoRunHotkey,
 								&ShiftKbAutoRunHotkey,
 								&LastYLine)
+				;----------------------------------------------------
+				; Y-LastYLine / Save All EditBox Values - TaskAutomatorGui.ahk
+				;----------------------------------------------------
+				SaveAllEditValues(TaskAutomatorGui1,
+								  &SaveButton,
+								  SubmitValues,
+								  &LastYLine,
+								  &FlagLineValueAdded)
 			case SwitchControllerAutoRun:
 				;----------------------------------------------------
 				; Y-67 / Controller AutoRun - TaskAutomatorGui.ahk
@@ -345,6 +374,14 @@ Loop {
 								  &SelectedButton,
 								  &EditSelectedKey,
 								  &LastYLine)
+				;----------------------------------------------------
+				; Y-LastYLine / Save All EditBox Values - TaskAutomatorGui.ahk
+				;----------------------------------------------------
+				SaveAllEditValues(TaskAutomatorGui1,
+								  &SaveButton,
+								  SubmitValues,
+								  &LastYLine,
+								  &FlagLineValueAdded)
 			case SwitchJumps:
 				;----------------------------------------------------
 				; Y-10 / Jumps - TaskAutomatorGui.ahk
@@ -387,63 +424,123 @@ Loop {
 				;----------------------------------------------------
 				; Y-10 / Auto Clicker - TaskAutomatorGui.ahk
 				;----------------------------------------------------
-				AutoClickerModule(TaskAutomatorGui1,
-								  &OptionsMenu,
-								  &SwitchQuickAccess,
-								  &SwitchClicker,
-								  &SwitchJumps,
-								  &SwitchControllerAutoRun,
-								  &SwitchKbAutoRun,
-								  &TextPatternClickerOnOff,
-								  &HotkeyEditMode,
-								  &PatternClickerHotkey,
-								  &CtrlPatternClickerHotkey,
-								  &AltPatternClickerHotkey,
-								  &ShiftPatternClickerHotkey,
-								  &EditBoxesAvailable,
-								  &EditPatternClicker,
-								  &EditPatternClickerOffset,
-								  &TextPatternClickInterval,
-								  &TextPatternClickerOffset,
-								  &TextLoop,
-								  &EditLoopTimes,
-								  &RadioCountLoopsYes,
-								  &RadioCountLoopsNo,
-								  &TextPosX,
-								  &TextPosY,
-								  &TextPosInterval,
-								  Position1,
-								  Position2,
-								  Position3,
-								  Position4,
-								  Position5,
-								  Position6,
-								  Position7,
-								  Position8,
-								  Position9,
-								  Position10,
-								  Position11,
-								  Position12,
-								  Position13,
-								  Position14,
-								  Position15,
-								  Position16,
-								  Position17,
-								  Position18,
-								  Position19,
-								  Position20,
-								  Position21,
-								  Position22,
-								  &StartTime,
-								  &LastYLine)
+				if ResizeModule == true {
+					ResizedAutoClickerModule(TaskAutomatorGui1,
+											 &OptionsMenu,
+											 &SwitchQuickAccess,
+											 &SwitchClicker,
+											 &SwitchJumps,
+											 &SwitchControllerAutoRun,
+											 &SwitchKbAutoRun,
+											 &TextPatternClickerOnOff,
+											 &HotkeyEditMode,
+											 &PatternClickerHotkey,
+											 &CtrlPatternClickerHotkey,
+											 &AltPatternClickerHotkey,
+											 &ShiftPatternClickerHotkey,
+											 &EditBoxesAvailable,
+											 &EditPatternClicker,
+											 &EditPatternClickerOffset,
+											 &TextPatternClickInterval,
+											 &TextPatternClickerOffset,
+											 &TextLoop,
+											 &EditLoopTimes,
+											 &RadioCountLoopsYes,
+											 &RadioCountLoopsNo,
+											 &TextPosX,
+											 &TextPosY,
+											 &TextPosInterval,
+											 Position1,
+											 Position2,
+											 Position3,
+											 Position4,
+											 Position5,
+											 Position6,
+											 Position7,
+											 Position8,
+											 Position9,
+											 Position10,
+											 Position11,
+											 Position12,
+											 Position13,
+											 Position14,
+											 Position15,
+											 Position16,
+											 Position17,
+											 Position18,
+											 Position19,
+											 Position20,
+											 Position21,
+											 Position22,
+											 &StartTime,
+											 &LastYLine)
+				} else {
+					AutoClickerModule(TaskAutomatorGui1,
+									  &OptionsMenu,
+									  &SwitchQuickAccess,
+									  &SwitchClicker,
+									  &SwitchJumps,
+									  &SwitchControllerAutoRun,
+									  &SwitchKbAutoRun,
+									  &TextPatternClickerOnOff,
+									  &HotkeyEditMode,
+									  &PatternClickerHotkey,
+									  &CtrlPatternClickerHotkey,
+									  &AltPatternClickerHotkey,
+									  &ShiftPatternClickerHotkey,
+									  &EditBoxesAvailable,
+									  &EditPatternClicker,
+									  &EditPatternClickerOffset,
+									  &TextPatternClickInterval,
+									  &TextPatternClickerOffset,
+									  &TextLoop,
+									  &EditLoopTimes,
+									  &RadioCountLoopsYes,
+									  &RadioCountLoopsNo,
+									  &TextPosX,
+									  &TextPosY,
+									  &TextPosInterval,
+									  Position1,
+									  Position2,
+									  Position3,
+									  Position4,
+									  Position5,
+									  Position6,
+									  Position7,
+									  Position8,
+									  Position9,
+									  Position10,
+									  Position11,
+									  Position12,
+									  Position13,
+									  Position14,
+									  Position15,
+									  Position16,
+									  Position17,
+									  Position18,
+									  Position19,
+									  Position20,
+									  Position21,
+									  Position22,
+									  &StartTime,
+									  &LastYLine)
+				}
 				;----------------------------------------------------
-				; Save All EditBox Values - TaskAutomatorGui.ahk
+				; Y-LastYLine / Save All EditBox Values - TaskAutomatorGui.ahk
 				;----------------------------------------------------
-				SaveAllEditValues(TaskAutomatorGui1,
-								  &SaveButton,
-								  SubmitValues,
-								  &LastYLine,
-								  &FlagLineValueAdded)
+				if ResizeModule == true {
+					ResizedSaveAllEditValues(TaskAutomatorGui1,
+											 &SaveButton,
+											 SubmitValues,
+											 &LastYLine,
+											 &FlagLineValueAdded)
+				} else {
+					SaveAllEditValues(TaskAutomatorGui1,
+									  &SaveButton,
+									  SubmitValues,
+									  &LastYLine,
+									  &FlagLineValueAdded)
+				}
 			case SwitchQuickAccess:
 				;----------------------------------------------------
 				; Y-10 / Quick Access - TaskAutomatorGui.ahk
@@ -525,7 +622,7 @@ Loop {
 								  &ShiftQuickAccessHk9,
 								  &LastYLine)
 				;----------------------------------------------------
-				; Save All EditBox Values - TaskAutomatorGui.ahk
+				; Y-LastYLine / Save All EditBox Values - TaskAutomatorGui.ahk
 				;----------------------------------------------------
 				SaveAllEditValues(TaskAutomatorGui1,
 								  &SaveButton,
@@ -536,33 +633,73 @@ Loop {
 			;----------------------------------------------------
 			; Y-LastYLine + 32 / Hotkey Edit Mode - TaskAutomatorGui.ahk
 			;----------------------------------------------------
-			CheckHotkeyEditMode(TaskAutomatorGui1,
-								&HotkeyEditMode,
-								&LicenseKeyFontType,
-								&LastYLine)
-			
+			if ResizeModule == true and SwitchClicker == true {
+				ResizedCheckHotkeyEditMode(TaskAutomatorGui1,
+										   &HotkeyEditMode,
+										   &LicenseKeyFontType,
+										   &LastYLine)
+			} else {
+				CheckHotkeyEditMode(TaskAutomatorGui1,
+									&HotkeyEditMode,
+									&LicenseKeyFontType,
+									&LastYLine)
+			}
+			;----------------------------------------------------
+			; Y-LastYLine + 32 / EditBoxes Mode - TaskAutomatorGui.ahk
+			;----------------------------------------------------
+			if ResizeModule == true and SwitchClicker == true {
+				ResizedCheckEditBoxesAvailable(TaskAutomatorGui1,
+											   &EditBoxesAvailable,
+											   &LicenseKeyFontType,
+											   &LastYLine)
+			}else {
+				CheckEditBoxesAvailable(TaskAutomatorGui1,
+										&EditBoxesAvailable,
+										&LicenseKeyFontType,
+										&LastYLine)
+			}
 			;----------------------------------------------------
 			; Y-LastYLine +64 / Check for updates - TaskAutomatorGui.ahk
 			;----------------------------------------------------
-			CheckForUpdates(TaskAutomatorGui1, 
-						   &FlagCheckTime,
-						   &LastUpdateCheckTimeStamp,
-						   &LicenseKeyFontType,
-						   &CheckforUpdatesDaily,
-						   &CheckforupdatesWeekly,
-						   &NeverCheckForUpdates, 
-						   &NeedUpdate,
-						   &Connected,
-						   &MLTALatestReleaseVersion,
-						   &DownloadUrl,
-						   &CurrentVersion,
-						   &LastYLine)
+			if ResizeModule == true and SwitchClicker == true {
+				ResizedCheckForUpdates(TaskAutomatorGui1, 
+									   &FlagCheckTime,
+									   &LastUpdateCheckTimeStamp,
+									   &LicenseKeyFontType,
+									   &CheckforUpdatesDaily,
+									   &CheckforupdatesWeekly,
+									   &NeverCheckForUpdates, 
+									   &NeedUpdate,
+									   &Connected,
+									   &TALatestReleaseVersion,
+									   &DownloadUrl,
+									   &CurrentVersion,
+									   &LastYLine)
+			} else {
+				CheckForUpdates(TaskAutomatorGui1, 
+							   &FlagCheckTime,
+							   &LastUpdateCheckTimeStamp,
+							   &LicenseKeyFontType,
+							   &CheckforUpdatesDaily,
+							   &CheckforupdatesWeekly,
+							   &NeverCheckForUpdates, 
+							   &NeedUpdate,
+							   &Connected,
+							   &MLTALatestReleaseVersion,
+							   &DownloadUrl,
+							   &CurrentVersion,
+							   &LastYLine)
+			}
 			;----------------------------------------------------
 			SB := TaskAutomatorGui1.Add("StatusBar", , "Ready.")
 			;----------------------------------------------------
 			TaskAutomatorGui1.OnEvent('Close', (*) => ExitApp())
 			TaskAutomatorGui1.Title := AppName
-			TaskAutomatorGui1.Show("x" . PositionX . " y" . PositionY . "w250 h" . LastYLine + 115)
+			if ResizeModule == true and SwitchClicker == true {
+				TaskAutomatorGui1.Show("x" . PositionX . " y" . PositionY . "w750 h" . LastYLine + 83)
+			} else {
+				TaskAutomatorGui1.Show("x" . PositionX . " y" . PositionY . "w250 h" . LastYLine + 115)
+			}
 			Saved := TaskAutomatorGui1.Submit(false)
 		} else {
 			;----------------------------------------------------
@@ -580,19 +717,34 @@ Loop {
 			TaskAutomatorGui2.SetFont("Bold " . MainFontColor, MainFontType)
 			TaskAutomatorGui2.BackColor := "0x" . BackgroundColor
 			if BackgroundPicture == "" {
-				try {
-					TaskAutomatorGui2.Add("Picture", "x-16 y0 w304 h712", ImageLib . "\Lightning1.jpg")
-				}
-				catch {
+				if ResizeModule == true and SwitchClicker == true {
+					try {
+						TaskAutomatorGui2.Add("Picture", "x0 y0 w750", ImageLib . "\Lightning2.jpg")
+					}
+					catch {
+					}
+				} else {
+					TaskAutomatorGui2.Add("Picture", "x0 y0 w250", ImageLib . "\Lightning1.jpg")
 				}
 			} else {
-				try {
-					TaskAutomatorGui2.Add("Picture", "x0 y0 w250 h590", BackgroundPicture)
-				}
-				catch {
-					BackgroundPicture := ""
-					IniWrite BackgroundPicture, IniFile, "Background", "BackgroundPicture"
-					Reload
+				if ResizeModule == true and SwitchClicker == true {
+					try {
+						TaskAutomatorGui2.Add("Picture", "x0 y0 w750", BackgroundPicture)
+					}
+					catch {
+						BackgroundPicture := ""
+						IniWrite BackgroundPicture, IniFile, "Background", "BackgroundPicture"
+						Reload
+					}
+				} else {
+					try {
+						TaskAutomatorGui2.Add("Picture", "x0 y0 w250", BackgroundPicture)
+					}
+					catch {
+						BackgroundPicture := ""
+						IniWrite BackgroundPicture, IniFile, "Background", "BackgroundPicture"
+						Reload
+					}
 				}
 			}
 			;----------------------------------------------------
@@ -652,6 +804,14 @@ Loop {
 							&AltKbAutoRunHotkey,
 							&ShiftKbAutoRunHotkey,
 							&LastYLine)
+			;----------------------------------------------------
+			; Y-LastYLine / Save All EditBox Values - TaskAutomatorGui.ahk
+			;----------------------------------------------------
+			SaveAllEditValues(TaskAutomatorGui2,
+							  &SaveButton,
+							  SubmitValues,
+							  &LastYLine,
+							  &FlagLineValueAdded)
 			case SwitchControllerAutoRun:
 			;----------------------------------------------------
 			; Y-67 / Controller AutoRun - TaskAutomatorGui.ahk
@@ -672,6 +832,14 @@ Loop {
 							  &SelectedButton,
 							  &EditSelectedKey,
 							  &LastYLine)
+			;----------------------------------------------------
+			; Y-LastYLine / Save All EditBox Values - TaskAutomatorGui.ahk
+			;----------------------------------------------------
+			SaveAllEditValues(TaskAutomatorGui2,
+							  &SaveButton,
+							  SubmitValues,
+							  &LastYLine,
+							  &FlagLineValueAdded)
 			case SwitchJumps:
 				;----------------------------------------------------
 				; Y-10 / Jumps - TaskAutomatorGui.ahk
@@ -714,63 +882,123 @@ Loop {
 				;----------------------------------------------------
 				; Y-10 / Auto Clicker - TaskAutomatorGui.ahk
 				;----------------------------------------------------
-				AutoClickerModule(TaskAutomatorGui2,
-								  &OptionsMenu,
-								  &SwitchQuickAccess,
-								  &SwitchClicker,
-								  &SwitchJumps,
-								  &SwitchControllerAutoRun,
-								  &SwitchKbAutoRun,
-								  &TextPatternClickerOnOff,
-								  &HotkeyEditMode,
-								  &PatternClickerHotkey,
-								  &CtrlPatternClickerHotkey,
-								  &AltPatternClickerHotkey,
-								  &ShiftPatternClickerHotkey,
-								  &EditBoxesAvailable,
-								  &EditPatternClicker,
-								  &EditPatternClickerOffset,
-								  &TextPatternClickInterval,
-								  &TextPatternClickerOffset,
-								  &TextLoop,
-								  &EditLoopTimes,
-								  &RadioCountLoopsYes,
-								  &RadioCountLoopsNo,
-								  &TextPosX,
-								  &TextPosY,
-								  &TextPosInterval,
-								  Position1,
-								  Position2,
-								  Position3,
-								  Position4,
-								  Position5,
-								  Position6,
-								  Position7,
-								  Position8,
-								  Position9,
-								  Position10,
-								  Position11,
-								  Position12,
-								  Position13,
-								  Position14,
-								  Position15,
-								  Position16,
-								  Position17,
-								  Position18,
-								  Position19,
-								  Position20,
-								  Position21,
-								  Position22,
-								  &StartTime,
-								  &LastYLine)
+				if ResizeModule == true {
+					ResizedAutoClickerModule(TaskAutomatorGui2,
+											 &OptionsMenu,
+											 &SwitchQuickAccess,
+											 &SwitchClicker,
+											 &SwitchJumps,
+											 &SwitchControllerAutoRun,
+											 &SwitchKbAutoRun,
+											 &TextPatternClickerOnOff,
+											 &HotkeyEditMode,
+											 &PatternClickerHotkey,
+											 &CtrlPatternClickerHotkey,
+											 &AltPatternClickerHotkey,
+											 &ShiftPatternClickerHotkey,
+											 &EditBoxesAvailable,
+											 &EditPatternClicker,
+											 &EditPatternClickerOffset,
+											 &TextPatternClickInterval,
+											 &TextPatternClickerOffset,
+											 &TextLoop,
+											 &EditLoopTimes,
+											 &RadioCountLoopsYes,
+											 &RadioCountLoopsNo,
+											 &TextPosX,
+											 &TextPosY,
+											 &TextPosInterval,
+											 Position1,
+											 Position2,
+											 Position3,
+											 Position4,
+											 Position5,
+											 Position6,
+											 Position7,
+											 Position8,
+											 Position9,
+											 Position10,
+											 Position11,
+											 Position12,
+											 Position13,
+											 Position14,
+											 Position15,
+											 Position16,
+											 Position17,
+											 Position18,
+											 Position19,
+											 Position20,
+											 Position21,
+											 Position22,
+											 &StartTime,
+											 &LastYLine)
+				} else {
+					AutoClickerModule(TaskAutomatorGui2,
+									  &OptionsMenu,
+									  &SwitchQuickAccess,
+									  &SwitchClicker,
+									  &SwitchJumps,
+									  &SwitchControllerAutoRun,
+									  &SwitchKbAutoRun,
+									  &TextPatternClickerOnOff,
+									  &HotkeyEditMode,
+									  &PatternClickerHotkey,
+									  &CtrlPatternClickerHotkey,
+									  &AltPatternClickerHotkey,
+									  &ShiftPatternClickerHotkey,
+									  &EditBoxesAvailable,
+									  &EditPatternClicker,
+									  &EditPatternClickerOffset,
+									  &TextPatternClickInterval,
+									  &TextPatternClickerOffset,
+									  &TextLoop,
+									  &EditLoopTimes,
+									  &RadioCountLoopsYes,
+									  &RadioCountLoopsNo,
+									  &TextPosX,
+									  &TextPosY,
+									  &TextPosInterval,
+									  Position1,
+									  Position2,
+									  Position3,
+									  Position4,
+									  Position5,
+									  Position6,
+									  Position7,
+									  Position8,
+									  Position9,
+									  Position10,
+									  Position11,
+									  Position12,
+									  Position13,
+									  Position14,
+									  Position15,
+									  Position16,
+									  Position17,
+									  Position18,
+									  Position19,
+									  Position20,
+									  Position21,
+									  Position22,
+									  &StartTime,
+									  &LastYLine)
+				}
 				;----------------------------------------------------
-				; Save All EditBox Values - TaskAutomatorGui.ahk
+				; Y-LastYLine / Save All EditBox Values - TaskAutomatorGui.ahk
 				;----------------------------------------------------
-				SaveAllEditValues(TaskAutomatorGui2,
-								  &SaveButton,
-								  SubmitValues,
-								  &LastYLine,
-								  &FlagLineValueAdded)
+				if ResizeModule == true {
+					ResizedSaveAllEditValues(TaskAutomatorGui2,
+											 &SaveButton,
+											 SubmitValues,
+											 &LastYLine,
+											 &FlagLineValueAdded)
+				} else {
+					SaveAllEditValues(TaskAutomatorGui2,
+									  &SaveButton,
+									  SubmitValues,
+									  &LastYLine,
+									  &FlagLineValueAdded)
+				}
 			case SwitchQuickAccess:
 				;----------------------------------------------------
 				; Y-10 / Quick Access - TaskAutomatorGui.ahk
@@ -852,7 +1080,7 @@ Loop {
 								  &ShiftQuickAccessHk9,
 								  &LastYLine)
 				;----------------------------------------------------
-				; Save All EditBox Values - TaskAutomatorGui.ahk
+				; Y-LastYLine / Save All EditBox Values - TaskAutomatorGui.ahk
 				;----------------------------------------------------
 				SaveAllEditValues(TaskAutomatorGui2,
 								  &SaveButton,
@@ -863,32 +1091,73 @@ Loop {
 			;----------------------------------------------------
 			; Y-LastYLine +32 / Hotkey Edit Mode - TaskAutomatorGui.ahk
 			;----------------------------------------------------
-			CheckHotkeyEditMode(TaskAutomatorGui2,
-								&HotkeyEditMode,
-								&LicenseKeyFontType,
-								&LastYLine)
+			if ResizeModule == true and SwitchClicker == true {
+				ResizedCheckHotkeyEditMode(TaskAutomatorGui2,
+										   &HotkeyEditMode,
+										   &LicenseKeyFontType,
+										   &LastYLine)
+			} else {
+				CheckHotkeyEditMode(TaskAutomatorGui2,
+									&HotkeyEditMode,
+									&LicenseKeyFontType,
+									&LastYLine)
+			}
+			;----------------------------------------------------
+			; Y-LastYLine + 32 / EditBoxes Mode - TaskAutomatorGui.ahk
+			;----------------------------------------------------
+			if ResizeModule == true and SwitchClicker == true {
+				ResizedCheckEditBoxesAvailable(TaskAutomatorGui2,
+											   &EditBoxesAvailable,
+											   &LicenseKeyFontType,
+											   &LastYLine)
+			}else {
+				CheckEditBoxesAvailable(TaskAutomatorGui2,
+										&EditBoxesAvailable,
+										&LicenseKeyFontType,
+										&LastYLine)
+			}
 			;----------------------------------------------------
 			; Y-LastYLine +64 / Check for updates - TaskAutomatorGui.ahk
 			;----------------------------------------------------
-			CheckForUpdates(TaskAutomatorGui2, 
-						   &FlagCheckTime,
-						   &LastUpdateCheckTimeStamp,
-						   &LicenseKeyFontType,
-						   &CheckforUpdatesDaily,
-						   &CheckforupdatesWeekly,
-						   &NeverCheckForUpdates, 
-						   &NeedUpdate,
-						   &Connected,
-						   &MLTALatestReleaseVersion,
-						   &DownloadUrl,
-						   &CurrentVersion,
-						   &LastYLine)
+			if ResizeModule == true and SwitchClicker == true {
+				ResizedCheckForUpdates(TaskAutomatorGui2, 
+									   &FlagCheckTime,
+									   &LastUpdateCheckTimeStamp,
+									   &LicenseKeyFontType,
+									   &CheckforUpdatesDaily,
+									   &CheckforupdatesWeekly,
+									   &NeverCheckForUpdates, 
+									   &NeedUpdate,
+									   &Connected,
+									   &TALatestReleaseVersion,
+									   &DownloadUrl,
+									   &CurrentVersion,
+									   &LastYLine)
+			} else {
+				CheckForUpdates(TaskAutomatorGui2, 
+							   &FlagCheckTime,
+							   &LastUpdateCheckTimeStamp,
+							   &LicenseKeyFontType,
+							   &CheckforUpdatesDaily,
+							   &CheckforupdatesWeekly,
+							   &NeverCheckForUpdates, 
+							   &NeedUpdate,
+							   &Connected,
+							   &MLTALatestReleaseVersion,
+							   &DownloadUrl,
+							   &CurrentVersion,
+							   &LastYLine)
+			}
 			;----------------------------------------------------
 			SB := TaskAutomatorGui2.Add("StatusBar", , "Ready.")
 			;----------------------------------------------------
 			TaskAutomatorGui2.OnEvent('Close', (*) => ExitApp())
 			TaskAutomatorGui2.Title := AppName
-			TaskAutomatorGui2.Show("x" . PositionX . " y" . PositionY . "w250 h" . LastYLine + 115)
+			if ResizeModule == true and SwitchClicker == true {
+				TaskAutomatorGui2.Show("x" . PositionX . " y" . PositionY . "w750 h" . LastYLine + 83)
+			} else {
+				TaskAutomatorGui2.Show("x" . PositionX . " y" . PositionY . "w250 h" . LastYLine + 115)
+			}
 			Saved := TaskAutomatorGui2.Submit(false)
 			CoordMode "Mouse", "Screen"
 		}
@@ -1437,18 +1706,31 @@ Loop {
 	}
 	
 	if SwitchClicker == true {
-		if TextPatternClickerOnOff.Value == " ON" {
-			SB.SetText("Infinite Clicker Active. Count: " . CountClicker)
-			CountClicker++
-		} else {
-			if CountClicker != 0 {
-				SB.SetText("Clicker Stopped. Count: " CountClicker)
-				sleep StopDelay
+		if ResizeModule == true {
+			if TextPatternClickerOnOff.Value == " ON" {
+				SB.SetText("Infinite Clicker Active. Count: " . CountClicker)
+				CountClicker++
+			} else {
+				if CountClicker != 0 {
+					SB.SetText("Clicker Stopped. Count: " CountClicker)
+					sleep StopDelay
+				}
+				SB.SetText("Ready.                                                                                                                                X:" . x . " Y:" . y )
+				CountClicker := 0
 			}
-			SB.SetText("Ready.                         X:" . x . " Y:" . y )
-			CountClicker := 0
+		} else {
+			if TextPatternClickerOnOff.Value == " ON" {
+				SB.SetText("Infinite Clicker Active. Count: " . CountClicker)
+				CountClicker++
+			} else {
+				if CountClicker != 0 {
+					SB.SetText("Clicker Stopped. Count: " CountClicker)
+					sleep StopDelay
+				}
+				SB.SetText("Ready.                         X:" . x . " Y:" . y )
+				CountClicker := 0
+			}
 		}
-		
 		if ClearXY == true {
 			ClearXY := false
 			IniWrite false, TempSystemFile, "GeneralData", "ClearXY"

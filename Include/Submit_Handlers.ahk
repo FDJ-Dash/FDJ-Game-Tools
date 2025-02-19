@@ -569,24 +569,28 @@ SubmitValues(*){
 		IniWrite Saved.QuickAccess9, IniFile, "QuickAccessPath", "QuickAccess9"
 		SaveMsg
 	}
+	if SwitchKbAutoRun == true or SwitchControllerAutoRun == true {
+		IniWrite Saved.ScrlUpYes, IniFile, "PaceProperties", "ScrlUpYes"
+		IniWrite Saved.ScrlUpNo, IniFile, "PaceProperties", "ScrlUpNo"
+		IniWrite Saved.ScrlDownYes, IniFile, "PaceProperties", "ScrlDownYes"
+		IniWrite Saved.ScrlDownNo, IniFile, "PaceProperties", "ScrlDownNo"
+		SaveMsg
+	}
+	
 }
 ;----------------------------------------------------
 ClearValuesXY(*){
 	GuiName := IniRead(TempSystemFile, "GeneralData", "GuiName")
 	if GuiName == "TaskAutomatorGui1" {
 		Saved := TaskAutomatorGui1.Submit(false)
+		TaskAutomatorGui1.GetPos(&PosX, &PosY)
 	} else {
 		Saved := TaskAutomatorGui2.Submit(false)
+		TaskAutomatorGui2.GetPos(&PosX, &PosY)
 	}
 	
 	IniWrite true, TempSystemFile, "GeneralData", "ClearXY"
 	; Dinamic Reload
-	GuiName := IniRead(TempSystemFile, "GeneralData", "GuiName")
-	if GuiName == "TaskAutomatorGui1" {
-		TaskAutomatorGui1.GetPos(&PosX, &PosY)
-	} else {
-		TaskAutomatorGui2.GetPos(&PosX, &PosY)
-	}
 	IniWrite PosX, IniFile, "Properties", "PositionX"
 	IniWrite PosY, IniFile, "Properties", "PositionY"
 	IniWrite true, TempSystemFile, "GeneralData", "DinamicReload"

@@ -592,7 +592,7 @@ ProcessPatternClicker(CurrentHotkey, *){
 		HotkeyEditModeOn
 		return
 	}
-	
+	ToolTip()
 	; Parse hotkey start
 	countParseHK := 1
 	countLoop := 1

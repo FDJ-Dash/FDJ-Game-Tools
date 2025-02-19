@@ -166,6 +166,7 @@ ReadProperties(&ExitMessageTimeWait,
 ;----------------------------------------------------
 ReadSetting(&HotkeyEditMode,
 			&EditBoxesAvailable,
+			&ResizeModule,
 			&CheckforUpdatesDaily, 
 			&CheckforupdatesWeekly, 
 			&NeverCheckForUpdates,
@@ -180,6 +181,11 @@ ReadSetting(&HotkeyEditMode,
 	if EditBoxesAvailable > 1 or EditBoxesAvailable < 0 {
 		EditBoxesAvailable := 1
 		IniWrite EditBoxesAvailable, IniFile, "Settings", "EditBoxesAvailable"
+	}
+	ResizeModule := IniRead(IniFile, "Settings", "ResizeModule")
+	if ResizeModule > 1 or ResizeModule < 0 {
+		ResizeModule := 0
+		IniWrite ResizeModule, IniFile, "Settings", "ResizeModule"
 	}
 	CheckforUpdatesDaily := IniRead(IniFile, "Settings", "CheckforUpdatesDaily")
 	CheckforupdatesWeekly := IniRead(IniFile, "Settings", "CheckforupdatesWeekly")
@@ -204,11 +210,19 @@ ReadSetting(&HotkeyEditMode,
 ReadPaceProperties(&ScrlUpCount, 
 				   &ScrlUpInterval, 
 				   &ScrlDownCount,
-				   &ScrlDownInterval){
+				   &ScrlDownInterval,
+				   &ScrlUpYes,
+				   &ScrlUpNo,
+				   &ScrlDownYes,
+				   &ScrlDownNo){
 	ScrlUpCount := IniRead(IniFile, "PaceProperties", "ScrlUpCount")
 	ScrlUpInterval := IniRead(IniFile, "PaceProperties", "ScrlUpInterval")
 	ScrlDownCount := IniRead(IniFile, "PaceProperties", "ScrlDownCount")
 	ScrlDownInterval := IniRead(IniFile, "PaceProperties", "ScrlDownInterval")
+	ScrlUpYes := IniRead(IniFile, "PaceProperties", "ScrlUpYes")
+	ScrlUpNo := IniRead(IniFile, "PaceProperties", "ScrlUpNo")
+	ScrlDownYes := IniRead(IniFile, "PaceProperties", "ScrlDownYes")
+	ScrlDownNo := IniRead(IniFile, "PaceProperties", "ScrlDownNo")
 }
 ;----------------------------------------------------
 ; Read Ini Saved Hotkey

@@ -16,6 +16,7 @@
 ; ModulesOFF(...)
 ; SaveAllEditValues(...)
 ; CheckHotkeyEditMode(...)
+; CheckEditBoxesAvailable(...)
 ; CheckForUpdates(...)
 ;----------------------------------------------------
 ; Y-10 / Pace control / Auto Scroll Up / Down
@@ -45,15 +46,19 @@ PaceControl(TaskAutomatorGui,
 		; Auto Scroll Up
 		;----------------------------------------------------
 		TextScrlUp := TaskAutomatorGui.Add("Text","x10 y10 w110 h20 +0x200", " Auto Scroll up")
-		RadioScrlUpYes := TaskAutomatorGui.Add("Radio", "x10 y35 w30 h20", "Y")
-		RadioScrlUpNo := TaskAutomatorGui.Add("Radio", "x45 y35 w30 h20 +Checked", "N")
+		RadioScrlUpYes := TaskAutomatorGui.Add("Radio", "vScrlUpYes x10 y35 w30 h20", "Y")
+		RadioScrlUpYes.Value := ScrlUpYes
+		RadioScrlUpNo := TaskAutomatorGui.Add("Radio", "vScrlUpNo x45 y35 w30 h20", "N")
+		RadioScrlUpNo.Value := ScrlUpNo
 		TextOnOffScrlUp := TaskAutomatorGui.Add("Text","x90 y35 w30 h20 +0x200", " OFF")
 		;----------------------------------------------------
 		; Auto Scroll Down
 		;----------------------------------------------------
 		TextScrlDown := TaskAutomatorGui.Add("Text","x130 y10 w110 h20 +0x200", " Auto Scroll down")
-		RadioScrlDownYes := TaskAutomatorGui.Add("Radio", "x130 y35 w30 h20", "Y")
-		RadioScrlDownNo := TaskAutomatorGui.Add("Radio", "x165 y35 w30 h20 +Checked", "N")
+		RadioScrlDownYes := TaskAutomatorGui.Add("Radio", "vScrlDownYes x130 y35 w30 h20", "Y")
+		RadioScrlDownYes.Value := ScrlDownYes
+		RadioScrlDownNo := TaskAutomatorGui.Add("Radio", "vScrlDownNo x165 y35 w30 h20", "N")
+		RadioScrlDownNo.Value := ScrlDownNo
 		TextOnOffScrlDown := TaskAutomatorGui.Add("Text","x210 y35 w30 h20 +0x200", " OFF")
 		
 		TaskAutomatorGui.Add("Text", "x1 y60 w250 h2 +0x10") ; Separator
@@ -545,19 +550,9 @@ AutoClickerModule(TaskAutomatorGui,
 		PatternClickerHotkey := TaskAutomatorGui.Add("Hotkey", "vPatternClickerHotkey x150 y10 w90 h20 +disabled", PatternClickerHotkey)
 	} ; HotkeyEditMode false end
 	if EditBoxesAvailable == true {
-		try {
-			SettingsMenu.SetIcon("Lock Edit &Boxes && Icons: ON/OFF", IconLib . "\EditBox2.png")
-		}
-		catch {
-		}
 		EditPatternClicker := TaskAutomatorGui.Add("Edit", "vClickInterval x60 y35 w50 h20 +Number")
 		EditPatternClickerOffset := TaskAutomatorGui.Add("Edit", "vRandomOffset x190 y35 w50 h20 +Number")
 	} else {
-		try {
-			SettingsMenu.SetIcon("Lock Edit &Boxes && Icons: ON/OFF", IconLib . "\EditBox1.png")
-		}
-		catch {
-		}
 		EditPatternClicker := TaskAutomatorGui.Add("Edit", "vClickInterval x60 y35 w50 h20 +Number +Disabled")
 		EditPatternClickerOffset := TaskAutomatorGui.Add("Edit", "vRandomOffset x190 y35 w50 h20 +Number +Disabled")
 	}
@@ -1665,11 +1660,6 @@ QuickAccessModule(TaskAutomatorGui,
 	TaskAutomatorGui.Add("Text", "x7 y10 h20 +0x200", "1")
 	if EditBoxesAvailable == true {
 		try {
-			SettingsMenu.SetIcon("Lock Edit &Boxes && Icons: ON/OFF", IconLib . "\EditBox2.png")
-		}
-		catch {
-		}
-		try {
 			TaskAutomatorGui.Add("Picture", "x18 y10 w20 h20 +border", QuickIcon1).OnEvent("Click", SelectNewIcon1)
 		}
 		catch {
@@ -1679,11 +1669,6 @@ QuickAccessModule(TaskAutomatorGui,
 		}
 		EditQuickAcess1 := TaskAutomatorGui.Add("Edit", "vQuickAccess1 x45 y10 w160 h20")
 	} else {
-		try {
-			SettingsMenu.SetIcon("Lock Edit &Boxes && Icons: ON/OFF", IconLib . "\EditBox1.png")
-		}
-		catch {
-		}
 		try {
 			TaskAutomatorGui.Add("Picture", "x18 y10 w20 h20 +border", QuickIcon1)
 		}
@@ -2265,7 +2250,7 @@ QuickAccessModule(TaskAutomatorGui,
 	LastYLine := 257
 }
 ;----------------------------------------------------
-; Y-510 / Save All EditBox Values
+; Y-LastYLine / Save All EditBox Values
 ;----------------------------------------------------
 SaveAllEditValues(TaskAutomatorGui, &SaveButton, SubmitValues, &LastYLine, &FlagLineValueAdded){
 	;-------------------------------
@@ -2278,7 +2263,7 @@ SaveAllEditValues(TaskAutomatorGui, &SaveButton, SubmitValues, &LastYLine, &Flag
 	}
 }
 ;----------------------------------------------------
-; Y-510 / Hotkey Edit Mode - TaskAutomatorGui.ahk
+; Y-LastYLine + 32 / Hotkey Edit Mode - TaskAutomatorGui.ahk
 ;----------------------------------------------------
 CheckHotkeyEditMode(TaskAutomatorGui,
 					&HotkeyEditMode,
@@ -2297,10 +2282,29 @@ CheckHotkeyEditMode(TaskAutomatorGui,
 		TaskAutomatorGui.Add("Picture", "x230 y" . LastYLine + 36 . " w10 h10 +border", IconLib . "\UpToDate.png")
 	}
 }
-
-
 ;----------------------------------------------------
-; Y-539 / Check for updates
+; Y-LastYLine + 32 / EditBoxes Mode - TaskAutomatorGui.ahk
+;----------------------------------------------------
+CheckEditBoxesAvailable(TaskAutomatorGui,
+						&EditBoxesAvailable,
+						&LicenseKeyFontType,
+						&LastYLine){
+	;-------------------------------
+	LastYLine := LastYLine + 31
+	TaskAutomatorGui.Add("Text", "x1 y" . LastYLine + 25 . " w250 h2 +0x10") ; Separator
+	TaskAutomatorGui.Add("Text","x7 y" . LastYLine + 32 . " w84 h20 +0x200", " EditBox Mode: ")
+	if EditBoxesAvailable == true {
+		TaskAutomatorGui.SetFont("s8 Bold cYellow", LicenseKeyFontType)
+		TaskAutomatorGui.Add("Text","x97 y" . LastYLine + 32 . " w126 h20 +0x200", " Unlocked ")
+		TaskAutomatorGui.Add("Picture", "x230 y" . LastYLine + 36 . " w10 h10 +border", IconLib . "\NewVersionAvailable.png")
+		TaskAutomatorGui.SetFont("s8 Bold cLime", LicenseKeyFontType)
+	} else {
+		TaskAutomatorGui.Add("Text","x97 y" . LastYLine + 32 . " w126 h20 +0x200", " Locked ")
+		TaskAutomatorGui.Add("Picture", "x230 y" . LastYLine + 36 . " w10 h10 +border", IconLib . "\UpToDate.png")
+	}
+}
+;----------------------------------------------------
+; Y-LastYLine +64  / Check for updates
 ;----------------------------------------------------
 CheckForUpdates(TaskAutomatorGui, 
 			   &FlagCheckTime,
@@ -2316,7 +2320,6 @@ CheckForUpdates(TaskAutomatorGui,
 			   &CurrentVersion,
 			   &LastYLine){
 	;-------------------------------
-	; TaskAutomatorGui.Add("Text", "x1 y539 w250 h2 +0x10") ; Separator
 	TaskAutomatorGui.Add("Text", "x1 y" . LastYLine + 57  . " w250 h2 +0x10") ; Separator
 	FlagCheckTime := false
 	if CheckforUpdatesDaily == true and 

@@ -167,6 +167,21 @@ EditBoxesHandler(*){
 	IniWrite PosY, IniFile, "Properties", "PositionY"
 	IniWrite true, TempSystemFile, "GeneralData", "DinamicReload"
 }
+ResizeModuleHandler(*){
+	ResizeModule := IniRead(IniFile, "Settings", "ResizeModule")
+	ResizeModule := !ResizeModule
+	IniWrite ResizeModule, IniFile, "Settings", "ResizeModule"
+	; Reload
+	GuiName := IniRead(TempSystemFile, "GeneralData", "GuiName")
+	if GuiName == "TaskAutomatorGui1" {
+		TaskAutomatorGui1.GetPos(&PosX, &PosY)
+	} else {
+		TaskAutomatorGui2.GetPos(&PosX, &PosY)
+	}
+	IniWrite PosX, IniFile, "Properties", "PositionX"
+	IniWrite PosY, IniFile, "Properties", "PositionY"
+	IniWrite true, TempSystemFile, "GeneralData", "DinamicReload"
+}
 ;----------------------------------------------------
 GuiPriorityAlwaysOnTopHandler(*){
 	GuiPriorityAlwaysOnTop := IniRead(IniFile, "Properties", "GuiPriorityAlwaysOnTop")

@@ -54,18 +54,12 @@ SetupMenuBar(&MenuBar_Storage,
 	OptionsMenu.Insert()
 	OptionsMenu.Add("&Always On Top: ON/OFF", GuiPriorityAlwaysOnTopHandler)
 	try {
-		; OptionsMenu.SetIcon("Switch &Keyboard Autorun ON/OFF", IconLib . "\Switch2.ico")
 		OptionsMenu.SetIcon("1. Switch &Keyboard Autorun", IconLib . "\Switch2.ico")
-		; OptionsMenu.SetIcon("Switch Con&troller Autorun ON/OFF", IconLib . "\Switch2.ico")
 		OptionsMenu.SetIcon("2. Switch Con&troller Autorun", IconLib . "\Switch2.ico")
 		OptionsMenu.SetIcon("Edit &Ini File", IconLib . "\File.ico")
-		; OptionsMenu.SetIcon("1. Switch Quick &Access", IconLib . "\Switch2.ico")
 		OptionsMenu.SetIcon("3a. Switch Quick &Access", IconLib . "\Switch2.ico")
-		; OptionsMenu.SetIcon("1b. Switch &Quick Access Hotkeys/Buttons", IconLib . "\Switch2.ico")
 		OptionsMenu.SetIcon("3b. Switch &Quick Access Hotkeys/Buttons", IconLib . "\Switch2.ico")
-		; OptionsMenu.SetIcon("2. Switch &Clicker", IconLib . "\Switch2.ico")
 		OptionsMenu.SetIcon("4. Switch &Clicker", IconLib . "\Switch2.ico")
-		; OptionsMenu.SetIcon("3. Switch &Jumps", IconLib . "\Switch2.ico")
 		OptionsMenu.SetIcon("5. Switch &Jumps", IconLib . "\Switch2.ico")
 		OptionsMenu.SetIcon("Change Background &Image", IconLib . "\ChangeBackground.png")
 		OptionsMenu.SetIcon("Change M&essage Background Image", IconLib . "\ChangeBackground.png")
@@ -77,7 +71,9 @@ SetupMenuBar(&MenuBar_Storage,
 	SettingsMenu := Menu()
 	MenuBar_Storage.Add("&Settings", SettingsMenu)
 	SettingsMenu.Add("Hotkey Mode: Active/Edit", HotkeyEditModeHandler)
-	SettingsMenu.Add("Lock Edit &Boxes && Icons: ON/OFF", EditBoxesHandler)
+	SettingsMenu.Add("EditBox Mode: Locked/Unlocked", EditBoxesHandler)
+	SettingsMenu.Insert()
+	SettingsMenu.Add("Resize Large Modules", ResizeModuleHandler)
 	SettingsMenu.Insert()
 	SettingsMenu.Add("Check for updates &daily", MenuHandlerCheckUptDaily)
 	SettingsMenu.Add("Check for updates &weekly", MenuHandlerCheckUptWeekly)
@@ -85,14 +81,19 @@ SetupMenuBar(&MenuBar_Storage,
 
 	try {
 		if EditBoxesAvailable == true {
-			SettingsMenu.SetIcon("Lock Edit &Boxes && Icons: ON/OFF", IconLib . "\EditBox2.png")
+			SettingsMenu.SetIcon("EditBox Mode: Locked/Unlocked", IconLib . "\EditBox2.png")
 		} else {
-			SettingsMenu.SetIcon("Lock Edit &Boxes && Icons: ON/OFF", IconLib . "\EditBox1.png")
+			SettingsMenu.SetIcon("EditBox Mode: Locked/Unlocked", IconLib . "\EditBox1.png")
 		}
 		if HotkeyEditMode == true {
 			SettingsMenu.SetIcon("Hotkey Mode: Active/Edit", IconLib . "\Unlocked.png")
 		} else {
 			SettingsMenu.SetIcon("Hotkey Mode: Active/Edit", IconLib . "\Locked.ico")
+		}
+		if ResizeModule == true {
+			SettingsMenu.SetIcon("Resize Large Modules", IconLib . "\Switch1.ico")
+		} else {
+			SettingsMenu.SetIcon("Resize Large Modules", IconLib . "\Switch2.ico")
 		}
 		SettingsMenu.SetIcon("Check for updates &daily", IconLib . "\CheckDaily.png")
 		SettingsMenu.SetIcon("Check for updates &weekly", IconLib . "\CheckWeekly.png")
