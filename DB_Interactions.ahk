@@ -107,9 +107,6 @@ ValidateUser(Email, Pswd, MacAddress, ReceiptId, LicAmount, DateTA) {
 				if QueryResult == 0 {
 					ResultSet := MySqlInst.GetResult()
 					RowCount := 0
-					; MacAddress := "CC-11-43-DD-10-22"
-					; MacAddress := "AA-00-34-DE-EE-0A"
-					; MacAddress := "01-02-33-5F-AA-5C"
 					for k, v in ResultSet.Rows {
 						; Process each row (Could be more than 1 row)
 						; if MacAddress is already registered then login successful
