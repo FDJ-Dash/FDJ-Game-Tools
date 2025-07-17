@@ -31,7 +31,7 @@ SelectNewIcon1(*) {
 	}
 	IniWrite PosX, IniFile, "Properties", "PositionX"
 	IniWrite PosY, IniFile, "Properties", "PositionY"
-	IniWrite true, TempSystemFile, "GeneralData", "DinamicReload"
+	IniWrite true, TempSystemFile, "GeneralData", "DynamicReload"
 }
 ;----------------------------------------------------
 SelectNewIcon2(*) {
@@ -46,7 +46,7 @@ SelectNewIcon2(*) {
 	}
 	IniWrite PosX, IniFile, "Properties", "PositionX"
 	IniWrite PosY, IniFile, "Properties", "PositionY"
-	IniWrite true, TempSystemFile, "GeneralData", "DinamicReload"
+	IniWrite true, TempSystemFile, "GeneralData", "DynamicReload"
 }
 ;----------------------------------------------------
 SelectNewIcon3(*) {
@@ -61,7 +61,7 @@ SelectNewIcon3(*) {
 	}
 	IniWrite PosX, IniFile, "Properties", "PositionX"
 	IniWrite PosY, IniFile, "Properties", "PositionY"
-	IniWrite true, TempSystemFile, "GeneralData", "DinamicReload"
+	IniWrite true, TempSystemFile, "GeneralData", "DynamicReload"
 }
 ;----------------------------------------------------
 SelectNewIcon4(*) {
@@ -76,7 +76,7 @@ SelectNewIcon4(*) {
 	}
 	IniWrite PosX, IniFile, "Properties", "PositionX"
 	IniWrite PosY, IniFile, "Properties", "PositionY"
-	IniWrite true, TempSystemFile, "GeneralData", "DinamicReload"
+	IniWrite true, TempSystemFile, "GeneralData", "DynamicReload"
 }
 ;----------------------------------------------------
 SelectNewIcon5(*) {
@@ -91,7 +91,7 @@ SelectNewIcon5(*) {
 	}
 	IniWrite PosX, IniFile, "Properties", "PositionX"
 	IniWrite PosY, IniFile, "Properties", "PositionY"
-	IniWrite true, TempSystemFile, "GeneralData", "DinamicReload"
+	IniWrite true, TempSystemFile, "GeneralData", "DynamicReload"
 }
 ;----------------------------------------------------
 SelectNewIcon6(*) {
@@ -106,7 +106,7 @@ SelectNewIcon6(*) {
 	}
 	IniWrite PosX, IniFile, "Properties", "PositionX"
 	IniWrite PosY, IniFile, "Properties", "PositionY"
-	IniWrite true, TempSystemFile, "GeneralData", "DinamicReload"
+	IniWrite true, TempSystemFile, "GeneralData", "DynamicReload"
 }
 ;----------------------------------------------------
 SelectNewIcon7(*) {
@@ -121,7 +121,7 @@ SelectNewIcon7(*) {
 	}
 	IniWrite PosX, IniFile, "Properties", "PositionX"
 	IniWrite PosY, IniFile, "Properties", "PositionY"
-	IniWrite true, TempSystemFile, "GeneralData", "DinamicReload"
+	IniWrite true, TempSystemFile, "GeneralData", "DynamicReload"
 }
 ;----------------------------------------------------
 SelectNewIcon8(*) {
@@ -136,7 +136,7 @@ SelectNewIcon8(*) {
 	}
 	IniWrite PosX, IniFile, "Properties", "PositionX"
 	IniWrite PosY, IniFile, "Properties", "PositionY"
-	IniWrite true, TempSystemFile, "GeneralData", "DinamicReload"
+	IniWrite true, TempSystemFile, "GeneralData", "DynamicReload"
 }
 ;----------------------------------------------------
 SelectNewIcon9(*) {
@@ -151,7 +151,7 @@ SelectNewIcon9(*) {
 	}
 	IniWrite PosX, IniFile, "Properties", "PositionX"
 	IniWrite PosY, IniFile, "Properties", "PositionY"
-	IniWrite true, TempSystemFile, "GeneralData", "DinamicReload"
+	IniWrite true, TempSystemFile, "GeneralData", "DynamicReload"
 }
 ;----------------------------------------------------
 ChangeBackgroundHandler(*){
@@ -166,7 +166,7 @@ ChangeBackgroundHandler(*){
 	}
 	IniWrite PosX, IniFile, "Properties", "PositionX"
 	IniWrite PosY, IniFile, "Properties", "PositionY"
-	IniWrite true, TempSystemFile, "GeneralData", "DinamicReload"
+	IniWrite true, TempSystemFile, "GeneralData", "DynamicReload"
 }
 ;----------------------------------------------------
 ChangeMessageBackgroundHandler(*){
@@ -181,5 +181,5 @@ ChangeMessageBackgroundHandler(*){
 	}
 	IniWrite PosX, IniFile, "Properties", "PositionX"
 	IniWrite PosY, IniFile, "Properties", "PositionY"
-	IniWrite true, TempSystemFile, "GeneralData", "DinamicReload"
+	IniWrite true, TempSystemFile, "GeneralData", "DynamicReload"
 }

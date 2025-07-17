@@ -590,8 +590,8 @@ ClearValuesXY(*){
 	}
 	
 	IniWrite true, TempSystemFile, "GeneralData", "ClearXY"
-	; Dinamic Reload
+	; DynamicReload
 	IniWrite PosX, IniFile, "Properties", "PositionX"
 	IniWrite PosY, IniFile, "Properties", "PositionY"
-	IniWrite true, TempSystemFile, "GeneralData", "DinamicReload"
+	IniWrite true, TempSystemFile, "GeneralData", "DynamicReload"
 }

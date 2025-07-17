@@ -16,6 +16,7 @@ CreateNewIniFile(*) {
 	FileAppend "; Programmer Alias: FDJ-Dash.`n" , IniFile
 	FileAppend "; ------------ App Details ------------`n" , IniFile
 	FileAppend "; App Name: Task Automator.`n" , IniFile
+	FileAppend ";--------------------------------------------------`n" , IniFile
 	FileAppend "; Description: This is an app aimed towards repetitive tasks like holding a`n" , IniFile
 	FileAppend "; button down for extended time, mouse clicks or even click patterns.`n" , IniFile
 	FileAppend "; Additionally, it brings interchangeable modules like jumps for certain`n" , IniFile
@@ -25,15 +26,11 @@ CreateNewIniFile(*) {
 	FileAppend "; NOTE: For all numpad keys, verify that NumLock key is activated / deactivated in order to trigger them.`n" , IniFile
 	FileAppend ";--------------------------------------------------`n" , IniFile
 	FileAppend "; HINT: If you delete this file or move it away from its forder,`n" , IniFile 
-	FileAppend "; Task Automator will generate a new file with dafault values on the spot`n" , IniFile
+	FileAppend "; Task Automator will generate a new file with dafault values on the spot.`n" , IniFile
 	FileAppend ";--------------------------------------------------`n" , IniFile
-	FileAppend "; Find the list of key names here: https://www.autohotkey.com/docs/v2/KeyList.htm`n" , IniFile
-	FileAppend ";-------------------------------`n" , IniFile
-	FileAppend "; See the list of recommended fonts here: https://www.autohotkey.com/docs/v2/misc/FontsStandard.htm`n" , IniFile
-	FileAppend ";-------------------------------`n" , IniFile
-	FileAppend "; See the list of color names and RGB values here: https://www.autohotkey.com/docs/v2/misc/Colors.htm`n" , IniFile
+	FileAppend "; Listed colors:`n" , IniFile
 	FileAppend "; Black Silver Gray White Maroon Red Purple Fuchsia Green Lime Olive Yellow Navy Blue Teal Aqua`n" , IniFile
-	FileAppend "; If the color name you need is not listed you can still write its RGB value`n" , IniFile
+	FileAppend "; If the color name you need is not listed you can still write its RGB value.`n" , IniFile
 	FileAppend ";--------------------------------------------------`n" , IniFile
 	FileAppend "[FontType]`n" , IniFile
 	FileAppend "MainFontType=Comic Sans MS`n" , IniFile

@@ -8,6 +8,9 @@
 ; Class list:
 ;----------------------------------------------------
 ; Position()
+; Devices()
+;----------------------------------------------------
+; Position()
 ;----------------------------------------------------
 class Position {
 	; Instance Variables
@@ -52,5 +55,20 @@ Position20 := Position()
 Position21 := Position()
 Position22 := Position()
 ;----------------------------------------------------
+; Devices()
+;----------------------------------------------------
+class Devices {
+	; Instance Variables
+	Customer_Id := ""
+	DeviceNumber := []
+	StoredMacAddress := []
+	CurrentMacAddress := ""
+	
+	; Methods
+	Call() {
+		; Method Call
+	}
+}
 
+UserDevices := Devices()
 

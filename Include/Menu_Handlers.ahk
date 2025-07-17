@@ -18,6 +18,7 @@
 ; HotkeyEditModeHandler(*)
 ; EditBoxesHandler(*)
 ; GuiPriorityAlwaysOnTopHandler(*)
+; MenuHandlerManageDevices(*)
 ; KbAutoRunOFFHandler(*)
 ; ControllerAutoRunOFFHandler(*)
 ; SwitchJumpsHandler(*)
@@ -41,7 +42,7 @@ MenuHandlerUpdate(*){
 		return
 	}
 	ParseRequest()
-	DownloadUrl := IniRead(DataFile, "EncriptedData", "TADownload")
+	DownloadUrl := IniRead(DataFile, "EncryptedData", "TADownload")
 	TALatestReleaseVersion := IniRead(DataFile, "GeneralData", "TALatestReleaseVersion")
 	IniWrite A_Now, IniFile, "Settings", "LastUpdateCheckTimeStamp"
 	if TALatestReleaseVersion != CurrentVersion {
@@ -74,7 +75,7 @@ MenuHandlerCheckUptDaily(*){
 	}
 	IniWrite PosX, IniFile, "Properties", "PositionX"
 	IniWrite PosY, IniFile, "Properties", "PositionY"
-	IniWrite true, TempSystemFile, "GeneralData", "DinamicReload"
+	IniWrite true, TempSystemFile, "GeneralData", "DynamicReload"
 }
 ;----------------------------------------------------
 MenuHandlerCheckUptWeekly(*){
@@ -93,7 +94,7 @@ MenuHandlerCheckUptWeekly(*){
 	}
 	IniWrite PosX, IniFile, "Properties", "PositionX"
 	IniWrite PosY, IniFile, "Properties", "PositionY"
-	IniWrite true, TempSystemFile, "GeneralData", "DinamicReload"
+	IniWrite true, TempSystemFile, "GeneralData", "DynamicReload"
 }
 ;----------------------------------------------------
 MenuHandlerNeverCheckUpt(*){
@@ -112,7 +113,7 @@ MenuHandlerNeverCheckUpt(*){
 	}
 	IniWrite PosX, IniFile, "Properties", "PositionX"
 	IniWrite PosY, IniFile, "Properties", "PositionY"
-	IniWrite true, TempSystemFile, "GeneralData", "DinamicReload"
+	IniWrite true, TempSystemFile, "GeneralData", "DynamicReload"
 }
 ;----------------------------------------------------
 SuspendMenuHandler(*){
@@ -149,7 +150,7 @@ HotkeyEditModeHandler(*) {
 	}
 	IniWrite PosX, IniFile, "Properties", "PositionX"
 	IniWrite PosY, IniFile, "Properties", "PositionY"
-	IniWrite true, TempSystemFile, "GeneralData", "DinamicReload"
+	IniWrite true, TempSystemFile, "GeneralData", "DynamicReload"
 }
 ;----------------------------------------------------
 EditBoxesHandler(*){
@@ -165,7 +166,7 @@ EditBoxesHandler(*){
 	}
 	IniWrite PosX, IniFile, "Properties", "PositionX"
 	IniWrite PosY, IniFile, "Properties", "PositionY"
-	IniWrite true, TempSystemFile, "GeneralData", "DinamicReload"
+	IniWrite true, TempSystemFile, "GeneralData", "DynamicReload"
 }
 ResizeModuleHandler(*){
 	ResizeModule := IniRead(IniFile, "Settings", "ResizeModule")
@@ -180,7 +181,7 @@ ResizeModuleHandler(*){
 	}
 	IniWrite PosX, IniFile, "Properties", "PositionX"
 	IniWrite PosY, IniFile, "Properties", "PositionY"
-	IniWrite true, TempSystemFile, "GeneralData", "DinamicReload"
+	IniWrite true, TempSystemFile, "GeneralData", "DynamicReload"
 }
 ;----------------------------------------------------
 GuiPriorityAlwaysOnTopHandler(*){
@@ -196,7 +197,11 @@ GuiPriorityAlwaysOnTopHandler(*){
 	}
 	IniWrite PosX, IniFile, "Properties", "PositionX"
 	IniWrite PosY, IniFile, "Properties", "PositionY"
-	IniWrite true, TempSystemFile, "GeneralData", "DinamicReload"
+	IniWrite true, TempSystemFile, "GeneralData", "DynamicReload"
+}
+;----------------------------------------------------
+MenuHandlerManageDevices(*) {
+    MenuManageDevices()
 }
 ;----------------------------------------------------
 KbAutoRunOFFHandler(*){
@@ -224,7 +229,7 @@ KbAutoRunOFFHandler(*){
 		}
 		IniWrite PosX, IniFile, "Properties", "PositionX"
 		IniWrite PosY, IniFile, "Properties", "PositionY"
-		IniWrite true, TempSystemFile, "GeneralData", "DinamicReload"
+		IniWrite true, TempSystemFile, "GeneralData", "DynamicReload"
 	}
 	
 }
@@ -252,7 +257,7 @@ ControllerAutoRunOFFHandler(*){
 		}
 		IniWrite PosX, IniFile, "Properties", "PositionX"
 		IniWrite PosY, IniFile, "Properties", "PositionY"
-		IniWrite true, TempSystemFile, "GeneralData", "DinamicReload"
+		IniWrite true, TempSystemFile, "GeneralData", "DynamicReload"
 	}
 }
 ;----------------------------------------------------
@@ -279,7 +284,7 @@ SwitchJumpsHandler(*){
 		}
 		IniWrite PosX, IniFile, "Properties", "PositionX"
 		IniWrite PosY, IniFile, "Properties", "PositionY"
-		IniWrite true, TempSystemFile, "GeneralData", "DinamicReload"
+		IniWrite true, TempSystemFile, "GeneralData", "DynamicReload"
 	}
 }
 ;----------------------------------------------------
@@ -306,7 +311,7 @@ SwitchClickerHandler(*){
 		}
 		IniWrite PosX, IniFile, "Properties", "PositionX"
 		IniWrite PosY, IniFile, "Properties", "PositionY"
-		IniWrite true, TempSystemFile, "GeneralData", "DinamicReload"
+		IniWrite true, TempSystemFile, "GeneralData", "DynamicReload"
 	}
 }
 ;----------------------------------------------------
@@ -333,7 +338,7 @@ QuickAccessHandler(*) {
 		}
 		IniWrite PosX, IniFile, "Properties", "PositionX"
 		IniWrite PosY, IniFile, "Properties", "PositionY"
-		IniWrite true, TempSystemFile, "GeneralData", "DinamicReload"
+		IniWrite true, TempSystemFile, "GeneralData", "DynamicReload"
 	}
 }
 ;----------------------------------------------------
@@ -353,6 +358,6 @@ QuickAccessButtonsHandler(*) {
 		}
 		IniWrite PosX, IniFile, "Properties", "PositionX"
 		IniWrite PosY, IniFile, "Properties", "PositionY"
-		IniWrite true, TempSystemFile, "GeneralData", "DinamicReload"
+		IniWrite true, TempSystemFile, "GeneralData", "DynamicReload"
 	}
 }
