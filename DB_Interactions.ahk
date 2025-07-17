@@ -57,15 +57,7 @@ RegisterUser(Email, Pswd, UserName, ReceiptId, LicAmountTA, DateTA, MacAddress) 
 	}
 	return QueryResult
 }
-; Email := "test4@gmail.com"
-; Pswd := "at12345"
-; UserName := "user4"
-; ReceiptId := "bbbb-bbbb-cccc-dddd"
-; Lic_Amount_TA := 3
-; Date_TA := A_Now
-; Date_TA := FormatTime(Date_TA, "yyyy-MM-dd")
-; MacAddress := "AC-BD-CD-1F-1A-CC"
-; RegisterUser(Email, Pswd, UserName, ReceiptId, Lic_Amount_TA, Date_TA, MacAddress)
+
 ;----------------------------------------------------
 ; Validate User
 ;----------------------------------------------------
@@ -156,10 +148,6 @@ ValidateUser(Email, Pswd, MacAddress, ReceiptId, LicAmount, DateTA) {
 	return 1
 }
 
-; Email := "test4@gmail.com"
-; Pswd := "at12345"
-; MacAddress := "01-09-CD-5F-AA-CC"
-; ValidateUser(Email, Pswd, MacAddress)
 ;----------------------------------------------------
 ; Update Mac Address
 ;----------------------------------------------------
@@ -204,10 +192,6 @@ UpdateMacAddress(Email, Pswd, MacAddress) {
 	}
 }
 
-; Email := "test4@gmail.com"
-; Pswd := "at12345"
-; MacAddress := "01-02-33-5F-AA-5C"
-; UpdateMacAddress(Email, Pswd, MacAddress)
 ;----------------------------------------------------
 ; Validate Mail
 ;----------------------------------------------------
