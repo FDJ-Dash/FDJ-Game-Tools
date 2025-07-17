@@ -9,10 +9,19 @@
 ;----------------------------------------------------
 ; ExitMenu(ExitReason,ExitCode)
 ; GetMacAddress(*)
-; EncriptMsg(OriginalMsg, *)
-; DecriptMsg(EncriptedMsgTA, *)
+; CurrentSessionKey(*)
+; SessionGenerationKey(*)
+; SetSessionKey(*)
+; EncryptMsg(OriginalMsg, *)
+; DecryptMsg(EncryptedMsgTA, *)
+; EncryptPsw(OriginalMsg, *)
+; DecryptPsw(EncryptedMsg, *)
+; DatabaseConnetion(*)
+; MailPswdGen(*)
 ; ParseRequest(*)
 ; CheckConnection(*)
+; SendMail(ValidCode, Email)
+; SendMailForgotPswd(ValidCode, Email)
 ;----------------------------------------------------
 ExitMenu(ExitReason,ExitCode)
 {	
@@ -107,11 +116,32 @@ GetMacAddress(*){
 	return StringMacAddress
 }
 ;----------------------------------------------------
-EncriptMsg(OriginalMsg, *){
+CurrentSessionKey(*) {
+    SessionKey := IniRead(TempSystemFile, "GeneralData", "SessionKey")
+    return SessionKey
+}
+;----------------------------------------------------
+SessionGenerationKey(*) {
+    SessionKey := A_Now
+    SessionKey := FormatTime(SessionKey, "yyyy-MM-dd")
+	Var1 := "20200101"
+    Var2 := "19820101"
+	KeyValue1 := DateDiff(A_Now, Var2, "days")
+	KeyValue2 := DateDiff(A_Now, Var1, "days")
+	SessionKey := KeyValue2 . SessionKey . KeyValue1
+	SessionKey := EncryptMsg(SessionKey)
+	return SessionKey
+}
+;----------------------------------------------------
+SetSessionKey(SessionKey, *) {
+    IniWrite SessionKey, TempSystemFile, "GeneralData", "SessionKey"
+}
+;----------------------------------------------------
+EncryptMsg(OriginalMsg, *){
 	MixedPattern := "Az0By9Cx7Da8Eb2Fc4Gw3Hv5Ij6Js1KlLhMpNeOtPgQnRrSiTqUoVkWmXdYfZu"
 	PunctuationPattern := "!#$%&'()*+,-./:;<=>?@[\]^_`"{|}~ "
 	
-	EncriptedMsg := ""
+	EncryptedMsg := ""
 	FlagSignCount := 0
 	FlagNmCount := 0
 	Flag_az_Count := 0
@@ -124,29 +154,29 @@ EncriptMsg(OriginalMsg, *){
 				switch true {
 				case FlagSignCount == 0:
 					if (letter == A_LoopField) {
-						EncriptedMsg .= chr(index + 34 + 6)
-						EncriptedMsg .= chr(index + 34 + 4)
+						EncryptedMsg .= chr(index + 34 + 6)
+						EncryptedMsg .= chr(index + 34 + 4)
 						FlagSignCount++
 						break
 					}
 				case FlagSignCount == 1:
 					if (letter == A_LoopField) {
-						EncriptedMsg .= chr(index + 34 + 3)
-						EncriptedMsg .= chr(index + 34 + 8)
+						EncryptedMsg .= chr(index + 34 + 3)
+						EncryptedMsg .= chr(index + 34 + 8)
 						FlagSignCount++
 						break
 					}
 				case FlagSignCount == 2:
 					if (letter == A_LoopField) {
-						EncriptedMsg .= chr(index + 34 + 9)
-						EncriptedMsg .= chr(index + 34 + 3)
+						EncryptedMsg .= chr(index + 34 + 9)
+						EncryptedMsg .= chr(index + 34 + 3)
 						FlagSignCount++
 						break
 					}
 				case FlagSignCount == 3:
 					if (letter == A_LoopField) {
-						EncriptedMsg .= chr(index + 34 + 20)
-						EncriptedMsg .= chr(index + 34 + 30)
+						EncryptedMsg .= chr(index + 34 + 20)
+						EncryptedMsg .= chr(index + 34 + 30)
 						FlagSignCount := 0
 						break
 					}
@@ -154,27 +184,27 @@ EncriptMsg(OriginalMsg, *){
 			}
 		case ord(A_LoopField) > 47 and ord(A_LoopField) < 58:
 			; (0,9)
-			EncriptedString := A_LoopField
+			EncryptedString := A_LoopField
 			for index, letter in StrSplit(MixedPattern) {
 				switch true {
 				case FlagNmCount == 0:
 					if (letter == A_LoopField) {
-						EncriptedMsg .= chr(index + 34 + 6)
-						EncriptedMsg .= chr(index + 34 + 3)
+						EncryptedMsg .= chr(index + 34 + 6)
+						EncryptedMsg .= chr(index + 34 + 3)
 						FlagNmCount++
 						break
 					}
 				case FlagNmCount == 1:
 					if (letter == A_LoopField) {
-						EncriptedMsg .= chr(index + 34 + 7)
-						EncriptedMsg .= chr(index + 34 + 18)
+						EncryptedMsg .= chr(index + 34 + 7)
+						EncryptedMsg .= chr(index + 34 + 18)
 						FlagNmCount++
 						break
 					}
 				case FlagNmCount == 2:
 					if (letter == A_LoopField) {
-						EncriptedMsg .= chr(index + 34 + 10)
-						EncriptedMsg .= chr(index + 34 + 24)
+						EncryptedMsg .= chr(index + 34 + 10)
+						EncryptedMsg .= chr(index + 34 + 24)
 						FlagNmCount := 0
 						break
 					}
@@ -186,29 +216,29 @@ EncriptMsg(OriginalMsg, *){
 				switch true {
 				case FlagSignCount == 0:
 					if (letter == A_LoopField) {
-						EncriptedMsg .= chr(index + 34 + 6)
-						EncriptedMsg .= chr(index + 34 + 4)
+						EncryptedMsg .= chr(index + 34 + 6)
+						EncryptedMsg .= chr(index + 34 + 4)
 						FlagSignCount++
 						break
 					}
 				case FlagSignCount == 1:
 					if (letter == A_LoopField) {
-						EncriptedMsg .= chr(index + 34 + 3)
-						EncriptedMsg .= chr(index + 34 + 8)
+						EncryptedMsg .= chr(index + 34 + 3)
+						EncryptedMsg .= chr(index + 34 + 8)
 						FlagSignCount++
 						break
 					}
 				case FlagSignCount == 2:
 					if (letter == A_LoopField) {
-						EncriptedMsg .= chr(index + 34 + 9)
-						EncriptedMsg .= chr(index + 34 + 3)
+						EncryptedMsg .= chr(index + 34 + 9)
+						EncryptedMsg .= chr(index + 34 + 3)
 						FlagSignCount++
 						break
 					}
 				case FlagSignCount == 3:
 					if (letter == A_LoopField) {
-						EncriptedMsg .= chr(index + 34 + 20)
-						EncriptedMsg .= chr(index + 34 + 30)
+						EncryptedMsg .= chr(index + 34 + 20)
+						EncryptedMsg .= chr(index + 34 + 30)
 						FlagSignCount := 0
 						break
 					}
@@ -216,27 +246,27 @@ EncriptMsg(OriginalMsg, *){
 			}
 		case ord(A_LoopField) > 64 and ord(A_LoopField) < 91:
 			; (A-Z)
-			EncriptedString := A_LoopField
+			EncryptedString := A_LoopField
 			for index, letter in StrSplit(MixedPattern) {
 				switch true {
 				case Flag_AZ_Count2 == 0:
 					if (letter == A_LoopField) {
-						EncriptedMsg .= chr(index + 34 + 16)
-						EncriptedMsg .= chr(index + 34 + 28)
+						EncryptedMsg .= chr(index + 34 + 16)
+						EncryptedMsg .= chr(index + 34 + 28)
 						Flag_AZ_Count2++
 						break
 					}
 				case Flag_AZ_Count2 == 1:
 					if (letter == A_LoopField) {
-						EncriptedMsg .= chr(index + 34 + 9)
-						EncriptedMsg .= chr(index + 34 + 18)
+						EncryptedMsg .= chr(index + 34 + 9)
+						EncryptedMsg .= chr(index + 34 + 18)
 						Flag_AZ_Count2++
 						break
 					}
 				case Flag_AZ_Count2 == 2:
 					if (letter == A_LoopField) {
-						EncriptedMsg .= chr(index + 34 + 15)
-						EncriptedMsg .= chr(index + 34 + 16)
+						EncryptedMsg .= chr(index + 34 + 15)
+						EncryptedMsg .= chr(index + 34 + 16)
 						Flag_AZ_Count2 := 0
 						break
 					}
@@ -248,29 +278,29 @@ EncriptMsg(OriginalMsg, *){
 				switch true {
 				case FlagSignCount == 0:
 					if (letter == A_LoopField) {
-						EncriptedMsg .= chr(index + 34 + 6)
-						EncriptedMsg .= chr(index + 34 + 4)
+						EncryptedMsg .= chr(index + 34 + 6)
+						EncryptedMsg .= chr(index + 34 + 4)
 						FlagSignCount++
 						break
 					}
 				case FlagSignCount == 1:
 					if (letter == A_LoopField) {
-						EncriptedMsg .= chr(index + 34 + 3)
-						EncriptedMsg .= chr(index + 34 + 8)
+						EncryptedMsg .= chr(index + 34 + 3)
+						EncryptedMsg .= chr(index + 34 + 8)
 						FlagSignCount++
 						break
 					}
 				case FlagSignCount == 2:
 					if (letter == A_LoopField) {
-						EncriptedMsg .= chr(index + 34 + 9)
-						EncriptedMsg .= chr(index + 34 + 3)
+						EncryptedMsg .= chr(index + 34 + 9)
+						EncryptedMsg .= chr(index + 34 + 3)
 						FlagSignCount++
 						break
 					}
 				case FlagSignCount == 3:
 					if (letter == A_LoopField) {
-						EncriptedMsg .= chr(index + 34 + 20)
-						EncriptedMsg .= chr(index + 34 + 30)
+						EncryptedMsg .= chr(index + 34 + 20)
+						EncryptedMsg .= chr(index + 34 + 30)
 						FlagSignCount := 0
 						break
 					}
@@ -278,27 +308,27 @@ EncriptMsg(OriginalMsg, *){
 			}
 		case ord(A_LoopField) > 96 and ord(A_LoopField) < 123:
 			; (a-z)
-			EncriptedString := A_LoopField
+			EncryptedString := A_LoopField
 			for index, letter in StrSplit(MixedPattern) {
 				switch true {
 				case Flag_az_Count == 0:
 					if (letter == A_LoopField) {
-						EncriptedMsg .= chr(index + 34 + 29)
-						EncriptedMsg .= chr(index + 34 + 25)
+						EncryptedMsg .= chr(index + 34 + 29)
+						EncryptedMsg .= chr(index + 34 + 25)
 						Flag_az_Count++
 						break
 					}
 				case Flag_az_Count == 1:
 					if (letter == A_LoopField) {
-						EncriptedMsg .= chr(index + 34 + 10)
-						EncriptedMsg .= chr(index + 34 + 18)
+						EncryptedMsg .= chr(index + 34 + 10)
+						EncryptedMsg .= chr(index + 34 + 18)
 						Flag_az_Count++
 						break
 					}
 				case Flag_az_Count == 2:
 					if (letter == A_LoopField) {
-						EncriptedMsg .= chr(index + 34 + 15)
-						EncriptedMsg .= chr(index + 34 + 22)
+						EncryptedMsg .= chr(index + 34 + 15)
+						EncryptedMsg .= chr(index + 34 + 22)
 						Flag_az_Count := 0
 						break
 					}
@@ -310,29 +340,29 @@ EncriptMsg(OriginalMsg, *){
 				switch true {
 				case FlagSignCount == 0:
 					if (letter == A_LoopField) {
-						EncriptedMsg .= chr(index + 34 + 6)
-						EncriptedMsg .= chr(index + 34 + 4)
+						EncryptedMsg .= chr(index + 34 + 6)
+						EncryptedMsg .= chr(index + 34 + 4)
 						FlagSignCount++
 						break
 					}
 				case FlagSignCount == 1:
 					if (letter == A_LoopField) {
-						EncriptedMsg .= chr(index + 34 + 3)
-						EncriptedMsg .= chr(index + 34 + 8)
+						EncryptedMsg .= chr(index + 34 + 3)
+						EncryptedMsg .= chr(index + 34 + 8)
 						FlagSignCount++
 						break
 					}
 				case FlagSignCount == 2:
 					if (letter == A_LoopField) {
-						EncriptedMsg .= chr(index + 34 + 9)
-						EncriptedMsg .= chr(index + 34 + 3)
+						EncryptedMsg .= chr(index + 34 + 9)
+						EncryptedMsg .= chr(index + 34 + 3)
 						FlagSignCount++
 						break
 					}
 				case FlagSignCount == 3:
 					if (letter == A_LoopField) {
-						EncriptedMsg .= chr(index + 34 + 20)
-						EncriptedMsg .= chr(index + 34 + 30)
+						EncryptedMsg .= chr(index + 34 + 20)
+						EncryptedMsg .= chr(index + 34 + 30)
 						FlagSignCount := 0
 						break
 					}
@@ -340,18 +370,18 @@ EncriptMsg(OriginalMsg, *){
 			}
 		}
 	}
-	return EncriptedMsg
+	return EncryptedMsg
 }
 ;----------------------------------------------------
-DecriptMsg(EncriptedMsgTA, *) {
+DecryptMsg(EncryptedMsgTA, *) {
 	MixedPattern := "Az0By9Cx7Da8Eb2Fc4Gw3Hv5Ij6Js1KlLhMpNeOtPgQnRrSiTqUoVkWmXdYfZu"
 	PunctuationPattern := "!#$%&'()*+,-./:;<=>?@[\]^_`"{|}~ "
-	DecriptedMsg := ""
+	DecryptedMsg := ""
 	
 	count := 1
 	DiffValue := 0
 	IndexKey := 0
-	Loop Parse EncriptedMsgTA {
+	Loop Parse EncryptedMsgTA {
 		if Mod(count, 2) == 1 {
 			RealKey := ord(A_LoopField)
 		}
@@ -368,7 +398,7 @@ DecriptMsg(EncriptedMsgTA, *) {
 						; continue
 					}
 					if index == IndexKey {
-						DecriptedMsg .= letter
+						DecryptedMsg .= letter
 						break
 					}
 				}
@@ -379,7 +409,7 @@ DecriptMsg(EncriptedMsgTA, *) {
 						; continue
 					}
 					if index == IndexKey {
-						DecriptedMsg .= letter
+						DecryptedMsg .= letter
 						break
 					}
 				}
@@ -390,7 +420,7 @@ DecriptMsg(EncriptedMsgTA, *) {
 						; continue
 					}
 					if index == IndexKey {
-						DecriptedMsg .= letter
+						DecryptedMsg .= letter
 						break
 					}
 				}
@@ -401,7 +431,7 @@ DecriptMsg(EncriptedMsgTA, *) {
 						continue
 					}
 					if index == IndexKey {
-						DecriptedMsg .= letter
+						DecryptedMsg .= letter
 						break
 					}
 				}
@@ -412,7 +442,7 @@ DecriptMsg(EncriptedMsgTA, *) {
 						; continue
 					}
 					if index == IndexKey {
-						DecriptedMsg .= letter
+						DecryptedMsg .= letter
 						break
 					}
 				}
@@ -423,7 +453,7 @@ DecriptMsg(EncriptedMsgTA, *) {
 						; continue
 					}
 					if index == IndexKey {
-						DecriptedMsg .= letter
+						DecryptedMsg .= letter
 						break
 					}
 				}
@@ -434,7 +464,7 @@ DecriptMsg(EncriptedMsgTA, *) {
 						; continue
 					}
 					if index == IndexKey {
-						DecriptedMsg .= letter
+						DecryptedMsg .= letter
 						break
 					}
 				}
@@ -445,7 +475,7 @@ DecriptMsg(EncriptedMsgTA, *) {
 						; continue
 					}
 					if index == IndexKey {
-						DecriptedMsg .= letter
+						DecryptedMsg .= letter
 						break
 					}
 				}
@@ -456,7 +486,7 @@ DecriptMsg(EncriptedMsgTA, *) {
 						; continue
 					}
 					if index == IndexKey {
-						DecriptedMsg .= letter
+						DecryptedMsg .= letter
 						break
 					}
 				}
@@ -467,7 +497,7 @@ DecriptMsg(EncriptedMsgTA, *) {
 						; continue
 					}
 					if index == IndexKey {
-						DecriptedMsg .= letter
+						DecryptedMsg .= letter
 						break
 					}
 				}
@@ -478,7 +508,7 @@ DecriptMsg(EncriptedMsgTA, *) {
 						continue
 					}
 					if index == IndexKey {
-						DecriptedMsg .= letter
+						DecryptedMsg .= letter
 						break
 					}
 				}
@@ -489,7 +519,7 @@ DecriptMsg(EncriptedMsgTA, *) {
 						continue
 					}
 					if index == IndexKey {
-						DecriptedMsg .= letter
+						DecryptedMsg .= letter
 						break
 					}
 				}
@@ -500,7 +530,7 @@ DecriptMsg(EncriptedMsgTA, *) {
 						continue
 					}
 					if index == IndexKey {
-						DecriptedMsg .= letter
+						DecryptedMsg .= letter
 						break
 					}
 				}
@@ -508,13 +538,440 @@ DecriptMsg(EncriptedMsgTA, *) {
 		}
 		count++
 	}
-	return DecriptedMsg
+	return DecryptedMsg
+}
+;----------------------------------------------------
+EncryptPsw(OriginalMsg, *) {
+    MixedPattern := "Az0By9Cx7Da8Eb2Fc4Gw3Hv5Ij6Js1KlLhMpNeOtPgQnRrSiTqUoVkWmXdYfZu"
+	PunctuationPattern := "!#$%&'()*+,-./:;<=>?@[\]^_`"{|}~ "
+	
+	EncryptedMsg := ""
+	FlagSignCount := 0
+	FlagNmCount := 0
+	Flag_az_Count := 0
+	Flag_AZ_Count2 := 0
+	Loop Parse OriginalMsg {
+		switch true {
+		case ord(A_LoopField) > 31 and ord(A_LoopField) < 48:
+			; punctuation signs
+			for index, letter in StrSplit(PunctuationPattern) {
+				switch true {
+				case FlagSignCount == 0:
+					if (letter == A_LoopField) {
+						EncryptedMsg .= chr(index + 34 + 16)
+						EncryptedMsg .= chr(index + 34 + 14)
+						FlagSignCount++
+						break
+					}
+				case FlagSignCount == 1:
+					if (letter == A_LoopField) {
+						EncryptedMsg .= chr(index + 34 + 13)
+						EncryptedMsg .= chr(index + 34 + 18)
+						FlagSignCount++
+						break
+					}
+				case FlagSignCount == 2:
+					if (letter == A_LoopField) {
+						EncryptedMsg .= chr(index + 34 + 19)
+						EncryptedMsg .= chr(index + 34 + 13)
+						FlagSignCount++
+						break
+					}
+				case FlagSignCount == 3:
+					if (letter == A_LoopField) {
+						EncryptedMsg .= chr(index + 34 + 10)
+						EncryptedMsg .= chr(index + 34 + 20)
+						FlagSignCount := 0
+						break
+					}
+				}
+			}
+		case ord(A_LoopField) > 47 and ord(A_LoopField) < 58:
+			; (0,9)
+			EncryptedString := A_LoopField
+			for index, letter in StrSplit(MixedPattern) {
+				switch true {
+				case FlagNmCount == 0:
+					if (letter == A_LoopField) {
+						EncryptedMsg .= chr(index + 34 + 16)
+						EncryptedMsg .= chr(index + 34 + 13)
+						FlagNmCount++
+						break
+					}
+				case FlagNmCount == 1:
+					if (letter == A_LoopField) {
+						EncryptedMsg .= chr(index + 34 + 17)
+						EncryptedMsg .= chr(index + 34 + 6)
+						FlagNmCount++
+						break
+					}
+				case FlagNmCount == 2:
+					if (letter == A_LoopField) {
+						EncryptedMsg .= chr(index + 34 + 15)
+						EncryptedMsg .= chr(index + 34 + 1)
+						FlagNmCount := 0
+						break
+					}
+				}
+			}
+		case ord(A_LoopField) > 57 and ord(A_LoopField) < 65:
+			; punctuation signs
+			for index, letter in StrSplit(PunctuationPattern) {
+				switch true {
+				case FlagSignCount == 0:
+					if (letter == A_LoopField) {
+						EncryptedMsg .= chr(index + 34 + 16)
+						EncryptedMsg .= chr(index + 34 + 14)
+						FlagSignCount++
+						break
+					}
+				case FlagSignCount == 1:
+					if (letter == A_LoopField) {
+						EncryptedMsg .= chr(index + 34 + 13)
+						EncryptedMsg .= chr(index + 34 + 18)
+						FlagSignCount++
+						break
+					}
+				case FlagSignCount == 2:
+					if (letter == A_LoopField) {
+						EncryptedMsg .= chr(index + 34 + 19)
+						EncryptedMsg .= chr(index + 34 + 13)
+						FlagSignCount++
+						break
+					}
+				case FlagSignCount == 3:
+					if (letter == A_LoopField) {
+						EncryptedMsg .= chr(index + 34 + 10)
+						EncryptedMsg .= chr(index + 34 + 20)
+						FlagSignCount := 0
+						break
+					}
+				}
+			}
+		case ord(A_LoopField) > 64 and ord(A_LoopField) < 91:
+			; (A-Z)
+			EncryptedString := A_LoopField
+			for index, letter in StrSplit(MixedPattern) {
+				switch true {
+				case Flag_AZ_Count2 == 0:
+					if (letter == A_LoopField) {
+						EncryptedMsg .= chr(index + 34 + 6)
+						EncryptedMsg .= chr(index + 34 + 18)
+						Flag_AZ_Count2++
+						break
+					}
+				case Flag_AZ_Count2 == 1:
+					if (letter == A_LoopField) {
+						EncryptedMsg .= chr(index + 34 + 19)
+						EncryptedMsg .= chr(index + 34 + 8)
+						Flag_AZ_Count2++
+						break
+					}
+				case Flag_AZ_Count2 == 2:
+					if (letter == A_LoopField) {
+						EncryptedMsg .= chr(index + 34 + 25)
+						EncryptedMsg .= chr(index + 34 + 24)
+						Flag_AZ_Count2 := 0
+						break
+					}
+				}
+			}
+		case ord(A_LoopField) > 90 and ord(A_LoopField) < 97:
+			; punctuation signs
+			for index, letter in StrSplit(PunctuationPattern) {
+				switch true {
+				case FlagSignCount == 0:
+					if (letter == A_LoopField) {
+						EncryptedMsg .= chr(index + 34 + 16)
+						EncryptedMsg .= chr(index + 34 + 14)
+						FlagSignCount++
+						break
+					}
+				case FlagSignCount == 1:
+					if (letter == A_LoopField) {
+						EncryptedMsg .= chr(index + 34 + 13)
+						EncryptedMsg .= chr(index + 34 + 18)
+						FlagSignCount++
+						break
+					}
+				case FlagSignCount == 2:
+					if (letter == A_LoopField) {
+						EncryptedMsg .= chr(index + 34 + 19)
+						EncryptedMsg .= chr(index + 34 + 13)
+						FlagSignCount++
+						break
+					}
+				case FlagSignCount == 3:
+					if (letter == A_LoopField) {
+						EncryptedMsg .= chr(index + 34 + 10)
+						EncryptedMsg .= chr(index + 34 + 20)
+						FlagSignCount := 0
+						break
+					}
+				}
+			}
+		case ord(A_LoopField) > 96 and ord(A_LoopField) < 123:
+			; (a-z)
+			EncryptedString := A_LoopField
+			for index, letter in StrSplit(MixedPattern) {
+				switch true {
+				case Flag_az_Count == 0:
+					if (letter == A_LoopField) {
+						EncryptedMsg .= chr(index + 34 + 19)
+						EncryptedMsg .= chr(index + 34 + 15)
+						Flag_az_Count++
+						break
+					}
+				case Flag_az_Count == 1:
+					if (letter == A_LoopField) {
+						EncryptedMsg .= chr(index + 34 + 16)
+						EncryptedMsg .= chr(index + 34 + 8)
+						Flag_az_Count++
+						break
+					}
+				case Flag_az_Count == 2:
+					if (letter == A_LoopField) {
+						EncryptedMsg .= chr(index + 34 + 5)
+						EncryptedMsg .= chr(index + 34 + 12)
+						Flag_az_Count := 0
+						break
+					}
+				}
+			}
+		case ord(A_LoopField) > 122 and ord(A_LoopField) < 127:
+			; punctuation signs
+			for index, letter in StrSplit(PunctuationPattern) {
+				switch true {
+				case FlagSignCount == 0:
+					if (letter == A_LoopField) {
+						EncryptedMsg .= chr(index + 34 + 16)
+						EncryptedMsg .= chr(index + 34 + 14)
+						FlagSignCount++
+						break
+					}
+				case FlagSignCount == 1:
+					if (letter == A_LoopField) {
+						EncryptedMsg .= chr(index + 34 + 13)
+						EncryptedMsg .= chr(index + 34 + 18)
+						FlagSignCount++
+						break
+					}
+				case FlagSignCount == 2:
+					if (letter == A_LoopField) {
+						EncryptedMsg .= chr(index + 34 + 19)
+						EncryptedMsg .= chr(index + 34 + 13)
+						FlagSignCount++
+						break
+					}
+				case FlagSignCount == 3:
+					if (letter == A_LoopField) {
+						EncryptedMsg .= chr(index + 34 + 10)
+						EncryptedMsg .= chr(index + 34 + 20)
+						FlagSignCount := 0
+						break
+					}
+				}
+			}
+		}
+	}
+	return EncryptedMsg
+}
+;----------------------------------------------------
+DecryptPsw(EncryptedMsg, *) {
+    MixedPattern := "Az0By9Cx7Da8Eb2Fc4Gw3Hv5Ij6Js1KlLhMpNeOtPgQnRrSiTqUoVkWmXdYfZu"
+	PunctuationPattern := "!#$%&'()*+,-./:;<=>?@[\]^_`"{|}~ "
+	DecryptedMsg := ""
+	
+	count := 1
+	DiffValue := 0
+	IndexKey := 0
+	Loop Parse EncryptedMsg {
+		if Mod(count, 2) == 1 {
+			RealKey := ord(A_LoopField)
+		}
+		
+		if Mod(count, 2) == 0 {
+			AddedKey1 := ord(A_LoopField)
+			DiffValue := Abs(RealKey - AddedKey1)
+			flagLetterFound := 0
+			switch true {
+			case DiffValue == 1:
+				IndexKey := RealKey - 34 - 25
+				for index, letter in StrSplit(MixedPattern) {
+					if IndexKey < 0 {
+						; continue
+					}
+					if index == IndexKey {
+						DecryptedMsg .= letter
+						break
+					}
+				}
+			case DiffValue == 2:
+				IndexKey := RealKey - 34 - 16
+				for index, letter in StrSplit(PunctuationPattern) {
+					if IndexKey < 0 {
+						; continue
+					}
+					if index == IndexKey {
+						DecryptedMsg .= letter
+						break
+					}
+				}
+			case DiffValue == 3:
+				IndexKey := RealKey - 34 - 16
+				for index, letter in StrSplit(MixedPattern) {
+					if IndexKey < 0 {
+						; continue
+					}
+					if index == IndexKey {
+						DecryptedMsg .= letter
+						break
+					}
+				}
+			case DiffValue == 4:
+				IndexKey := RealKey - 34 - 19
+				for index, letter in StrSplit(MixedPattern) {
+					if IndexKey < 0 {
+						continue
+					}
+					if index == IndexKey {
+						DecryptedMsg .= letter
+						break
+					}
+				}
+			case DiffValue == 5:
+				IndexKey := RealKey - 34 - 13
+				for index, letter in StrSplit(PunctuationPattern) {
+					if IndexKey < 0 {
+						; continue
+					}
+					if index == IndexKey {
+						DecryptedMsg .= letter
+						break
+					}
+				}
+			case DiffValue == 6:
+				IndexKey := RealKey - 34 - 19
+				for index, letter in StrSplit(PunctuationPattern) {
+					if IndexKey < 0 {
+						; continue
+					}
+					if index == IndexKey {
+						DecryptedMsg .= letter
+						break
+					}
+				}
+			case DiffValue == 7:
+				IndexKey := RealKey - 34 - 5
+				for index, letter in StrSplit(MixedPattern) {
+					if IndexKey < 0 {
+						; continue
+					}
+					if index == IndexKey {
+						DecryptedMsg .= letter
+						break
+					}
+				}
+			case DiffValue == 8:
+				IndexKey := RealKey - 34 - 16
+				for index, letter in StrSplit(MixedPattern) {
+					if IndexKey < 0 {
+						; continue
+					}
+					if index == IndexKey {
+						DecryptedMsg .= letter
+						break
+					}
+				}
+			case DiffValue == 9:
+				IndexKey := RealKey - 34 - 19
+				for index, letter in StrSplit(MixedPattern) {
+					if IndexKey < 0 {
+						; continue
+					}
+					if index == IndexKey {
+						DecryptedMsg .= letter
+						break
+					}
+				}
+			case DiffValue == 10:
+				IndexKey := RealKey - 34 - 10
+				for index, letter in StrSplit(PunctuationPattern) {
+					if IndexKey < 0 {
+						; continue
+					}
+					if index == IndexKey {
+						DecryptedMsg .= letter
+						break
+					}
+				}
+			case DiffValue == 11:
+				IndexKey := RealKey - 34 - 17
+				for index, letter in StrSplit(MixedPattern) {
+					if IndexKey < 0 {
+						continue
+					}
+					if index == IndexKey {
+						DecryptedMsg .= letter
+						break
+					}
+				}
+			case DiffValue == 12:
+				IndexKey := RealKey - 34 - 6
+				for index, letter in StrSplit(MixedPattern) {
+					if IndexKey < 0 {
+						continue
+					}
+					if index == IndexKey {
+						DecryptedMsg .= letter
+						break
+					}
+				}
+			case DiffValue == 14:
+				IndexKey := RealKey - 34 - 15
+				for index, letter in StrSplit(MixedPattern) {
+					if IndexKey < 0 {
+						continue
+					}
+					if index == IndexKey {
+						DecryptedMsg .= letter
+						break
+					}
+				}
+			}
+		}
+		count++
+	}
+	return DecryptedMsg
+}
+;----------------------------------------------------
+DatabaseConnetion(*) {
+    DatabaseServer := "\X^fQX@=53{wZbW^eaIQcj_[fn<Cgc7??FJFIQW^27PL``hip"
+    DatabaseServer := DecryptMsg(DatabaseServer)
+    ;------------------------
+    DatabaseName := "\X^fQX@=2=GU=:2=5CFC"
+    DatabaseName := DecryptMsg(DatabaseName)
+    ;------------------------
+    DbUserName := DatabaseName
+    ;------------------------
+    DbPswd := "_[RZC@kr9E8APLDOFNkrJFIQipGUqm:7"
+    DbPswd := DecryptMsg(DbPswd)
+	
+	MySqlInst := MySql()
+	MySqlInst.Real_Connect(DatabaseServer, DatabaseName, DbPswd, DbUserName)
+	return MySqlInst
+}
+;----------------------------------------------------
+MailPswdGen(*) {
+    MailPswd := "{w:BipGCHF:BovGCIQEJkr}y\d_fKEa]FNmtso"
+    MailPswd := DecryptMsg(MailPswd)
+	return MailPswd
 }
 ;----------------------------------------------------
 ParseRequest(*){
 	TempFileTA := A_Temp . "\TA_UpdateData.ini"
 	EncCurl := "PLjr_f_[HF16bjKEBLHTHF@E,5ovgcNVelmi\d3:JFT\ahsoX``:4V``Y``sobjW^kgHFV^ahgcNVovMI?DPX<CgcE?FCGR23EQJS89amGU,5+(ZbKRJK<HDObkTUwsBNjr9@V_PZDRVW_kmiDMbj>?KWPYHOc_.6\]am\eNUGC.6``a]d6B=:;Fc_PYLTJXY``YUIQBI.+D@XYNV_k]dGC>GFNDEGRip6B5C;D>?Q]=:>I;DAOPQ6BfoPL\dno[bCAEJa]T\Y``c_IQ:4DN64<Cc_\d27[bokT\SZ}y:B82BIsodlDN_feaPXel\X64BN5>MN16<H7?NUa]93NWRSBLco7?NUuq42,5jrY``sodl<Cgc``h_f38miRZQXea7?NUeaIQ93QXJFT\W^\XT\"
-	RunWait(A_ComSpec " /c " . DecriptMsg(EncCurl) . " > " TempFileTA, , "Hide")
+	RunWait(A_ComSpec " /c " . DecryptMsg(EncCurl) . " > " TempFileTA, , "Hide")
 	
 	Count := 0
 	Loop Read, TempFileTA
@@ -575,8 +1032,8 @@ ParseRequest(*){
 			for index, word in StrSplit(download_url[0], A_Space) {
 				if index == 3 {
 					DownloadUrl := word
-					DownloadUrl := EncriptMsg(DownloadUrl)
-					IniWrite DownloadUrl, DataFile, "EncriptedData", "TADownload"
+					DownloadUrl := EncryptMsg(DownloadUrl)
+					IniWrite DownloadUrl, DataFile, "EncryptedData", "TADownload"
 				}
 			}
 		case Match3 == true:
@@ -623,4 +1080,84 @@ CheckConnection(*){
 
 	}
 	return Match
+}
+;----------------------------------------------------
+SendMail(ValidCode, Email) {
+	pmsg := ComObject("CDO.Message")
+
+	pmsg.From := "Do Not Reply <fdj.software@gmail.com>"
+	pmsg.To := "" . Email . ""
+	pmsg.Subject := "Mail Validation Code for Task Automator"
+	pmsg.TextBody := "Your validation code is: " . ValidCode
+
+	fields := Object()
+	fields.smtpserver := "smtp.gmail.com"
+	fields.smtpserverport := 465
+	fields.smtpusessl := True
+	fields.sendusing := 2
+	fields.smtpauthenticate := 1
+	fields.sendusername := "fdj.software@gmail.com"
+	fields.sendpassword := MailPswd
+	fields.smtpconnectiontimeout := 60
+	schema := "http://schemas.microsoft.com/cdo/configuration/"
+
+	pfld := pmsg.Configuration.Fields
+	for field, value in fields.OwnProps() {
+		pfld.Item[schema . field] := value
+	}
+	pfld.Update()
+
+	; pmsg.AddAttachment(IconLib . "\Logo-FDJ-Dash.png")
+	try { 
+		pmsg.Send()
+	}
+
+	Catch as err {
+	  errMsg := "Problem:  " err.Extra
+	   . "`nFile:          " err.File
+	   . "`nLine:         " err.Line
+	   . "`n              " err.What
+	   . "`nError:                       " err.Message
+	   MsgBox(errMsg)
+	}
+}
+;----------------------------------------------------
+SendMailForgotPswd(ValidCode, Email) {
+	pmsg := ComObject("CDO.Message")
+
+	pmsg.From := "Do Not Reply <fdj.software@gmail.com>"
+	pmsg.To := "" . Email . ""
+	pmsg.Subject := "Password recovery code for Task Automator"
+	pmsg.TextBody := "Your password recovery code is: " . ValidCode
+
+	fields := Object()
+	fields.smtpserver := "smtp.gmail.com"
+	fields.smtpserverport := 465
+	fields.smtpusessl := True
+	fields.sendusing := 2
+	fields.smtpauthenticate := 1
+	fields.sendusername := "fdj.software@gmail.com"
+	fields.sendpassword := MailPswd
+	fields.smtpconnectiontimeout := 60
+	schema := "http://schemas.microsoft.com/cdo/configuration/"
+
+	pfld := pmsg.Configuration.Fields
+	for field, value in fields.OwnProps() {
+		pfld.Item[schema . field] := value
+	}
+	pfld.Update()
+
+	; pmsg.AddAttachment(IconLib . "\Logo-FDJ-Dash.png")
+	try { 
+		pmsg.Send()
+	}
+
+	Catch as err {
+	  errMsg := "Problem:  " err.Extra
+	   . "`nFile:          " err.File
+	   . "`nLine:         " err.Line
+	   . "`n              " err.What
+	   . "`nError:                       " err.Message
+	   MsgBox(errMsg)
+	}
 }

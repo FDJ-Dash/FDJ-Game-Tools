@@ -10,8 +10,11 @@
 ;----------------------------------------------------
 #Requires Autohotkey v2
 #SingleInstance
-
+ListLines False
+#NoTrayIcon
 SetWorkingDir(A_ScriptDir)
+
+
 Global IconLib := A_ScriptDir . "\Icons"
 , ImageLib := A_ScriptDir . "\Images"
 , HotkeyGuide := "https://fdj-software.gitbook.io/apps"
@@ -22,11 +25,10 @@ Global IconLib := A_ScriptDir . "\Icons"
 , TempSystemFile := A_Temp . "\TA_SystemFile.ini"
 , AuxHkDataFile := A_Temp . "\TA_AuxHkData.ini"
 , AppName := "Task Automator"
-, CurrentVersion := "v1.6"
+, CurrentVersion := "v2.0"
 , FDJ_SoftwareIcon := "\Logo-FDJ-Dash.png"
 , DefaultMsgBackgroundImage := "\Lightning2.jpg"
 , Creator := " Fernando Daniel Jaime "
-
 ;----------------------------------------------------
 ; Libraries
 ;----------------------------------------------------
@@ -43,30 +45,53 @@ Global IconLib := A_ScriptDir . "\Icons"
 #Include "*i %A_ScriptDir%\Include\Hotkey_Process.ahk"
 #Include "*i %A_ScriptDir%\Include\ClassDefinitions.ahk"
 ;----------------------------------------------------
+; Database Libraries
+;----------------------------------------------------
+#Include "*i %A_ScriptDir%\Include\Forms_Handler.ahk"
+#Include "*i %A_ScriptDir%\Include\DatabaseMsgHandler.ahk"
+#Include "*i %A_ScriptDir%\MySQLAPI-v1.1.ahk"
+#Include "*i %A_ScriptDir%\DB_Interactions.ahk"
+;----------------------------------------------------
+; Mail Variables
+;----------------------------------------------------
+MailPswd := MailPswdGen()
+;----------------------------------------------------
 ; Trigger Delay
 ;----------------------------------------------------
 StartDelay := 500
 StopDelay := 1500
 ;----------------------------------------------------
-; Dinamic Reload variables
+; DynamicReload variables
 ;----------------------------------------------------
-DinamicReload := true
+DynamicReload := true
 GuiCount := 1
 GuiName := ""
 FlagLineValueAdded := false
 StartTime := ""
 
-IniWrite DinamicReload, TempSystemFile, "GeneralData", "DinamicReload"
+IniWrite DynamicReload, TempSystemFile, "GeneralData", "DynamicReload"
 IniWrite GuiCount, TempSystemFile, "GeneralData", "GuiCount"
 IniWrite GuiName, TempSystemFile, "GeneralData", "GuiName"
 IniWrite false, TempSystemFile, "GeneralData", "ClearXY"
+;----------------------------------------------------
+; Get Device License Data
+;----------------------------------------------------
+StringMacAddress := GetMacAddress()
+LicenseKey := EncryptMsg(StringMacAddress)
+;----------------------------------------------------
+; Check connection every minute
+;----------------------------------------------------
+totalTime := 60000
+remainingTime := totalTime
+elapsed := 0
+KeepChecking := false
 ;----------------------------------------------------
 ; General Loop Start
 ;----------------------------------------------------
 Loop {
 	ClearXY := IniRead(TempSystemFile, "GeneralData", "ClearXY")
-	DinamicReload := IniRead(TempSystemFile, "GeneralData", "DinamicReload")
-	if DinamicReload == true {
+	DynamicReload := IniRead(TempSystemFile, "GeneralData", "DynamicReload")
+	if DynamicReload == true {
 		;----------------------------------------------------
 		; Read ini file - Create_Files.ahk
 		;----------------------------------------------------
@@ -243,7 +268,7 @@ Loop {
 		;----------------------------------------------------
 		if Mod(GuiCount, 2) == 1 {
 			;----------------------------------------------------
-			; GUI 1 instance - Inside Dinamic Reload
+			; GUI 1 instance - Inside DynamicReload
 			;----------------------------------------------------
 			GuiName := "TaskAutomatorGui1"
 			IniWrite GuiName, TempSystemFile, "GeneralData", "GuiName"
@@ -703,7 +728,7 @@ Loop {
 			Saved := TaskAutomatorGui1.Submit(false)
 		} else {
 			;----------------------------------------------------
-			; GUI 2 instance - Inside Dinamic Reload
+			; GUI 2 instance - Inside DynamicReload
 			;----------------------------------------------------
 			GuiName := "TaskAutomatorGui2"
 			IniWrite GuiName, TempSystemFile, "GeneralData", "GuiName"
@@ -1180,31 +1205,180 @@ Loop {
 		;----------------------------------------------------
 		OnExit ExitMenu
 		;----------------------------------------------------
-		; Verify License - General_Functions.ahk
+		; Validate Connection
 		;----------------------------------------------------
-		StringMacAddress := GetMacAddress()
-		LicenseKey := EncriptMsg(StringMacAddress)
-
+		Connected := CheckConnection()
+		;----------------------------------------------------
+		; Validate license key and Device Number
+		;----------------------------------------------------
 		try {
 			LicenseKeyInFile := IniRead(LicenseFile, "Data", "LicenseKey")
+			DeviceNumber := IniRead(LicenseFile, "Data", "DeviceNumber")
+			LicenceAmount := IniRead(LicenseFile, "Data", "LicenceAmount")
+			UserName := IniRead(LicenseFile, "Data", "UserName")
 		}
 		catch as e {
 			; License file is missing
 			ExitApp(3)
 		}
 
-		Switch true {
-		case LicenseKeyInFile == "":
-			IniWrite LicenseKey, LicenseFile, "Data", "LicenseKey"
-		case LicenseKeyInFile == LicenseKey:
-		case LicenseKeyInFile != LicenseKey:
-			; Invalid License
-			ExitApp(2)
-		}
 		;----------------------------------------------------
-		; if SwitchKbAutoRun == true {
-			; Hotkey Saved.KbAutoRunHotkey, (ThisHotkey) => ProcessRunWalkHotkey(ThisHotkey)
-		; }
+		; Validate Session
+		;----------------------------------------------------
+		try {
+		SessionKey := CurrentSessionKey()
+		}
+		catch {
+		    ; No Session Generated
+			SessionKey := ""
+		}
+		NewSessionKey := SessionGenerationKey()
+		if SessionKey != NewSessionKey {
+			;------------------------
+			CustomerId := ""
+			switch true {
+			case Connected != true:
+				KeepChecking := true
+			case LicenseKeyInFile != LicenseKey:
+			    SB.SetText("Authenticating..")
+				VerifyingPortAccess()
+				MySqlInst := DatabaseConnetion()
+				;------------------------
+				QueryResult := MySqlInst.Query("SELECT * FROM ta_mac WHERE Mac_Address='" StringMacAddress "'" )
+				if QueryResult == 0 {
+					ResultSet := MySqlInst.GetResult()
+					Device := 0
+					for k, v in ResultSet.Rows {
+						; Process each row (Could be more than 1 row)
+						if StringMacAddress == v["Mac_Address"] {
+							Device := v["Device_Number"]
+							CustomerId := v["Customer_Id"]
+							; Add missing device number silently
+							DeviceNumber := Device
+							IniWrite Device, LicenseFile, "Data", "DeviceNumber"
+						}
+					}
+					if DeviceNumber != Device {
+						; Device not found
+						LoginOrRegister()
+					}
+				} else {
+					; Unable to connect to server - Using VPN
+					if Connected == true {
+						; Port 3306 is blocked.
+						Port3306Blocked()
+					} else {
+						LoginOrRegister()
+						CheckConnectionMsg()
+					}
+				}
+				LoginOrRegister()
+			case UserName == "" or LicenceAmount == "":
+			    SB.SetText("Authenticating..")
+				VerifyingPortAccess()
+				FlagSession := False
+				MySqlInst := DatabaseConnetion()
+				;------------------------
+				QueryResult := MySqlInst.Query("SELECT * FROM ta_mac WHERE Mac_Address='" StringMacAddress "'" )
+				if QueryResult == 0 {
+					ResultSet := MySqlInst.GetResult()
+					Device := 0
+					DeviceNumber := ""
+					CountDevice := 0
+					for k, v in ResultSet.Rows {
+						; Process each row (Could be more than 1 row)
+						if StringMacAddress == v["Mac_Address"] {
+							Device := v["Device_Number"]
+							CustomerId := v["Customer_Id"]
+							; Add missing device number silently
+							DeviceNumber := Device
+							IniWrite Device, LicenseFile, "Data", "DeviceNumber"
+							FlagSession := true
+						}
+					}
+					if DeviceNumber != Device {
+						; Device not found
+						LoginOrRegister()
+					}
+				} else {
+					; Unable to connect to server - Using VPN
+					if Connected == true {
+						; Port 3306 is blocked.
+						Port3306Blocked()
+					} else {
+						LoginOrRegister()
+						CheckConnectionMsg()
+					}
+				}
+				;------------------------
+				if CustomerId != "" {
+					QueryResult := MySqlInst.Query("SELECT * FROM billing_ta WHERE Customer_Id='" CustomerId "'" )
+					if QueryResult == 0 {
+						ResultSet := MySqlInst.GetResult()
+						for k, v in ResultSet.Rows {
+							; Process each row (Will always be a unique row for billing_ta table)
+							LicAmountTA := v["Lic_Amount_TA"]
+							IniWrite LicAmountTA, LicenseFile, "Data", "LicenceAmount"
+						}
+					}
+					if UserName == "" {
+						QueryResult := MySqlInst.Query("SELECT * FROM customers WHERE Customer_Id='" CustomerId "'")
+						if QueryResult == 0 {
+							ResultSet := MySqlInst.GetResult()
+							for k, v in ResultSet.Rows {
+								; Process each row (Will always be a unique row for customers table)
+								UserName := v["User_Name"]
+								IniWrite UserName, LicenseFile, "Data", "UserName"
+							}
+						}
+					}
+				}
+				if FlagSession == true {
+				    SetSessionKey(NewSessionKey)
+				}
+			default:
+				SB.SetText("Authenticating..")
+				VerifyingPortAccess()
+				FlagSession := False
+				MySqlInst := DatabaseConnetion()
+				;------------------------
+				QueryResult := MySqlInst.Query("SELECT * FROM ta_mac WHERE Mac_Address='" StringMacAddress "'" )
+				if QueryResult == 0 {
+					ResultSet := MySqlInst.GetResult()
+					Device := 0
+					DeviceNumber := ""
+					for k, v in ResultSet.Rows {
+						; Process each row (Could be more than 1 row)
+						if StringMacAddress == v["Mac_Address"] {
+							Device := v["Device_Number"]
+							CustomerId := v["Customer_Id"]
+							; Add missing device number silently
+							DeviceNumber := Device
+							IniWrite Device, LicenseFile, "Data", "DeviceNumber"
+							FlagSession := true
+						}
+					}
+					if DeviceNumber != Device {
+						; Device not found
+						LoginOrRegister()
+					}
+				} else {
+					; Unable to connect to server - Using VPN
+					if Connected == true {
+						; Port 3306 is blocked.
+						Port3306Blocked()
+					} else {
+						LoginOrRegister()
+						CheckConnectionMsg()
+					}
+				}
+				if FlagSession == true {
+				    SetSessionKey(NewSessionKey)
+				}
+			} ; End switch
+		}
+        
+		;----------------------------------------------------
 		Switch true {
 		case SwitchKbAutoRun:
 			Hotkey Saved.KbAutoRunHotkey, (ThisHotkey) => ProcessRunWalkHotkey(ThisHotkey)
@@ -1254,16 +1428,33 @@ Loop {
 		
 		CountClicker := 0
 		;----------------------------------------------------
-		; Set DinamicReload to false again
+		; Set DynamicReload to false again
 		;----------------------------------------------------
-		DinamicReload := false
-		IniWrite DinamicReload, TempSystemFile, "GeneralData", "DinamicReload"
+		DynamicReload := false
+		IniWrite DynamicReload, TempSystemFile, "GeneralData", "DynamicReload"
 		;----------------------------------------------------
-	} ; End DimamicReload / GUI Static code
+	} ; End DynamicReload / GUI Static code
 	
 	;----------------------------------------------------
 	; Dinamic code starts here
 	;----------------------------------------------------
+	if KeepChecking == true {
+		elapsed += GeneralLoopInterval 
+		remainingTime := round((totalTime - elapsed) / 1000)
+		if (remainingTime <= 0) {
+			remainingTime := 0
+		}
+	}
+	if remainingTime == 0 {
+		remainingTime := totalTime
+		elapsed := 0
+	    ; Check connection again
+		Connected := CheckConnection()
+		if Connected == true {
+		    IniWrite true, TempSystemFile, "GeneralData", "DynamicReload"
+		}
+	}
+	
 	MouseGetPos(&x, &y)
 	if SwitchControllerAutoRun == true {
 		OptionsMenu.SetIcon("2. Switch Con&troller Autorun", IconLib . "\Switch1.ico")
@@ -1332,7 +1523,7 @@ Loop {
 					}
 					Sleep 10
 				}
-				; EditBoxesHandler Sets edit mode OFF and triggers dinamic reload
+				; EditBoxesHandler Sets edit mode OFF and triggers DynamicReload
 				EditBoxesHandler()
 			}
 			if RadioCtrlAuRunYes.Value == true {
@@ -2046,3 +2237,4 @@ Loop {
 	}
 	Sleep GeneralLoopInterval		
 } ; End General Loop
+

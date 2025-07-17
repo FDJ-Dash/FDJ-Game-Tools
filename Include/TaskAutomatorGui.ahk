@@ -2380,7 +2380,7 @@ CheckForUpdates(TaskAutomatorGui,
 			if TALatestReleaseVersion == "" {
 				ParseRequest()
 			}
-			DownloadUrl := IniRead(DataFile, "EncriptedData", "TADownload")
+			DownloadUrl := IniRead(DataFile, "EncryptedData", "TADownload")
 			TALatestReleaseVersion := IniRead(DataFile, "GeneralData", "TALatestReleaseVersion")
 			if TALatestReleaseVersion != CurrentVersion {
 				if DownloadUrl != "" {

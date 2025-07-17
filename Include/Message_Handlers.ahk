@@ -20,6 +20,8 @@
 ; MenuHandlerGuide(*)
 ; MenuHandlerQuickAccessMsg(*)
 ; ConnectionMessage(*)
+; VerifyingPortAccess(*)
+; Port3306Blocked(*)
 ; UpToDateMessage(*)
 ; NewVersionAvailableMessage(ReleaseVersion, *)
 ;----------------------------------------------------
@@ -35,13 +37,13 @@ ExitMsg(*){
 		MessageBackgroundPicture := IniRead(IniFile, "Background", "MessageBackgroundPicture")
 		if MessageBackgroundPicture == "" {
 			try {
-				Exitmsg.Add("Picture", "x0 y0 w470 h240", ImageLib . DefaultMsgBackgroundImage)
+				Exitmsg.Add("Picture", "x0 y0 w500 h240", ImageLib . DefaultMsgBackgroundImage)
 			}
 			catch {
 			}
 		} else {
 			try {
-				Exitmsg.Add("Picture", "x0 y0 w470 h240", MessageBackgroundPicture)
+				Exitmsg.Add("Picture", "x0 y0 w500 h240", MessageBackgroundPicture)
 			}
 			catch {
 				MessageBackgroundPicture := ""
@@ -54,34 +56,26 @@ ExitMsg(*){
 				}
 				IniWrite PosX, IniFile, "Properties", "PositionX"
 				IniWrite PosY, IniFile, "Properties", "PositionY"
-				IniWrite true, TempSystemFile, "GeneralData", "DinamicReload"
+				IniWrite true, TempSystemFile, "GeneralData", "DynamicReload"
 			}
 		}
 		try {
-			Exitmsg.Add("Picture", "x9 y12 w64 h64 +border", IconLib . FDJ_SoftwareIcon)
+			Exitmsg.Add("Picture", "x9 y10 w32 h32 +border", IconLib . FDJ_SoftwareIcon)
 		}
 		catch {
 		}
-		Exitmsg.SetFont("s20 W700 Q4 " . MessageAppNameFontColor, MessageAppNameFontType)
-		Exitmsg.Add("Text", "x80 y16", AppName)
+		Exitmsg.SetFont("s16 W700 Q4 " . MessageAppNameFontColor, MessageAppNameFontType)
+		Exitmsg.Add("Text", "x50 y16 +Center w420", AppName)
+		Exitmsg.Add("Text", "x470 y16 +Center w20", "")
 		Exitmsg.SetFont("s9 " . MessageFontColor, MessageFontType)
-		Exitmsg.Add("Text", "x303 y31 ", CurrentVersion)
-		Exitmsg.Add("Text", "x80 y55 ", "License key: " )
+		Exitmsg.Add("Text", "x355 y24 ", CurrentVersion)
+		Exitmsg.Add("Text", "x0 y54 w500 h1 +0x5")
+		;-----------------
 		Exitmsg.SetFont()
-		Exitmsg.SetFont("s8 Bold " . LicenseKeyFontColor, LicenseKeyFontType)
-		Exitmsg.Add("Text", "x160 y55 ", LicenseKey)
-		Exitmsg.Add("Text", "x0 y90 w470 h1 +0x5")
-		Exitmsg.SetFont()
-		Exitmsg.SetFont("s12 " . MessageMainMsgFontColor, MessageMainMsgFontType)
-		Exitmsg.Add("Text", "x80 y110", "ML Task Automator will close in " ExitMessageTimeWait / 1000 " seconds")
-        Exitmsg.Add("Text", "x175 y140", "Have a nice day!")
-		Exitmsg.SetFont()
-		Exitmsg.SetFont("s9 " . MessageFontColor, MessageFontType)
-		Exitmsg.Add("Text", "x0 y180 w470 h1 +0x5")
-		Exitmsg.Add("Text", "x107 y190", "Copyright 2024 FDJ-Software. All Rights Reserved.")
-		Exitmsg.SetFont()
-		Exitmsg.SetFont("s8 " . MessageFontColor, MessageFontType)
-		Exitmsg.Add("Text", "x116 y212", "Made with AutoHotkey V" A_AhkVersion . " " . (1 ? "Unicode" : "ANSI") . " " . (A_PtrSize == 8 ? "64-bit" : "32-bit"))
+		Exitmsg.SetFont("s14 " . MessageMainMsgFontColor, MessageMainMsgFontType)
+		Exitmsg.Add("Text", "x70 y110 +Center w360 +0x200", "Task Automator will close in " ExitMessageTimeWait / 1000 " seconds")
+        Exitmsg.Add("Text", "x130 y140 +Center w240 +0x200", "Have a nice day!")
+		;-----------------
         Exitmsg.Title := "Goodbye!"
 		if GuiName == "TaskAutomatorGui1" {
 			TaskAutomatorGui1.GetPos(&PosX, &PosY)
@@ -94,7 +88,7 @@ ExitMsg(*){
 		if PosY == -32000 {
 			PosY := IniRead(IniFile, "Properties", "PositionY")
 		}
-        Exitmsg.Show("x" . PosX - 150 . " y" . PosY + 220 . "w470 h240")
+        Exitmsg.Show("x" . PosX - 150 . " y" . PosY + 220 . "w500 h240")
         Exitmsg.Opt("+LastFound")
     Return
 }
@@ -111,13 +105,13 @@ InvalidLicenseMsg(*){
 		MessageBackgroundPicture := IniRead(IniFile, "Background", "MessageBackgroundPicture")
 		if MessageBackgroundPicture == "" {
 			try {
-				InvLicMsg.Add("Picture", "x0 y0 w470 h240", ImageLib . DefaultMsgBackgroundImage)
+				InvLicMsg.Add("Picture", "x0 y0 w500 h240", ImageLib . DefaultMsgBackgroundImage)
 			}
 			catch {
 			}
 		} else {
 			try {
-				InvLicMsg.Add("Picture", "x0 y0 w470 h240", MessageBackgroundPicture)
+				InvLicMsg.Add("Picture", "x0 y0 w500 h240", MessageBackgroundPicture)
 			}
 			catch {
 				MessageBackgroundPicture := ""
@@ -130,41 +124,33 @@ InvalidLicenseMsg(*){
 				}
 				IniWrite PosX, IniFile, "Properties", "PositionX"
 				IniWrite PosY, IniFile, "Properties", "PositionY"
-				IniWrite true, TempSystemFile, "GeneralData", "DinamicReload"
+				IniWrite true, TempSystemFile, "GeneralData", "DynamicReload"
 			}
 		}
 		try {
-			InvLicMsg.Add("Picture", "x9 y12 w64 h64 +border", IconLib . FDJ_SoftwareIcon)
+			InvLicMsg.Add("Picture", "x9 y10 w32 h32 +border", IconLib . FDJ_SoftwareIcon)
 		}
 		catch {
 		}
-		InvLicMsg.SetFont("s20 W700 Q4 " . MessageAppNameFontColor, MessageAppNameFontType)
-        InvLicMsg.Add("Text", "x80 y16", AppName)
+		InvLicMsg.SetFont("s16 W700 Q4 " . MessageAppNameFontColor, MessageAppNameFontType)
+		InvLicMsg.Add("Text", "x50 y16 +Center w420", AppName)
+		InvLicMsg.Add("Text", "x470 y16 +Center w20", "")
 		InvLicMsg.SetFont("s9 " . MessageFontColor, MessageFontType)
-		InvLicMsg.Add("Text", "x303 y31 ", CurrentVersion)
-		InvLicMsg.Add("Text", "x80 y55 ", "License key: " )
+		InvLicMsg.Add("Text", "x355 y24 ", CurrentVersion)
+		InvLicMsg.Add("Text", "x0 y54 w500 h1 +0x5")
+		;-----------------
 		InvLicMsg.SetFont()
-		InvLicMsg.SetFont("s8 Bold cRed", LicenseKeyFontType)
-		InvLicMsg.Add("Text", "x160 y55", "???")
-		InvLicMsg.Add("Text", "x0 y90 w470 h1 +0x5")
-		InvLicMsg.SetFont()
-		InvLicMsg.SetFont("s12 cRed", MessageMainMsgFontType)
-		InvLicMsg.Add("Text", "x167 y110", "Invalid License Key")
-        InvLicMsg.Add("Text", "x80 y140", "ML Task Automator will close in " ExitMessageTimeWait / 1000 " seconds")
-		InvLicMsg.SetFont()
-		InvLicMsg.SetFont("s9 " . MessageFontColor, MessageFontType)
-		InvLicMsg.Add("Text", "x0 y180 w470 h1 +0x5")
-		InvLicMsg.Add("Text", "x100 y190", "Copyright 2024 FDJ-Software. All Rights Reserved.")
-		InvLicMsg.SetFont()
-		InvLicMsg.SetFont("s8 " . MessageFontColor, MessageFontType)
-		InvLicMsg.Add("Text", "x120 y212", "Made with AutoHotkey V" A_AhkVersion . " " . (1 ? "Unicode" : "ANSI") . " " . (A_PtrSize == 8 ? "64-bit" : "32-bit"))
+		InvLicMsg.SetFont("s14 cRed", MessageMainMsgFontType)
+		InvLicMsg.Add("Text", "x130 y110 +Center w240 +0x200", "Invalid License Key")
+        InvLicMsg.Add("Text", "x70 y140 +Center w360 +0x200", "Task Automator will close in " ExitMessageTimeWait / 1000 " seconds")
+		;-----------------
         InvLicMsg.Title := "Invalid License Key!"
 		if GuiName == "TaskAutomatorGui1" {
 			TaskAutomatorGui1.GetPos(&PosX, &PosY)
 		} else {
 			TaskAutomatorGui2.GetPos(&PosX, &PosY)
 		}
-        InvLicMsg.Show("x" . PosX - 150 . " y" . PosY + 220 . "w470 h240")
+        InvLicMsg.Show("x" . PosX - 150 . " y" . PosY + 220 . "w500 h240")
         InvLicMsg.Opt("+LastFound")
     Return
 }
@@ -181,13 +167,13 @@ LicenseFileMissingMsg(*){
 		MessageBackgroundPicture := IniRead(IniFile, "Background", "MessageBackgroundPicture")
 		if MessageBackgroundPicture == "" {
 			try {
-				NoLicFileMsg.Add("Picture", "x0 y0 w470 h240", ImageLib . DefaultMsgBackgroundImage)
+				NoLicFileMsg.Add("Picture", "x0 y0 w500 h240", ImageLib . DefaultMsgBackgroundImage)
 			}
 			catch {
 			}
 		} else {
 			try {
-				NoLicFileMsg.Add("Picture", "x0 y0 w470 h240", MessageBackgroundPicture)
+				NoLicFileMsg.Add("Picture", "x0 y0 w500 h240", MessageBackgroundPicture)
 			}
 			catch {
 				MessageBackgroundPicture := ""
@@ -200,41 +186,33 @@ LicenseFileMissingMsg(*){
 				}
 				IniWrite PosX, IniFile, "Properties", "PositionX"
 				IniWrite PosY, IniFile, "Properties", "PositionY"
-				IniWrite true, TempSystemFile, "GeneralData", "DinamicReload"
+				IniWrite true, TempSystemFile, "GeneralData", "DynamicReload"
 			}
 		}
 		try {
-			NoLicFileMsg.Add("Picture", "x9 y12 w64 h64 +border", IconLib . FDJ_SoftwareIcon)
+			NoLicFileMsg.Add("Picture", "x9 y10 w32 h32 +border", IconLib . FDJ_SoftwareIcon)
 		}
 		catch {
 		}
-		NoLicFileMsg.SetFont("s20 W700 Q4 " . MessageAppNameFontColor, MessageAppNameFontType)
-        NoLicFileMsg.Add("Text", "x80 y16", AppName)
+		NoLicFileMsg.SetFont("s16 W700 Q4 " . MessageAppNameFontColor, MessageAppNameFontType)
+		NoLicFileMsg.Add("Text", "x50 y16 +Center w420", AppName)
+		NoLicFileMsg.Add("Text", "x470 y16 +Center w20", "")
 		NoLicFileMsg.SetFont("s9 " . MessageFontColor, MessageFontType)
-		NoLicFileMsg.Add("Text", "x303 y31 ", CurrentVersion)
-		NoLicFileMsg.Add("Text", "x80 y55 ", "License key: " )
+		NoLicFileMsg.Add("Text", "x355 y24 ", CurrentVersion)
+		NoLicFileMsg.Add("Text", "x0 y54 w500 h1 +0x5")
+		;-----------------
 		NoLicFileMsg.SetFont()
-		NoLicFileMsg.SetFont("s8 Bold cRed", LicenseKeyFontType)
-		NoLicFileMsg.Add("Text", "x160 y55", "???")
-		NoLicFileMsg.Add("Text", "x0 y90 w470 h1 +0x5")
-		NoLicFileMsg.SetFont()
-		NoLicFileMsg.SetFont("s12 cRed", MessageMainMsgFontType)
-		NoLicFileMsg.Add("Text", "x160 y110", "License file not found")
-        NoLicFileMsg.Add("Text", "x80 y140", "ML Task Automator will close in " ExitMessageTimeWait / 1000 " seconds")
-		NoLicFileMsg.SetFont()
-		NoLicFileMsg.SetFont("s9 " . MessageFontColor, MessageFontType)
-		NoLicFileMsg.Add("Text", "x0 y180 w470 h1 +0x5")
-		NoLicFileMsg.Add("Text", "x100 y190", "Copyright 2024 FDJ-Software. All Rights Reserved.")
-		NoLicFileMsg.SetFont()
-		NoLicFileMsg.SetFont("s8 " . MessageFontColor, MessageFontType)
-		NoLicFileMsg.Add("Text", "x120 y212", "Made with AutoHotkey V" A_AhkVersion . " " . (1 ? "Unicode" : "ANSI") . " " . (A_PtrSize == 8 ? "64-bit" : "32-bit"))
+		NoLicFileMsg.SetFont("s14 cRed", MessageMainMsgFontType)
+		NoLicFileMsg.Add("Text", "x130 y110 +Center w240 +0x200", "License file not found")
+        NoLicFileMsg.Add("Text", "x70 y140 +Center w360 +0x200", "Task Automator will close in " ExitMessageTimeWait / 1000 " seconds")
+		;-----------------
         NoLicFileMsg.Title := "Invalid License Key!"
 		if GuiName == "TaskAutomatorGui1" {
 			TaskAutomatorGui1.GetPos(&PosX, &PosY)
 		} else {
 			TaskAutomatorGui2.GetPos(&PosX, &PosY)
 		}
-        NoLicFileMsg.Show("x" . PosX - 150 . " y" . PosY + 220 . "w470 h240")
+        NoLicFileMsg.Show("x" . PosX - 150 . " y" . PosY + 220 . "w500 h240")
         NoLicFileMsg.Opt("+LastFound")
     Return
 }
@@ -251,13 +229,13 @@ InvalidPath(*){
 		MessageBackgroundPicture := IniRead(IniFile, "Background", "MessageBackgroundPicture")
 		if MessageBackgroundPicture == "" {
 			try {
-				InvPathmsg.Add("Picture", "x0 y0 w470 h240", ImageLib . DefaultMsgBackgroundImage)
+				InvPathmsg.Add("Picture", "x0 y0 w500 h240", ImageLib . DefaultMsgBackgroundImage)
 			}
 			catch {
 			}
 		} else {
 			try {
-				InvPathmsg.Add("Picture", "x0 y0 w470 h240", MessageBackgroundPicture)
+				InvPathmsg.Add("Picture", "x0 y0 w500 h240", MessageBackgroundPicture)
 			}
 			catch {
 				MessageBackgroundPicture := ""
@@ -270,46 +248,37 @@ InvalidPath(*){
 				}
 				IniWrite PosX, IniFile, "Properties", "PositionX"
 				IniWrite PosY, IniFile, "Properties", "PositionY"
-				IniWrite true, TempSystemFile, "GeneralData", "DinamicReload"
+				IniWrite true, TempSystemFile, "GeneralData", "DynamicReload"
 			}
 		}
 		try {
-			InvPathmsg.Add("Picture", "x9 y12 w64 h64 +border", IconLib . FDJ_SoftwareIcon)
+			InvPathmsg.Add("Picture", "x9 y10 w32 h32 +border", IconLib . FDJ_SoftwareIcon)
 		}
 		catch {
 		}
-		InvPathmsg.SetFont("s20 W700 Q4 " . MessageAppNameFontColor, MessageAppNameFontType)
-        InvPathmsg.Add("Text", "x80 y16", AppName)
+		InvPathmsg.SetFont("s16 W700 Q4 " . MessageAppNameFontColor, MessageAppNameFontType)
+		InvPathmsg.Add("Text", "x50 y16 +Center w420", AppName)
+		InvPathmsg.Add("Text", "x470 y16 +Center w20", "")
 		InvPathmsg.SetFont("s9 " . MessageFontColor, MessageFontType)
-		InvPathmsg.Add("Text", "x303 y31 ", CurrentVersion)
-		InvPathmsg.Add("Text", "x80 y55 ", "License key: " )
+		InvPathmsg.Add("Text", "x355 y24 ", CurrentVersion)
+		InvPathmsg.Add("Text", "x0 y54 w500 h1 +0x5")
+		;-----------------
 		InvPathmsg.SetFont()
-		InvPathmsg.SetFont("s8 Bold " . LicenseKeyFontColor, LicenseKeyFontType)
-		InvPathmsg.Add("Text", "x160 y55 ", LicenseKey)
-		InvPathmsg.Add("Text", "x0 y90 w470 h1 +0x5")
-		InvPathmsg.SetFont()
-		InvPathmsg.SetFont("s12 " . MessageMainMsgFontColor, MessageMainMsgFontType)
-		InvPathmsg.Add("Text", "x145 y125", "Your path input is invalid.")
-		InvPathmsg.SetFont()
-		InvPathmsg.SetFont("s9 " . MessageFontColor, MessageFontType)
-		InvPathmsg.Add("Text", "x0 y180 w470 h1 +0x5")
-		InvPathmsg.Add("Text", "x25 y190", "Copyright 2024 FDJ-Software. All Rights Reserved.")
-		InvPathmsg.SetFont()
-		InvPathmsg.SetFont("s8 " . MessageFontColor, MessageFontType)
-		InvPathmsg.Add("Text", "x25 y212", "Made with AutoHotkey V" A_AhkVersion . " " . (1 ? "Unicode" : "ANSI") . " " . (A_PtrSize == 8 ? "64-bit" : "32-bit"))
-        ogcButtonOK := InvPathmsg.Add("Button", "x370 y200 w80 h24", "OK")
-		ogcButtonOK.OnEvent("Click", Destroy)
+		InvPathmsg.SetFont("s14 " . MessageMainMsgFontColor, MessageMainMsgFontType)
+		InvPathmsg.Add("Text", "x100 y125 +Center w300 +0x200", "Your path input is invalid.")
+        ;-----------------
 		InvPathmsg.Title := "Invalid path"
 		if GuiName == "TaskAutomatorGui1" {
 			TaskAutomatorGui1.GetPos(&PosX, &PosY)
 		} else {
 			TaskAutomatorGui2.GetPos(&PosX, &PosY)
 		}
-        InvPathmsg.Show("x" . PosX - 150 . " y" . PosY + 220 . "w470 h240")
-		ControlFocus("Button1", "Invalid path")
+        InvPathmsg.Show("x" . PosX - 150 . " y" . PosY + 220 . "w500 h240")
         InvPathmsg.Opt("+LastFound")
+		Destroy()
     Return
 	Destroy(*){
+	    Sleep ExitMessageTimeWait
 		InvPathmsg.Destroy()
 	}
 }
@@ -325,13 +294,13 @@ DuplicatedHotkeyValue(*){
 		MessageBackgroundPicture := IniRead(IniFile, "Background", "MessageBackgroundPicture")
 		if MessageBackgroundPicture == "" {
 			try {
-				DupHkValue.Add("Picture", "x0 y0 w470 h240", ImageLib . DefaultMsgBackgroundImage)
+				DupHkValue.Add("Picture", "x0 y0 w500 h240", ImageLib . DefaultMsgBackgroundImage)
 			}
 			catch {
 			}
 		} else {
 			try {
-				DupHkValue.Add("Picture", "x0 y0 w470 h240", MessageBackgroundPicture)
+				DupHkValue.Add("Picture", "x0 y0 w500 h240", MessageBackgroundPicture)
 			}
 			catch {
 				MessageBackgroundPicture := ""
@@ -345,45 +314,35 @@ DuplicatedHotkeyValue(*){
 				}
 				IniWrite PosX, IniFile, "Properties", "PositionX"
 				IniWrite PosY, IniFile, "Properties", "PositionY"
-				IniWrite true, TempSystemFile, "GeneralData", "DinamicReload"
+				IniWrite true, TempSystemFile, "GeneralData", "DynamicReload"
 			}
 		}
 		try {
-			DupHkValue.Add("Picture", "x9 y12 w64 h64 +border", IconLib . FDJ_SoftwareIcon)
+			DupHkValue.Add("Picture", "x9 y10 w32 h32 +border", IconLib . FDJ_SoftwareIcon)
 		}
 		catch {
 		}
-		DupHkValue.SetFont("s20 W700 Q4 " . MessageAppNameFontColor, MessageAppNameFontType)
-        DupHkValue.Add("Text", "x80 y16", AppName)
+		DupHkValue.SetFont("s16 W700 Q4 " . MessageAppNameFontColor, MessageAppNameFontType)
+		DupHkValue.Add("Text", "x50 y16 +Center w420", AppName)
+		DupHkValue.Add("Text", "x470 y16 +Center w20", "")
 		DupHkValue.SetFont("s9 " . MessageFontColor, MessageFontType)
-		DupHkValue.Add("Text", "x303 y31 ", CurrentVersion)
-		DupHkValue.Add("Text", "x80 y55 ", "License key: " )
+		DupHkValue.Add("Text", "x355 y24 ", CurrentVersion)
+		DupHkValue.Add("Text", "x0 y54 w500 h1 +0x5")
+		;-----------------
 		DupHkValue.SetFont()
-		DupHkValue.SetFont("s8 Bold " . LicenseKeyFontColor, LicenseKeyFontType)
-		LicenseKeyInFile := IniRead(LicenseFile, "Data", "LicenseKey")
-		DupHkValue.Add("Text", "x160 y55", LicenseKeyInFile)
-		DupHkValue.Add("Text", "x0 y90 w470 h1 +0x5")
-		DupHkValue.SetFont()
-		DupHkValue.SetFont("s12 cRed", MessageMainMsgFontType)
-		DupHkValue.Add("Text", "x40 y110", "Duplicated hotkey values is a dangerous configuration")
-		DupHkValue.Add("Text", "x135 y140", "Returning to default values")
-		DupHkValue.SetFont()
-		DupHkValue.SetFont("s9 " . MessageFontColor, MessageFontType)
-		DupHkValue.Add("Text", "x0 y180 w470 h1 +0x5")
-		DupHkValue.Add("Text", "x25 y190", "Copyright 2024 FDJ-Software. All Rights Reserved.")
-		DupHkValue.SetFont()
-		DupHkValue.SetFont("s8 " . MessageFontColor, MessageFontType)
-		DupHkValue.Add("Text", "x25 y212", "Made with AutoHotkey V" A_AhkVersion . " " . (1 ? "Unicode" : "ANSI") . " " . (A_PtrSize == 8 ? "64-bit" : "32-bit"))
-        ogcButtonOK := DupHkValue.Add("Button", "x370 y200 w80 h24", "OK")
-		ogcButtonOK.OnEvent("Click", Destroy)
+		DupHkValue.SetFont("s14 cRed", MessageMainMsgFontType)
+		DupHkValue.Add("Text", "x20 y110 +Center w460 +0x200", "Duplicated hotkey values is a dangerous configuration.")
+		DupHkValue.Add("Text", "x100 y140 +Center w300 +0x200", "Returning to default values.")
+        ;-----------------
 		DupHkValue.Title := "Duplicated Hotkey Values"
 		PosX := IniRead(IniFile, "Properties", "PositionX")
 		PosY := IniRead(IniFile, "Properties", "PositionY")
-        DupHkValue.Show("x" . PosX - 150 . " y" . PosY + 220 . "w470 h240")
-		ControlFocus("Button1", "Duplicated Hotkey Values")
+        DupHkValue.Show("x" . PosX - 150 . " y" . PosY + 220 . "w500 h240")
         DupHkValue.Opt("+LastFound")
+		Destroy()
     Return
 	Destroy(*){
+	    Sleep ExitMessageTimeWait
 		DupHkValue.Destroy()
 	}
 }
@@ -401,13 +360,13 @@ SaveMsg(*){
 		MessageBackgroundPicture := IniRead(IniFile, "Background", "MessageBackgroundPicture")
 		if MessageBackgroundPicture == "" {
 		try {
-				Savemsg.Add("Picture", "x0 y0 w470 h240", ImageLib . DefaultMsgBackgroundImage)
+				Savemsg.Add("Picture", "x0 y0 w500 h240", ImageLib . DefaultMsgBackgroundImage)
 			}
 			catch {
 			}
 		} else {
 			try {
-				Savemsg.Add("Picture", "x0 y0 w470 h240", MessageBackgroundPicture)
+				Savemsg.Add("Picture", "x0 y0 w500 h240", MessageBackgroundPicture)
 			}
 			catch {
 				MessageBackgroundPicture := ""
@@ -420,45 +379,37 @@ SaveMsg(*){
 				}
 				IniWrite PosX, IniFile, "Properties", "PositionX"
 				IniWrite PosY, IniFile, "Properties", "PositionY"
-				IniWrite true, TempSystemFile, "GeneralData", "DinamicReload"
+				IniWrite true, TempSystemFile, "GeneralData", "DynamicReload"
 			}
 		}
 		try {
-			Savemsg.Add("Picture", "x9 y12 w64 h64 +border", IconLib . FDJ_SoftwareIcon)
+			Savemsg.Add("Picture", "x9 y10 w32 h32 +border", IconLib . FDJ_SoftwareIcon)
 		}
 		catch {
 		}
-		Savemsg.SetFont("s20 W700 Q4 " . MessageAppNameFontColor, MessageAppNameFontType)
-        Savemsg.Add("Text", "x80 y16", AppName)
+		Savemsg.SetFont("s16 W700 Q4 " . MessageAppNameFontColor, MessageAppNameFontType)
+		Savemsg.Add("Text", "x50 y16 +Center w420", AppName)
+		Savemsg.Add("Text", "x470 y16 +Center w20", "")
 		Savemsg.SetFont("s9 " . MessageFontColor, MessageFontType)
-		Savemsg.Add("Text", "x303 y31 ", CurrentVersion)
-		Savemsg.Add("Text", "x80 y55 ", "License key: " )
+		Savemsg.Add("Text", "x355 y24 ", CurrentVersion)
+		Savemsg.Add("Text", "x0 y54 w500 h1 +0x5")
+		;-----------------
 		Savemsg.SetFont()
-		Savemsg.SetFont("s8 Bold " . LicenseKeyFontColor, LicenseKeyFontType)
-		Savemsg.Add("Text", "x160 y55 ", LicenseKey)
-		Savemsg.Add("Text", "x0 y90 w470 h1 +0x5")
-		Savemsg.SetFont()
-		Savemsg.SetFont("s12 " . MessageMainMsgFontColor, MessageMainMsgFontType)
-		Savemsg.Add("Text", "x110 y125", "Values saved successfully to ini file")
-		Savemsg.SetFont()
-		Savemsg.SetFont("s9 " . MessageFontColor, MessageFontType)
-		Savemsg.Add("Text", "x0 y180 w470 h1 +0x5")
-		Savemsg.Add("Text", "x107 y190", "Copyright 2024 FDJ-Software. All Rights Reserved.")
-		Savemsg.SetFont()
-		Savemsg.SetFont("s8 " . MessageFontColor, MessageFontType)
-		Savemsg.Add("Text", "x116 y212", "Made with AutoHotkey V" A_AhkVersion . " " . (1 ? "Unicode" : "ANSI") . " " . (A_PtrSize == 8 ? "64-bit" : "32-bit"))
+		Savemsg.SetFont("s14 " . MessageMainMsgFontColor, MessageMainMsgFontType)
+		Savemsg.Add("Text", "x90 y125 +Center w320 +0x200", "Values saved successfully to ini file")
+		;-----------------
 		Savemsg.Title := "Save Successful!"
 		if GuiName == "TaskAutomatorGui1" {
 			TaskAutomatorGui1.GetPos(&PosX, &PosY)
 		} else {
 			TaskAutomatorGui2.GetPos(&PosX, &PosY)
 		}
-        Savemsg.Show("x" . PosX - 150 . " y" . PosY + 220 . "w470 h240")
+        Savemsg.Show("x" . PosX - 150 . " y" . PosY + 220 . "w500 h240")
         Savemsg.Opt("+LastFound")
-		Sleep SaveSuccesfullTimeWait
-		Savemsg.Destroy()
+		Destroy()
     Return
 	Destroy(*){
+	    Sleep SaveSuccesfullTimeWait
 		Savemsg.Destroy()
 	}
 }
@@ -475,13 +426,13 @@ ToggleHotkeysEnabled(*){
 		MessageBackgroundPicture := IniRead(IniFile, "Background", "MessageBackgroundPicture")
 		if MessageBackgroundPicture == "" {
 		try {
-				HkEnabled.Add("Picture", "x0 y0 w470 h240", ImageLib . DefaultMsgBackgroundImage)
+				HkEnabled.Add("Picture", "x0 y0 w500 h240", ImageLib . DefaultMsgBackgroundImage)
 			}
 			catch {
 			}
 		} else {
 			try {
-				HkEnabled.Add("Picture", "x0 y0 w470 h240", MessageBackgroundPicture)
+				HkEnabled.Add("Picture", "x0 y0 w500 h240", MessageBackgroundPicture)
 			}
 			catch {
 				MessageBackgroundPicture := ""
@@ -494,33 +445,25 @@ ToggleHotkeysEnabled(*){
 				}
 				IniWrite PosX, IniFile, "Properties", "PositionX"
 				IniWrite PosY, IniFile, "Properties", "PositionY"
-				IniWrite true, TempSystemFile, "GeneralData", "DinamicReload"
+				IniWrite true, TempSystemFile, "GeneralData", "DynamicReload"
 			}
 		}
 		try {
-			HkEnabled.Add("Picture", "x9 y12 w64 h64 +border", IconLib . FDJ_SoftwareIcon)
+			HkEnabled.Add("Picture", "x9 y10 w32 h32 +border", IconLib . FDJ_SoftwareIcon)
 		}
 		catch {
 		}
-		HkEnabled.SetFont("s20 W700 Q4 " . MessageAppNameFontColor, MessageAppNameFontType)
-        HkEnabled.Add("Text", "x80 y16", AppName)
+		HkEnabled.SetFont("s16 W700 Q4 " . MessageAppNameFontColor, MessageAppNameFontType)
+		HkEnabled.Add("Text", "x50 y16 +Center w420", AppName)
+		HkEnabled.Add("Text", "x470 y16 +Center w20", "")
 		HkEnabled.SetFont("s9 " . MessageFontColor, MessageFontType)
-		HkEnabled.Add("Text", "x303 y31 ", CurrentVersion)
-		HkEnabled.Add("Text", "x80 y55 ", "License key: " )
+		HkEnabled.Add("Text", "x355 y24 ", CurrentVersion)
+		HkEnabled.Add("Text", "x0 y54 w470 h1 +0x5")
+		;-----------------
 		HkEnabled.SetFont()
-		HkEnabled.SetFont("s8 Bold " . LicenseKeyFontColor, LicenseKeyFontType)
-		HkEnabled.Add("Text", "x160 y55 ", LicenseKey)
-		HkEnabled.Add("Text", "x0 y90 w470 h1 +0x5")
-		HkEnabled.SetFont()
-		HkEnabled.SetFont("s12 " . MessageMainMsgFontColor, MessageMainMsgFontType)
-		HkEnabled.Add("Text", "x170 y125", "Hotkeys Enabled")
-		HkEnabled.SetFont()
-		HkEnabled.SetFont("s9 " . MessageFontColor, MessageFontType)
-		HkEnabled.Add("Text", "x0 y180 w470 h1 +0x5")
-		HkEnabled.Add("Text", "x107 y190", "Copyright 2024 FDJ-Software. All Rights Reserved.")
-		HkEnabled.SetFont()
-		HkEnabled.SetFont("s8 " . MessageFontColor, MessageFontType)
-		HkEnabled.Add("Text", "x116 y212", "Made with AutoHotkey V" A_AhkVersion . " " . (1 ? "Unicode" : "ANSI") . " " . (A_PtrSize == 8 ? "64-bit" : "32-bit"))
+		HkEnabled.SetFont("s14 " . MessageMainMsgFontColor, MessageMainMsgFontType)
+		HkEnabled.Add("Text", "x120 y125 +Center w260 +0x200", "Hotkeys Enabled")
+		;-----------------
 		HkEnabled.Title := "Hotkeys Enabled"
 		if GuiName == "TaskAutomatorGui1" {
 			TaskAutomatorGui1.GetPos(&PosX, &PosY)
@@ -533,11 +476,15 @@ ToggleHotkeysEnabled(*){
 		if PosY == -32000 {
 			PosY := IniRead(IniFile, "Properties", "PositionY")
 		}
-        HkEnabled.Show("x" . PosX - 150 . " y" . PosY + 220 . "w470 h240")
+        HkEnabled.Show("x" . PosX - 150 . " y" . PosY + 220 . "w500 h240")
         HkEnabled.Opt("+LastFound")
-		sleep SuspendedHotkeysTimeWait
-		HkEnabled.Destroy()
+		Destroy()
     Return
+	
+	Destroy(*) {
+	    Sleep SuspendedHotkeysTimeWait
+		HkEnabled.Destroy()
+	}
 }
 ;----------------------------------------------------
 ToggleHotkeysDisabled(*){
@@ -552,13 +499,13 @@ ToggleHotkeysDisabled(*){
 		MessageBackgroundPicture := IniRead(IniFile, "Background", "MessageBackgroundPicture")
 		if MessageBackgroundPicture == "" {
 		try {
-				HkDisabled.Add("Picture", "x0 y0 w470 h240", ImageLib . DefaultMsgBackgroundImage)
+				HkDisabled.Add("Picture", "x0 y0 w500 h240", ImageLib . DefaultMsgBackgroundImage)
 			}
 			catch {
 			}
 		} else {
 			try {
-				HkDisabled.Add("Picture", "x0 y0 w470 h240", MessageBackgroundPicture)
+				HkDisabled.Add("Picture", "x0 y0 w500 h240", MessageBackgroundPicture)
 			}
 			catch {
 				MessageBackgroundPicture := ""
@@ -571,34 +518,26 @@ ToggleHotkeysDisabled(*){
 				}
 				IniWrite PosX, IniFile, "Properties", "PositionX"
 				IniWrite PosY, IniFile, "Properties", "PositionY"
-				IniWrite true, TempSystemFile, "GeneralData", "DinamicReload"
+				IniWrite true, TempSystemFile, "GeneralData", "DynamicReload"
 			}
 		}
 		try {
-			HkDisabled.Add("Picture", "x9 y12 w64 h64 +border", IconLib . FDJ_SoftwareIcon)
+			HkDisabled.Add("Picture", "x9 y10 w32 h32 +border", IconLib . FDJ_SoftwareIcon)
 		}
 		catch {
 		}
-		HkDisabled.SetFont("s20 W700 Q4 " . MessageAppNameFontColor, MessageAppNameFontType)
-        HkDisabled.Add("Text", "x80 y16", AppName)
+		HkDisabled.SetFont("s16 W700 Q4 " . MessageAppNameFontColor, MessageAppNameFontType)
+		HkDisabled.Add("Text", "x50 y16 +Center w420", AppName)
+		HkDisabled.Add("Text", "x470 y16 +Center w20", "")
 		HkDisabled.SetFont("s9 " . MessageFontColor, MessageFontType)
-		HkDisabled.Add("Text", "x303 y31 ", CurrentVersion)
-		HkDisabled.Add("Text", "x80 y55 ", "License key: " )
+		HkDisabled.Add("Text", "x355 y24 ", CurrentVersion)
+		HkDisabled.Add("Text", "x0 y54 w500 h1 +0x5")
+		;-----------------
 		HkDisabled.SetFont()
-		HkDisabled.SetFont("s8 Bold " . LicenseKeyFontColor, LicenseKeyFontType)
-		HkDisabled.Add("Text", "x160 y55 ", LicenseKey)
-		HkDisabled.Add("Text", "x0 y90 w470 h1 +0x5")
-		HkDisabled.SetFont()
-		HkDisabled.SetFont("s12 " . MessageMainMsgFontColor, MessageMainMsgFontType)
-		HkDisabled.Add("Text", "x167 y110", "Hotkeys Suspended")
-		HkDisabled.Add("Text", "x116 y140", "Press " . SuspendHotkeysKey . " again to anable them.")
-		HkDisabled.SetFont()
-		HkDisabled.SetFont("s9 " . MessageFontColor, MessageFontType)
-		HkDisabled.Add("Text", "x0 y180 w470 h1 +0x5")
-		HkDisabled.Add("Text", "x107 y190", "Copyright 2024 FDJ-Software. All Rights Reserved.")
-		HkDisabled.SetFont()
-		HkDisabled.SetFont("s8 " . MessageFontColor, MessageFontType)
-		HkDisabled.Add("Text", "x116 y212", "Made with AutoHotkey V" A_AhkVersion . " " . (1 ? "Unicode" : "ANSI") . " " . (A_PtrSize == 8 ? "64-bit" : "32-bit"))
+		HkDisabled.SetFont("s14 " . MessageMainMsgFontColor, MessageMainMsgFontType)
+		HkDisabled.Add("Text", "x120 y110 +Center w260 +0x200", "Hotkeys Suspended")
+		HkDisabled.Add("Text", "x100 y140 +Center w300 +0x200", "Press " . SuspendHotkeysKey . " again to anable them.")
+		;-----------------
 		HkDisabled.Title := "Hotkeys Suspended"
 		if GuiName == "TaskAutomatorGui1" {
 			TaskAutomatorGui1.GetPos(&PosX, &PosY)
@@ -611,11 +550,15 @@ ToggleHotkeysDisabled(*){
 		if PosY == -32000 {
 			PosY := IniRead(IniFile, "Properties", "PositionY")
 		}
-        HkDisabled.Show("x" . PosX - 150 . " y" . PosY + 220 . "w470 h240")
+        HkDisabled.Show("x" . PosX - 150 . " y" . PosY + 220 . "w500 h240")
         HkDisabled.Opt("+LastFound")
-		sleep SuspendedHotkeysTimeWait
-		HkDisabled.Destroy()
+		Destroy()
     Return
+	
+	Destroy(*) {
+	    Sleep SuspendedHotkeysTimeWait
+		HkDisabled.Destroy()
+	}
 }
 ;----------------------------------------------------
 HotkeyEditModeOn(*){
@@ -630,13 +573,13 @@ HotkeyEditModeOn(*){
 		MessageBackgroundPicture := IniRead(IniFile, "Background", "MessageBackgroundPicture")
 		if MessageBackgroundPicture == "" {
 		try {
-				HkEditModeOn.Add("Picture", "x0 y0 w470 h240", ImageLib . DefaultMsgBackgroundImage)
+				HkEditModeOn.Add("Picture", "x0 y0 w500 h240", ImageLib . DefaultMsgBackgroundImage)
 			}
 			catch {
 			}
 		} else {
 			try {
-				HkEditModeOn.Add("Picture", "x0 y0 w470 h240", MessageBackgroundPicture)
+				HkEditModeOn.Add("Picture", "x0 y0 w500 h240", MessageBackgroundPicture)
 			}
 			catch {
 				MessageBackgroundPicture := ""
@@ -649,47 +592,38 @@ HotkeyEditModeOn(*){
 				}
 				IniWrite PosX, IniFile, "Properties", "PositionX"
 				IniWrite PosY, IniFile, "Properties", "PositionY"
-				IniWrite true, TempSystemFile, "GeneralData", "DinamicReload"
+				IniWrite true, TempSystemFile, "GeneralData", "DynamicReload"
 			}
 		}
 		try {
-			HkEditModeOn.Add("Picture", "x9 y12 w64 h64 +border", IconLib . FDJ_SoftwareIcon)
+			HkEditModeOn.Add("Picture", "x9 y10 w32 h32 +border", IconLib . FDJ_SoftwareIcon)
 		}
 		catch {
 		}
-		HkEditModeOn.SetFont("s20 W700 Q4 " . MessageAppNameFontColor, MessageAppNameFontType)
-        HkEditModeOn.Add("Text", "x80 y16", AppName)
+		HkEditModeOn.SetFont("s16 W700 Q4 " . MessageAppNameFontColor, MessageAppNameFontType)
+		HkEditModeOn.Add("Text", "x50 y16 +Center w420", AppName)
+		HkEditModeOn.Add("Text", "x470 y16 +Center w20", "")
 		HkEditModeOn.SetFont("s9 " . MessageFontColor, MessageFontType)
-		HkEditModeOn.Add("Text", "x303 y31 ", CurrentVersion)
-		HkEditModeOn.Add("Text", "x80 y55 ", "License key: " )
+		HkEditModeOn.Add("Text", "x355 y24 ", CurrentVersion)
+		HkEditModeOn.Add("Text", "x0 y54 w500 h1 +0x5")
+		;-----------------
 		HkEditModeOn.SetFont()
-		HkEditModeOn.SetFont("s8 Bold " . LicenseKeyFontColor, LicenseKeyFontType)
-		HkEditModeOn.Add("Text", "x160 y55 ", LicenseKey)
-		HkEditModeOn.Add("Text", "x0 y90 w470 h1 +0x5")
-		HkEditModeOn.SetFont()
-		HkEditModeOn.SetFont("s12 " . MessageMainMsgFontColor, MessageMainMsgFontType)
-		HkEditModeOn.Add("Text", "x148 y110", "Hotkey Edit Mode is ON")
-		HkEditModeOn.Add("Text", "x136 y140", "Switch it OFF and try again.")
-		HkEditModeOn.SetFont()
-		HkEditModeOn.SetFont("s9 " . MessageFontColor, MessageFontType)
-		HkEditModeOn.Add("Text", "x0 y180 w470 h1 +0x5")
-		HkEditModeOn.Add("Text", "x25 y190", "Copyright 2024 FDJ-Software. All Rights Reserved.")
-		HkEditModeOn.SetFont()
-		HkEditModeOn.SetFont("s8 " . MessageFontColor, MessageFontType)
-		HkEditModeOn.Add("Text", "x25 y212", "Made with AutoHotkey V" A_AhkVersion . " " . (1 ? "Unicode" : "ANSI") . " " . (A_PtrSize == 8 ? "64-bit" : "32-bit"))
-        ogcButtonOK := HkEditModeOn.Add("Button", "x370 y200 w80 h24", "OK")
-		ogcButtonOK.OnEvent("Click", Destroy)
+		HkEditModeOn.SetFont("s14 " . MessageMainMsgFontColor, MessageMainMsgFontType)
+		HkEditModeOn.Add("Text", "x100 y110 +Center w300 +0x200", "Hotkey Edit Mode is ON")
+		HkEditModeOn.Add("Text", "x100 y140 +Center w300 +0x200", "Switch it OFF and try again.")
+        ;-----------------
         HkEditModeOn.Title := "Hotkey Edit Mode ON"
 		if GuiName == "TaskAutomatorGui1" {
 			TaskAutomatorGui1.GetPos(&PosX, &PosY)
 		} else {
 			TaskAutomatorGui2.GetPos(&PosX, &PosY)
 		}
-        HkEditModeOn.Show("x" . PosX - 150 . " y" . PosY + 220 . "w470 h240")
-        ControlFocus("Button1", "Hotkey Edit Mode ON")
+        HkEditModeOn.Show("x" . PosX - 150 . " y" . PosY + 220 . "w500 h240")
         HkEditModeOn.Opt("+LastFound")
+		Destroy()
     Return
 	Destroy(*){
+	    Sleep ExitMessageTimeWait
 		HkEditModeOn.Destroy()
 	}
 }
@@ -706,13 +640,13 @@ MenuHandlerAbout(*){
 		MessageBackgroundPicture := IniRead(IniFile, "Background", "MessageBackgroundPicture")
 		if MessageBackgroundPicture == "" {
 		try {
-				About.Add("Picture", "x0 y0 w470 h240", ImageLib . DefaultMsgBackgroundImage)
+				About.Add("Picture", "x0 y0 w500 h240", ImageLib . DefaultMsgBackgroundImage)
 			}
 			catch {
 			}
 		} else {
 			try {
-				About.Add("Picture", "x0 y0 w470 h240", MessageBackgroundPicture)
+				About.Add("Picture", "x0 y0 w500 h240", MessageBackgroundPicture)
 			}
 			catch {
 				MessageBackgroundPicture := ""
@@ -725,47 +659,45 @@ MenuHandlerAbout(*){
 				}
 				IniWrite PosX, IniFile, "Properties", "PositionX"
 				IniWrite PosY, IniFile, "Properties", "PositionY"
-				IniWrite true, TempSystemFile, "GeneralData", "DinamicReload"
+				IniWrite true, TempSystemFile, "GeneralData", "DynamicReload"
 			}
 		}
 		try {
-			About.Add("Picture", "x9 y12 w64 h64 +border", IconLib . FDJ_SoftwareIcon)
+			About.Add("Picture", "x9 y10 w32 h32 +border", IconLib . FDJ_SoftwareIcon)
 		}
 		catch {
 		}
-		About.SetFont("s20 W700 Q4 " . MessageAppNameFontColor, MessageAppNameFontType)
-        About.Add("Text", "x80 y16", AppName)
+		About.SetFont("s16 W700 Q4 " . MessageAppNameFontColor, MessageAppNameFontType)
+		About.Add("Text", "x50 y16 +Center w420", AppName)
+		About.Add("Text", "x470 y16 +Center w20", "")
 		About.SetFont("s9 " . MessageFontColor, MessageFontType)
-		About.Add("Text", "x303 y31 ", CurrentVersion)
-		About.SetFont("s9 bold " . MessageFontColor, MessageFontType)
-		About.Add("Text", "x80 y55 ", "License key: " )
-		About.SetFont()
-		About.SetFont("s8 Bold " . LicenseKeyFontColor, LicenseKeyFontType)
-		About.Add("Text", "x160 y55 ", LicenseKey)
-		About.Add("Text", "x0 y90 w470 h1 +0x5")
+		About.Add("Text", "x355 y24 ", CurrentVersion)
+		About.Add("Text", "x0 y54 w500 h1 +0x5")
+		;-----------------
 		About.SetFont()
 		About.SetFont("s10 " . MessageMainMsgFontColor, MessageMainMsgFontType)
-		About.Add("Text", "x135 y100", " Programmed and designed by: ")
-		About.SetFont("s14 Bold " . MessageMainMsgFontColor, MessageMainMsgFontType)
-		About.Add("Text", "x115 y125", Creator)
-		; About.Add("Link", "x310 y115", "<a href=`"https://github.com/FDJ-Dash`">FDJ-Dash</a>")
+		About.Add("Text", "x100 y75 +Center w300 h23 +0x200", " Programmed and designed by: ")
+		About.SetFont("s14 " . MessageMainMsgFontColor, MessageMainMsgFontType)
+		About.Add("Text", "x100 y105 +Center w300 h28 +0x200", Creator)
 		About.SetFont()
-		About.SetFont("s9 " . MessageFontColor, MessageFontType)
-		About.Add("Text", "x124 y156", " Support mail: fdj.software@gmail.com ")
-		About.Add("Text", "x0 y180 w470 h1 +0x5")
-        About.Add("Text", "x25 y190", "Copyright 2024 FDJ-Software. All Rights Reserved.")
+		About.SetFont("s10 " . MessageFontColor, MessageFontType)
+		About.Add("Text", "x100 y140 +Center w300 h23 +0x200", " Support mail: fdj.software@gmail.com ")
+		About.Add("Text", "x0 y186 w500 h1 +0x5")
+		About.SetFont()
+		About.SetFont("s10 " . MessageFontColor, MessageFontType)
+		About.Add("Text", "x10 y200 +Center w370 h23 +0x200", "Copyright 2024 FDJ-Software. All Rights Reserved.")
 		About.SetFont()
 		About.SetFont("s8 " . MessageFontColor, MessageFontType)
-		About.Add("Text", "x25 y212", "Made with AutoHotkey V" A_AhkVersion . " " . (1 ? "Unicode" : "ANSI") . " " . (A_PtrSize == 8 ? "64-bit" : "32-bit"))
-		ogcButtonOK := About.Add("Button", "x370 y200 w80 h24", "OK")
+		ogcButtonOK := About.Add("Button", "x400 y200 w80 h24", "OK")
 		ogcButtonOK.OnEvent("Click", Destroy)
+		;-----------------
         About.Title := "About"
 		if GuiName == "TaskAutomatorGui1" {
 			TaskAutomatorGui1.GetPos(&PosX, &PosY)
 		} else {
 			TaskAutomatorGui2.GetPos(&PosX, &PosY)
 		}
-        About.Show("x" . PosX - 150 . " y" . PosY + 220 . "w470 h240")
+        About.Show("x" . PosX - 150 . " y" . PosY + 220 . "w500 h240")
         ControlFocus("Button1", "About")
         About.Opt("+LastFound")
     Return
@@ -786,13 +718,13 @@ MenuHandlerGuide(*) {
 		MessageBackgroundPicture := IniRead(IniFile, "Background", "MessageBackgroundPicture")
 		if MessageBackgroundPicture == "" {
 		try {
-				GuideMsg.Add("Picture", "x0 y0 w470 h240", ImageLib . DefaultMsgBackgroundImage)
+				GuideMsg.Add("Picture", "x0 y0 w500 h240", ImageLib . DefaultMsgBackgroundImage)
 			}
 			catch {
 			}
 		} else {
 			try {
-				GuideMsg.Add("Picture", "x0 y0 w470 h240", MessageBackgroundPicture)
+				GuideMsg.Add("Picture", "x0 y0 w500 h240", MessageBackgroundPicture)
 			}
 			catch {
 				MessageBackgroundPicture := ""
@@ -805,49 +737,39 @@ MenuHandlerGuide(*) {
 				}
 				IniWrite PosX, IniFile, "Properties", "PositionX"
 				IniWrite PosY, IniFile, "Properties", "PositionY"
-				IniWrite true, TempSystemFile, "GeneralData", "DinamicReload"
+				IniWrite true, TempSystemFile, "GeneralData", "DynamicReload"
 			}
 		}
 		try {
-			GuideMsg.Add("Picture", "x9 y12 w64 h64 +border", IconLib . FDJ_SoftwareIcon)
+			GuideMsg.Add("Picture", "x9 y10 w32 h32 +border", IconLib . FDJ_SoftwareIcon)
 		}
 		catch {
 		}
-		GuideMsg.SetFont("s20 W700 Q4 " . MessageAppNameFontColor, MessageAppNameFontType)
-        GuideMsg.Add("Text", "x80 y16", AppName)
+		GuideMsg.SetFont("s16 W700 Q4 " . MessageAppNameFontColor, MessageAppNameFontType)
+		GuideMsg.Add("Text", "x50 y16 +Center w420", AppName)
+		GuideMsg.Add("Text", "x470 y16 +Center w20", "")
 		GuideMsg.SetFont("s9 " . MessageFontColor, MessageFontType)
-		GuideMsg.Add("Text", "x303 y31 ", CurrentVersion)
-		GuideMsg.Add("Text", "x80 y55 ", "License key: " )
+		GuideMsg.Add("Text", "x355 y24 ", CurrentVersion)
+		GuideMsg.Add("Text", "x0 y54 w500 h1 +0x5")
+		;-----------------
 		GuideMsg.SetFont()
-		GuideMsg.SetFont("s8 Bold " . LicenseKeyFontColor, LicenseKeyFontType)
-		GuideMsg.Add("Text", "x160 y55 ", LicenseKey)
-		GuideMsg.Add("Text", "x0 y90 w470 h1 +0x5")
-		GuideMsg.SetFont()
-		GuideMsg.SetFont("s12 " . MessageMainMsgFontColor, MessageMainMsgFontType)
-		GuideMsg.Add("Text", "x100 y110", "The guide will open in your browser.")
-        GuideMsg.Add("Text", "x137 y140", "You can close this message.")
-		GuideMsg.SetFont()
-		GuideMsg.SetFont("s9 " . MessageFontColor, MessageFontType)
-		GuideMsg.Add("Text", "x0 y180 w470 h1 +0x5")
-		GuideMsg.Add("Text", "x25 y190", "Copyright 2024 FDJ-Software. All Rights Reserved.")
-		GuideMsg.SetFont()
-		GuideMsg.SetFont("s8 " . MessageFontColor, MessageFontType)
-		GuideMsg.Add("Text", "x25 y212", "Made with AutoHotkey V" A_AhkVersion . " " . (1 ? "Unicode" : "ANSI") . " " . (A_PtrSize == 8 ? "64-bit" : "32-bit"))
-        ogcButtonOK := GuideMsg.Add("Button", "x370 y200 w80 h24 Default", "OK")
-		ogcButtonOK.OnEvent("Click", Destroy)
+		GuideMsg.SetFont("s14 " . MessageMainMsgFontColor, MessageMainMsgFontType)
+		GuideMsg.Add("Text", "x80 y125 +Center w340 +0x200", "The guide will open in your browser.")
+        ;-----------------
         GuideMsg.Title := "Guide"
 		if GuiName == "TaskAutomatorGui1" {
 			TaskAutomatorGui1.GetPos(&PosX, &PosY)
 		} else {
 			TaskAutomatorGui2.GetPos(&PosX, &PosY)
 		}
-        GuideMsg.Show("x" . PosX - 150 . " y" . PosY + 220 . "w470 h240")
-        ControlFocus("Button1", "Guide")
+        GuideMsg.Show("x" . PosX - 150 . " y" . PosY + 220 . "w500 h240")
         GuideMsg.Opt("+LastFound")
 		run HotkeyGuide
+		Destroy()
     Return
 	
 	Destroy(*){
+	    Sleep ExitMessageTimeWait
 		GuideMsg.Destroy()
 	}
 }
@@ -865,13 +787,13 @@ MenuHandlerQuickAccessMsg(*) {
 		MessageBackgroundPicture := IniRead(IniFile, "Background", "MessageBackgroundPicture")
 		if MessageBackgroundPicture == "" {
 		try {
-				QuickAccMsg.Add("Picture", "x0 y0 w470 h240", ImageLib . DefaultMsgBackgroundImage)
+				QuickAccMsg.Add("Picture", "x0 y0 w500 h240", ImageLib . DefaultMsgBackgroundImage)
 			}
 			catch {
 			}
 		} else {
 			try {
-				QuickAccMsg.Add("Picture", "x0 y0 w470 h240", MessageBackgroundPicture)
+				QuickAccMsg.Add("Picture", "x0 y0 w500 h240", MessageBackgroundPicture)
 			}
 			catch {
 				MessageBackgroundPicture := ""
@@ -884,35 +806,28 @@ MenuHandlerQuickAccessMsg(*) {
 				}
 				IniWrite PosX, IniFile, "Properties", "PositionX"
 				IniWrite PosY, IniFile, "Properties", "PositionY"
-				IniWrite true, TempSystemFile, "GeneralData", "DinamicReload"
+				IniWrite true, TempSystemFile, "GeneralData", "DynamicReload"
 			}
 		}
 		try {
-			QuickAccMsg.Add("Picture", "x9 y12 w64 h64 +border", IconLib . FDJ_SoftwareIcon)
+			QuickAccMsg.Add("Picture", "x9 y10 w32 h32 +border", IconLib . FDJ_SoftwareIcon)
 		}
 		catch {
 		}
-		QuickAccMsg.SetFont("s20 W700 Q4 " . MessageAppNameFontColor, MessageAppNameFontType)
-        QuickAccMsg.Add("Text", "x80 y16", AppName)
+		QuickAccMsg.SetFont("s16 W700 Q4 " . MessageAppNameFontColor, MessageAppNameFontType)
+		QuickAccMsg.Add("Text", "x50 y16 +Center w420", AppName)
+		QuickAccMsg.Add("Text", "x470 y16 +Center w20", "")
 		QuickAccMsg.SetFont("s9 " . MessageFontColor, MessageFontType)
-		QuickAccMsg.Add("Text", "x303 y31 ", CurrentVersion)
-		QuickAccMsg.Add("Text", "x80 y55 ", "License key: " )
+		QuickAccMsg.Add("Text", "x355 y24 ", CurrentVersion)
+		QuickAccMsg.Add("Text", "x0 y54 w500 h1 +0x5")
+		;-----------------
 		QuickAccMsg.SetFont()
-		QuickAccMsg.SetFont("s8 Bold " . LicenseKeyFontColor, LicenseKeyFontType)
-		QuickAccMsg.Add("Text", "x160 y55 ", LicenseKey)
-		QuickAccMsg.Add("Text", "x0 y90 w470 h1 +0x5")
-		QuickAccMsg.SetFont()
-		QuickAccMsg.SetFont("s12 " . MessageMainMsgFontColor, MessageMainMsgFontType)
-		QuickAccMsg.Add("Text", "x80 y110", "To switch Quick Access Buttons you need to")
-        QuickAccMsg.Add("Text", "x110 y140", "switch to Quick Access module first.")
-		QuickAccMsg.SetFont()
-		QuickAccMsg.SetFont("s9 " . MessageFontColor, MessageFontType)
-		QuickAccMsg.Add("Text", "x0 y180 w470 h1 +0x5")
-		QuickAccMsg.Add("Text", "x25 y190", "Copyright 2024 FDJ-Software. All Rights Reserved.")
-		QuickAccMsg.SetFont()
+		QuickAccMsg.SetFont("s14 " . MessageMainMsgFontColor, MessageMainMsgFontType)
+		QuickAccMsg.Add("Text", "x50 y110 +Center w400 +0x200", "To switch Quick Access Buttons you need to")
+        QuickAccMsg.Add("Text", "x90 y140 +Center w320 +0x200", "switch to Quick Access module first.")
+        ;-----------------
 		QuickAccMsg.SetFont("s8 " . MessageFontColor, MessageFontType)
-		QuickAccMsg.Add("Text", "x25 y212", "Made with AutoHotkey V" A_AhkVersion . " " . (1 ? "Unicode" : "ANSI") . " " . (A_PtrSize == 8 ? "64-bit" : "32-bit"))
-        ogcButtonOK := QuickAccMsg.Add("Button", "x370 y200 w80 h24 Default", "OK")
+        ogcButtonOK := QuickAccMsg.Add("Button", "x210 y190 w80 h24 Default", "OK")
 		ogcButtonOK.OnEvent("Click", Destroy)
         QuickAccMsg.Title := "Guide"
 		if GuiName == "TaskAutomatorGui1" {
@@ -920,7 +835,7 @@ MenuHandlerQuickAccessMsg(*) {
 		} else {
 			TaskAutomatorGui2.GetPos(&PosX, &PosY)
 		}
-        QuickAccMsg.Show("x" . PosX - 150 . " y" . PosY + 220 . "w470 h240")
+        QuickAccMsg.Show("x" . PosX - 150 . " y" . PosY + 220 . "w500 h240")
         ControlFocus("Button1", "Guide")
         QuickAccMsg.Opt("+LastFound")
     Return
@@ -942,13 +857,13 @@ ConnectionMessage(*) {
 		MessageBackgroundPicture := IniRead(IniFile, "Background", "MessageBackgroundPicture")
 		if MessageBackgroundPicture == "" {
 		try {
-				ConnectionMsg.Add("Picture", "x0 y0 w470 h240", ImageLib . DefaultMsgBackgroundImage)
+				ConnectionMsg.Add("Picture", "x0 y0 w500 h240", ImageLib . DefaultMsgBackgroundImage)
 			}
 			catch {
 			}
 		} else {
 			try {
-				ConnectionMsg.Add("Picture", "x0 y0 w470 h240", MessageBackgroundPicture)
+				ConnectionMsg.Add("Picture", "x0 y0 w500 h240", MessageBackgroundPicture)
 			}
 			catch {
 				MessageBackgroundPicture := ""
@@ -961,48 +876,185 @@ ConnectionMessage(*) {
 				}
 				IniWrite PosX, IniFile, "Properties", "PositionX"
 				IniWrite PosY, IniFile, "Properties", "PositionY"
-				IniWrite true, TempSystemFile, "GeneralData", "DinamicReload"
+				IniWrite true, TempSystemFile, "GeneralData", "DynamicReload"
 			}
 		}
 		try {
-			ConnectionMsg.Add("Picture", "x9 y12 w64 h64 +border", IconLib . FDJ_SoftwareIcon)
+			ConnectionMsg.Add("Picture", "x9 y10 w32 h32 +border", IconLib . FDJ_SoftwareIcon)
 		}
 		catch {
 		}
-		ConnectionMsg.SetFont("s20 W700 Q4 " . MessageAppNameFontColor, MessageAppNameFontType)
-		ConnectionMsg.Add("Text", "x80 y16", AppName)
+		ConnectionMsg.SetFont("s16 W700 Q4 " . MessageAppNameFontColor, MessageAppNameFontType)
+		ConnectionMsg.Add("Text", "x50 y16 +Center w420", AppName)
+		ConnectionMsg.Add("Text", "x470 y16 +Center w20", "")
 		ConnectionMsg.SetFont("s9 " . MessageFontColor, MessageFontType)
-		ConnectionMsg.Add("Text", "x303 y31 ", CurrentVersion)
-		ConnectionMsg.Add("Text", "x80 y55 ", "License key: " )
+		ConnectionMsg.Add("Text", "x355 y24 ", CurrentVersion)
+		ConnectionMsg.Add("Text", "x0 y54 w500 h1 +0x5")
+		;-----------------
 		ConnectionMsg.SetFont()
-		ConnectionMsg.SetFont("s8 Bold " . LicenseKeyFontColor, LicenseKeyFontType)
-		ConnectionMsg.Add("Text", "x160 y55 ", LicenseKey)
-		ConnectionMsg.Add("Text", "x0 y90 w470 h1 +0x5")
-		ConnectionMsg.SetFont()
-		ConnectionMsg.SetFont("s12 cRed", MessageMainMsgFontType)
-		ConnectionMsg.Add("Text", "x115 y110", "Unable to check for new updates.")
-		ConnectionMsg.Add("Text", "x127 y140", "Please verify your connection.")		
-		ConnectionMsg.SetFont()
-		ConnectionMsg.SetFont("s9 " . MessageFontColor, MessageFontType)
-		ConnectionMsg.Add("Text", "x0 y180 w470 h1 +0x5")
-        ConnectionMsg.Add("Text", "x25 y190", "Copyright 2024 FDJ-Software. All Rights Reserved.")
-		ConnectionMsg.SetFont()
+		ConnectionMsg.SetFont("s14 cRed", MessageMainMsgFontType)
+		ConnectionMsg.Add("Text", "x90 y110 +Center w320 +0x200", "Unable to check for new updates.")
+		ConnectionMsg.Add("Text", "x100 y140 +Center w300 +0x200", "Please verify your connection.")		
 		ConnectionMsg.SetFont("s8 " . MessageFontColor, MessageFontType)
-		ConnectionMsg.Add("Text", "x25 y212", "Made with AutoHotkey V" A_AhkVersion . " " . (1 ? "Unicode" : "ANSI") . " " . (A_PtrSize == 8 ? "64-bit" : "32-bit"))
-		ogcButtonOK := ConnectionMsg.Add("Button", "x370 y200 w80 h24", "OK")
+		ogcButtonOK := ConnectionMsg.Add("Button", "x210 y190 w80 h24", "OK")
 		ogcButtonOK.OnEvent("Click", Destroy)
+		;-----------------
         ConnectionMsg.Title := "Connection Failed!"
 		if GuiName == "TaskAutomatorGui1" {
 			TaskAutomatorGui1.GetPos(&PosX, &PosY)
 		} else {
 			TaskAutomatorGui2.GetPos(&PosX, &PosY)
 		}
-        ConnectionMsg.Show("x" . PosX - 150 . " y" . PosY + 220 . "w470 h240")
+        ConnectionMsg.Show("x" . PosX - 150 . " y" . PosY + 220 . "w500 h240")
         ControlFocus("Button1", "Connection Failed!")
         ConnectionMsg.Opt("+LastFound")
 	Return
 	Destroy(*){
 		ConnectionMsg.Destroy()
+	}
+}
+;----------------------------------------------------
+VerifyingPortAccess(*) {
+	VerifPortAccess:
+		if GuiPriorityAlwaysOnTop == true {
+			VerifPortAccess := Gui("+AlwaysOnTop")
+		} else {
+			VerifPortAccess := Gui()
+		}
+		GuiName := IniRead(TempSystemFile, "GeneralData", "GuiName")
+		VerifPortAccess.BackColor := "0x" . BackgroundColor
+		MessageBackgroundPicture := IniRead(IniFile, "Background", "MessageBackgroundPicture")
+		if MessageBackgroundPicture == "" {
+		try {
+				VerifPortAccess.Add("Picture", "x0 y0 w500 h240", ImageLib . DefaultMsgBackgroundImage)
+			}
+			catch {
+			}
+		} else {
+			try {
+				VerifPortAccess.Add("Picture", "x0 y0 w500 h240", MessageBackgroundPicture)
+			}
+			catch {
+				MessageBackgroundPicture := ""
+				IniWrite MessageBackgroundPicture, IniFile, "Background", "MessageBackgroundPicture"
+				; Reload
+				if GuiName == "TaskAutomatorGui1" {
+					TaskAutomatorGui1.GetPos(&PosX, &PosY)
+				} else {
+					TaskAutomatorGui2.GetPos(&PosX, &PosY)
+				}
+				IniWrite PosX, IniFile, "Properties", "PositionX"
+				IniWrite PosY, IniFile, "Properties", "PositionY"
+				IniWrite true, TempSystemFile, "GeneralData", "DynamicReload"
+			}
+		}
+		try {
+			VerifPortAccess.Add("Picture", "x9 y10 w32 h32 +border", IconLib . FDJ_SoftwareIcon)
+		}
+		catch {
+		}
+		VerifPortAccess.SetFont("s16 W700 Q4 " . MessageAppNameFontColor, MessageAppNameFontType)
+		VerifPortAccess.Add("Text", "x50 y16 +Center w420", AppName)
+		VerifPortAccess.Add("Text", "x470 y16 +Center w20", "")
+		VerifPortAccess.SetFont("s9 " . MessageFontColor, MessageFontType)
+		VerifPortAccess.Add("Text", "x355 y24 ", CurrentVersion)
+		VerifPortAccess.Add("Text", "x0 y54 w500 h1 +0x5")
+		;-----------------
+		VerifPortAccess.SetFont()
+		VerifPortAccess.SetFont("s14 " . MessageMainMsgFontColor, MessageMainMsgFontType)
+		VerifPortAccess.Add("Text", "x100 y80 +Center w300 +0x200", "Authenticating session.")
+		VerifPortAccess.Add("Text", "x50 y110 +Center w400 +0x200", "If ports are blocked then")
+		VerifPortAccess.Add("Text", "x10 y140 +Center w480 +0x200", "the extensive check will take up to a minute")
+        VerifPortAccess.SetFont("s8 " . MessageFontColor, MessageFontType)
+		ogcButtonOK := VerifPortAccess.Add("Button", "x210 y190 w80 h24", "OK")
+		ogcButtonOK.OnEvent("Click", Destroy)
+		;-----------------
+        VerifPortAccess.Title := "Port Access Verification"
+		if GuiName == "TaskAutomatorGui1" {
+			TaskAutomatorGui1.GetPos(&PosX, &PosY)
+		} else {
+			TaskAutomatorGui2.GetPos(&PosX, &PosY)
+		}
+        VerifPortAccess.Show("x" . PosX - 150 . " y" . PosY + 220 . "w500 h240")
+        VerifPortAccess.Opt("+LastFound")
+		Sleep ExitMessageTimeWait
+		VerifPortAccess.Destroy()
+    Return
+	Destroy(*){
+		VerifPortAccess.Destroy()
+	}
+}
+;----------------------------------------------------
+Port3306Blocked(*) {
+	PortBlocked:
+		if GuiPriorityAlwaysOnTop == true {
+			PortBlocked := Gui("+AlwaysOnTop")
+		} else {
+			PortBlocked := Gui()
+		}
+		GuiName := IniRead(TempSystemFile, "GeneralData", "GuiName")
+		PortBlocked.BackColor := "0x" . BackgroundColor
+		MessageBackgroundPicture := IniRead(IniFile, "Background", "MessageBackgroundPicture")
+		if MessageBackgroundPicture == "" {
+		try {
+				PortBlocked.Add("Picture", "x0 y0 w500 h240", ImageLib . DefaultMsgBackgroundImage)
+			}
+			catch {
+			}
+		} else {
+			try {
+				PortBlocked.Add("Picture", "x0 y0 w500 h240", MessageBackgroundPicture)
+			}
+			catch {
+				MessageBackgroundPicture := ""
+				IniWrite MessageBackgroundPicture, IniFile, "Background", "MessageBackgroundPicture"
+				; Reload
+				if GuiName == "TaskAutomatorGui1" {
+					TaskAutomatorGui1.GetPos(&PosX, &PosY)
+				} else {
+					TaskAutomatorGui2.GetPos(&PosX, &PosY)
+				}
+				IniWrite PosX, IniFile, "Properties", "PositionX"
+				IniWrite PosY, IniFile, "Properties", "PositionY"
+				IniWrite true, TempSystemFile, "GeneralData", "DynamicReload"
+			}
+		}
+		try {
+			PortBlocked.Add("Picture", "x9 y10 w32 h32 +border", IconLib . FDJ_SoftwareIcon)
+		}
+		catch {
+		}
+		PortBlocked.SetFont("s16 W700 Q4 " . MessageAppNameFontColor, MessageAppNameFontType)
+		PortBlocked.Add("Text", "x50 y16 +Center w420", AppName)
+		PortBlocked.Add("Text", "x470 y16 +Center w20", "")
+		PortBlocked.SetFont("s9 " . MessageFontColor, MessageFontType)
+		PortBlocked.Add("Text", "x355 y24 ", CurrentVersion)
+		PortBlocked.Add("Text", "x0 y54 w500 h1 +0x5")
+		;-----------------
+		PortBlocked.SetFont()
+		PortBlocked.SetFont("s14 " . MessageMainMsgFontColor, MessageMainMsgFontType)
+		PortBlocked.Add("Text", "x10 y80 +Center w480 +0x200", "Unable to authenticate. Port 3306 is blocked.")
+		PortBlocked.Add("Text", "x50 y110 +Center w400 +0x200", "The app will close")
+		PortBlocked.Add("Text", "x10 y140 +Center w480 +0x200", "Maybe your VPN, ISP or firewall is blocking it.")
+        PortBlocked.SetFont("s8 " . MessageFontColor, MessageFontType)
+		ogcButtonOK := PortBlocked.Add("Button", "x210 y190 w80 h24", "OK")
+		ogcButtonOK.OnEvent("Click", Destroy)
+		;-----------------
+        PortBlocked.Title := "Port 3306 Blocked"
+		if GuiName == "TaskAutomatorGui1" {
+			TaskAutomatorGui1.GetPos(&PosX, &PosY)
+		} else {
+			TaskAutomatorGui2.GetPos(&PosX, &PosY)
+		}
+        PortBlocked.Show("x" . PosX - 150 . " y" . PosY + 220 . "w500 h240")
+        PortBlocked.Opt("+LastFound")
+		Sleep 15000
+		PortBlocked.Destroy()
+		ExitApp
+    Return
+	Destroy(*){
+		PortBlocked.Destroy()
+		ExitApp
 	}
 }
 ;----------------------------------------------------
@@ -1018,13 +1070,13 @@ UpToDateMessage(*) {
 		MessageBackgroundPicture := IniRead(IniFile, "Background", "MessageBackgroundPicture")
 		if MessageBackgroundPicture == "" {
 		try {
-				UpToDateMsg.Add("Picture", "x0 y0 w470 h240", ImageLib . DefaultMsgBackgroundImage)
+				UpToDateMsg.Add("Picture", "x0 y0 w500 h240", ImageLib . DefaultMsgBackgroundImage)
 			}
 			catch {
 			}
 		} else {
 			try {
-				UpToDateMsg.Add("Picture", "x0 y0 w470 h240", MessageBackgroundPicture)
+				UpToDateMsg.Add("Picture", "x0 y0 w500 h240", MessageBackgroundPicture)
 			}
 			catch {
 				MessageBackgroundPicture := ""
@@ -1037,46 +1089,37 @@ UpToDateMessage(*) {
 				}
 				IniWrite PosX, IniFile, "Properties", "PositionX"
 				IniWrite PosY, IniFile, "Properties", "PositionY"
-				IniWrite true, TempSystemFile, "GeneralData", "DinamicReload"
+				IniWrite true, TempSystemFile, "GeneralData", "DynamicReload"
 			}
 		}
 		try {
-			UpToDateMsg.Add("Picture", "x9 y12 w64 h64 +border", IconLib . FDJ_SoftwareIcon)
+			UpToDateMsg.Add("Picture", "x9 y10 w32 h32 +border", IconLib . FDJ_SoftwareIcon)
 		}
 		catch {
 		}
-		UpToDateMsg.SetFont("s20 W700 Q4 " . MessageAppNameFontColor, MessageAppNameFontType)
-		UpToDateMsg.Add("Text", "x80 y16", AppName)
+		UpToDateMsg.SetFont("s16 W700 Q4 " . MessageAppNameFontColor, MessageAppNameFontType)
+		UpToDateMsg.Add("Text", "x50 y16 +Center w420", AppName)
+		UpToDateMsg.Add("Text", "x470 y16 +Center w20", "")
 		UpToDateMsg.SetFont("s9 " . MessageFontColor, MessageFontType)
-		UpToDateMsg.Add("Text", "x303 y31 ", CurrentVersion)
-		UpToDateMsg.Add("Text", "x80 y55 ", "License key: " )
+		UpToDateMsg.Add("Text", "x355 y24 ", CurrentVersion)
+		UpToDateMsg.Add("Text", "x0 y54 w500 h1 +0x5")
+		;-----------------
 		UpToDateMsg.SetFont()
-		UpToDateMsg.SetFont("s8 Bold " . LicenseKeyFontColor, LicenseKeyFontType)
-		UpToDateMsg.Add("Text", "x160 y55 ", LicenseKey)
-		UpToDateMsg.Add("Text", "x0 y90 w470 h1 +0x5")
-		UpToDateMsg.SetFont()
-		UpToDateMsg.SetFont("s12 " . MessageMainMsgFontColor, MessageMainMsgFontType)
-		UpToDateMsg.Add("Text", "x135 y123", "Current version is up to date!")
-		UpToDateMsg.SetFont()
-		UpToDateMsg.SetFont("s9 " . MessageFontColor, MessageFontType)
-		UpToDateMsg.Add("Text", "x0 y180 w470 h1 +0x5")
-        UpToDateMsg.Add("Text", "x25 y190", "Copyright 2024 FDJ-Software. All Rights Reserved.")
-		UpToDateMsg.SetFont()
-		UpToDateMsg.SetFont("s8 " . MessageFontColor, MessageFontType)
-		UpToDateMsg.Add("Text", "x25 y212", "Made with AutoHotkey V" A_AhkVersion . " " . (1 ? "Unicode" : "ANSI") . " " . (A_PtrSize == 8 ? "64-bit" : "32-bit"))
-		ogcButtonOK := UpToDateMsg.Add("Button", "x370 y200 w80 h24", "OK")
-		ogcButtonOK.OnEvent("Click", Destroy)
-        UpToDateMsg.Title := "Up To Date!"
+		UpToDateMsg.SetFont("s14 " . MessageMainMsgFontColor, MessageMainMsgFontType)
+		UpToDateMsg.Add("Text", "x100 y123 +Center w300 +0x200", "Current version is up to date!")
+        ;-----------------
+		UpToDateMsg.Title := "Up To Date!"
 		if GuiName == "TaskAutomatorGui1" {
 			TaskAutomatorGui1.GetPos(&PosX, &PosY)
 		} else {
 			TaskAutomatorGui2.GetPos(&PosX, &PosY)
 		}
-        UpToDateMsg.Show("x" . PosX - 150 . " y" . PosY + 220 . "w470 h240")
-        ControlFocus("Button1", "Up To Date!")
+        UpToDateMsg.Show("x" . PosX - 150 . " y" . PosY + 220 . "w500 h240")
         UpToDateMsg.Opt("+LastFound")
+		Destroy()
 	Return
 	Destroy(*){
+	    Sleep ExitMessageTimeWait
 		UpToDateMsg.Destroy()
 	}
 }
@@ -1093,13 +1136,13 @@ NewVersionAvailableMessage(ReleaseVersion, *) {
 		MessageBackgroundPicture := IniRead(IniFile, "Background", "MessageBackgroundPicture")
 		if MessageBackgroundPicture == "" {
 		try {
-				NewVerMsg.Add("Picture", "x0 y0 w470 h240", ImageLib . DefaultMsgBackgroundImage)
+				NewVerMsg.Add("Picture", "x0 y0 w500 h240", ImageLib . DefaultMsgBackgroundImage)
 			}
 			catch {
 			}
 		} else {
 			try {
-				NewVerMsg.Add("Picture", "x0 y0 w470 h240", MessageBackgroundPicture)
+				NewVerMsg.Add("Picture", "x0 y0 w500 h240", MessageBackgroundPicture)
 			}
 			catch {
 				MessageBackgroundPicture := ""
@@ -1112,44 +1155,36 @@ NewVersionAvailableMessage(ReleaseVersion, *) {
 				}
 				IniWrite PosX, IniFile, "Properties", "PositionX"
 				IniWrite PosY, IniFile, "Properties", "PositionY"
-				IniWrite true, TempSystemFile, "GeneralData", "DinamicReload"
+				IniWrite true, TempSystemFile, "GeneralData", "DynamicReload"
 			}
 		}
 		try {
-			NewVerMsg.Add("Picture", "x9 y12 w64 h64 +border", IconLib . FDJ_SoftwareIcon)
+			NewVerMsg.Add("Picture", "x9 y10 w32 h32 +border", IconLib . FDJ_SoftwareIcon)
 		}
 		catch {
 		}
-		NewVerMsg.SetFont("s20 W700 Q4 " . MessageAppNameFontColor, MessageAppNameFontType)
-		NewVerMsg.Add("Text", "x80 y16", AppName)
+		NewVerMsg.SetFont("s16 W700 Q4 " . MessageAppNameFontColor, MessageAppNameFontType)
+		NewVerMsg.Add("Text", "x50 y16 +Center w420", AppName)
+		NewVerMsg.Add("Text", "x470 y16 +Center w20", "")
 		NewVerMsg.SetFont("s9 " . MessageFontColor, MessageFontType)
-		NewVerMsg.Add("Text", "x303 y31 ", CurrentVersion)
-		NewVerMsg.Add("Text", "x80 y55 ", "License key: " )
+		NewVerMsg.Add("Text", "x355 y24 ", CurrentVersion)
+		NewVerMsg.Add("Text", "x0 y54 w500 h1 +0x5")
+		;-----------------
 		NewVerMsg.SetFont()
-		NewVerMsg.SetFont("s8 Bold " . LicenseKeyFontColor, LicenseKeyFontType)
-		NewVerMsg.Add("Text", "x160 y55 ", LicenseKey)
-		NewVerMsg.Add("Text", "x0 y90 w470 h1 +0x5")
-		NewVerMsg.SetFont()
-		NewVerMsg.SetFont("s12 " . MessageMainMsgFontColor, MessageMainMsgFontType)
-		NewVerMsg.Add("Text", "x100 y115", "New release version " . ReleaseVersion . " is available")
+		NewVerMsg.SetFont("s14 " . MessageMainMsgFontColor, MessageMainMsgFontType)
+		NewVerMsg.Add("Text", "x80 y115 +Center w340 +0x200", "New release version " . ReleaseVersion . " is available.")
 		NewVerMsg.SetFont()
 		NewVerMsg.SetFont("s9 " . MessageFontColor, MessageFontType)
-		ogcButtonUpdate := NewVerMsg.Add("Button", "x190 y145 w80 h24", "Download")
+		ogcButtonUpdate := NewVerMsg.Add("Button", "x210 y145 w80 h24", "Download")
 		ogcButtonUpdate.OnEvent("Click", UpdateDownload)
-		NewVerMsg.Add("Text", "x0 y180 w470 h1 +0x5")
-        NewVerMsg.Add("Text", "x25 y190", "Copyright 2024 FDJ-Software. All Rights Reserved.")
-		NewVerMsg.SetFont()
-		NewVerMsg.SetFont("s8 " . MessageFontColor, MessageFontType)
-		NewVerMsg.Add("Text", "x25 y212", "Made with AutoHotkey V" A_AhkVersion . " " . (1 ? "Unicode" : "ANSI") . " " . (A_PtrSize == 8 ? "64-bit" : "32-bit"))
-		ogcButtonOK := NewVerMsg.Add("Button", "x370 y200 w80 h24", "Close")
-		ogcButtonOK.OnEvent("Click", Destroy)
+		;-----------------
         NewVerMsg.Title := "New Version Available!"
 		if GuiName == "TaskAutomatorGui1" {
 			TaskAutomatorGui1.GetPos(&PosX, &PosY)
 		} else {
 			TaskAutomatorGui2.GetPos(&PosX, &PosY)
 		}
-        NewVerMsg.Show("x" . PosX - 150 . " y" . PosY + 220 . "w470 h240")
+        NewVerMsg.Show("x" . PosX - 150 . " y" . PosY + 220 . "w500 h240")
         ControlFocus("Button1", "New Version Available!")
         NewVerMsg.Opt("+LastFound")
 		NewVerMsg.OnEvent("Close", NewVerMsg_Close)
@@ -1161,13 +1196,13 @@ NewVersionAvailableMessage(ReleaseVersion, *) {
 		TAName := IniRead(DataFile, "GeneralData", "TAName")
 		; Scaped character included: ``
 		TADownloadPart1 := "PLjr_f_[HF16S_KEBLbjHF16AJKEQ[23BIPLRZU\gc75EJ7?U\c_LTahPL7?Y``ok``h]d93so=EY``eaT\BLNUgcZbW^JFdlCAEJ71HTV``CA,5ovgcNVelmi\d3:JFT\ahsoX``49KEY``sobjW^kgV``V^ahgcNVovMIB@PX<Cgc?DFCGR23EQJS89amGU,5+(ZbKRJK<HDObkTUwsBNjr9@V_E?DRVW_kmiDMbj>?KWPYHOc_.6\]am\eNUGC.6``a]d6B=:;Fc_PYLTJXY``YUIQBI.+D@XYNV_k]dGC>GFNDEGRip6B5C;D>?Q]=:>I;DAOPQ6BfoPL\dno[bQ["
-		TADownloadPart1 := DecriptMsg(TADownloadPart1)
+		TADownloadPart1 := DecryptMsg(TADownloadPart1)
 		;------------------------
-		TADownloadPart2 := IniRead(DataFile, "EncriptedData", "TADownload")
-		TADownloadPart2 := DecriptMsg(TADownloadPart2)
+		TADownloadPart2 := IniRead(DataFile, "EncryptedData", "TADownload")
+		TADownloadPart2 := DecryptMsg(TADownloadPart2)
 		;------------------------
 		TADownloadPart3 := "42so"
-		TADownloadPart3 := DecriptMsg(TADownloadPart3)
+		TADownloadPart3 := DecryptMsg(TADownloadPart3)
 		;------------------------
 		TADownloadPart4 := FileSelect("S16", A_MyDocuments . "\" . TAName , "Save File", "Executable files (*.exe)")
 		FullPathDownLoad := TADownloadPart1 . " " . TADownloadPart2 . " " . TADownloadPart3 . " " . TADownloadPart4
