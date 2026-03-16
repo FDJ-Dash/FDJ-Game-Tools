@@ -2,7 +2,7 @@
 ; Creator: Fernando Daniel Jaime.
 ; Programmer Alias: FDJ-Dash.
 ;------------- File Details ------------
-; App Name: Task Automator.
+; App Name: Game Tools.
 ; File Description: This file contains functions related to file selection on main app.
 ;----------------------------------------------------
 ; Header list:

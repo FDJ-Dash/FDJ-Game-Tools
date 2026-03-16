@@ -2,7 +2,7 @@
 ; Creator: Fernando Daniel Jaime.
 ; Programmer Alias: FDJ-Dash.
 ;------------- File Details ------------
-; App Name: Task Automator.
+; App Name: Game Tools.
 ; File Description: This file creates Task Automator GUI.
 ;----------------------------------------------------
 ; Header list:
@@ -492,8 +492,6 @@ AutoClickerModule(TaskAutomatorGui,
 				  Position18,
 				  Position19,
 				  Position20,
-				  Position21,
-				  Position22,
 				  &StartTime,
 				  &LastYLine){
 	;-------------------------------
@@ -1468,98 +1466,11 @@ AutoClickerModule(TaskAutomatorGui,
 	Position20.EditRadioNo := TaskAutomatorGui.Add("Radio", "vRadio20No x211 y507 w30 h20", "N")
 	Position20.EditRadioNo.Value := Position20.RadioNo
 	;----------------------------------------------------
-	; Position 21
-	;----------------------------------------------------
-	TaskAutomatorGui.Add("Text","x7 y528 h20 +0x200", "21")
-	TaskAutomatorGui.SetFont()
-	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
-	if EditBoxesAvailable == true {
-		Position21.EditPosX := TaskAutomatorGui.Add("Edit", "vCoordX21 x25 y528 w40 h20 +Number")
-	} else {
-		Position21.EditPosX := TaskAutomatorGui.Add("Edit", "vCoordX21 x25 y528 w40 h20 +Number +Disabled")
-	}
-	Position21.EditPosX.Opt("" . BackgroundMainColor . "")
-	TaskAutomatorGui.SetFont()
-	TaskAutomatorGui.SetFont("Bold " . MainFontColor, MainFontType)
-	Position21.EditPosX.Value := Position21.CoordX
-	;--------------------
-	TaskAutomatorGui.SetFont()
-	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
-	if EditBoxesAvailable == true {
-		Position21.EditPosY := TaskAutomatorGui.Add("Edit", "vCoordY21 x73 y528 w40 h20 +Number")
-	} else {
-		Position21.EditPosY := TaskAutomatorGui.Add("Edit", "vCoordY21 x73 y528 w40 h20 +Number +Disabled")
-	}
-	Position21.EditPosY.Opt("" . BackgroundMainColor . "")
-	TaskAutomatorGui.SetFont()
-	TaskAutomatorGui.SetFont("Bold " . MainFontColor, MainFontType)
-	Position21.EditPosY.Value := Position21.CoordY
-	;--------------------
-	TaskAutomatorGui.SetFont()
-	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
-	if EditBoxesAvailable == true {
-		Position21.EditInterval := TaskAutomatorGui.Add("Edit", "vCoord21Interval x121 y528 w50 h20 +Number")
-	} else {
-		Position21.EditInterval := TaskAutomatorGui.Add("Edit", "vCoord21Interval x121 y528 w50 h20 +Number +Disabled")
-	}
-	Position21.EditInterval.Opt("" . BackgroundMainColor . "")
-	TaskAutomatorGui.SetFont()
-	TaskAutomatorGui.SetFont("Bold " . MainFontColor, MainFontType)
-	Position21.EditInterval.Value := Position21.Interval
-	;--------------------
-	Position21.EditRadioYes := TaskAutomatorGui.Add("Radio", "vRadio21Yes x179 y528 h20", "Y")
-	Position21.EditRadioYes.Value := Position21.RadioYes
-	Position21.EditRadioNo := TaskAutomatorGui.Add("Radio", "vRadio21No x211 y528 w30 h20", "N")
-	Position21.EditRadioNo.Value := Position21.RadioNo
-	;----------------------------------------------------
-	; Position 22
-	;----------------------------------------------------
-	TaskAutomatorGui.Add("Text","x7 y549 h20 +0x200", "22")
-	TaskAutomatorGui.SetFont()
-	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
-	if EditBoxesAvailable == true {
-		Position22.EditPosX := TaskAutomatorGui.Add("Edit", "vCoordX22 x25 y549 w40 h20 +Number")
-	} else {
-		Position22.EditPosX := TaskAutomatorGui.Add("Edit", "vCoordX22 x25 y549 w40 h20 +Number +Disabled")
-	}
-	Position22.EditPosX.Opt("" . BackgroundMainColor . "")
-	TaskAutomatorGui.SetFont()
-	TaskAutomatorGui.SetFont("Bold " . MainFontColor, MainFontType)
-	Position22.EditPosX.Value := Position22.CoordX
-	;--------------------
-	TaskAutomatorGui.SetFont()
-	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
-	if EditBoxesAvailable == true {
-		Position22.EditPosY := TaskAutomatorGui.Add("Edit", "vCoordY22 x73 y549 w40 h20 +Number")
-	} else {
-		Position22.EditPosY := TaskAutomatorGui.Add("Edit", "vCoordY22 x73 y549 w40 h20 +Number +Disabled")
-	}
-	Position22.EditPosY.Opt("" . BackgroundMainColor . "")
-	TaskAutomatorGui.SetFont()
-	TaskAutomatorGui.SetFont("Bold " . MainFontColor, MainFontType)
-	Position22.EditPosY.Value := Position22.CoordY
-	;--------------------
-	TaskAutomatorGui.SetFont()
-	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
-	if EditBoxesAvailable == true {
-		Position22.EditInterval := TaskAutomatorGui.Add("Edit", "vCoord22Interval x121 y549 w50 h20 +Number")
-	} else {
-		Position22.EditInterval := TaskAutomatorGui.Add("Edit", "vCoord22Interval x121 y549 w50 h20 +Number +Disabled")
-	}
-	Position22.EditInterval.Opt("" . BackgroundMainColor . "")
-	TaskAutomatorGui.SetFont()
-	TaskAutomatorGui.SetFont("Bold " . MainFontColor, MainFontType)
-	Position22.EditInterval.Value := Position22.Interval
-	;--------------------
-	Position22.EditRadioYes := TaskAutomatorGui.Add("Radio", "vRadio22Yes x179 y549 h20", "Y")
-	Position22.EditRadioYes.Value := Position22.RadioYes
-	Position22.EditRadioNo := TaskAutomatorGui.Add("Radio", "vRadio22No x211 y549 w30 h20", "N")
-	Position22.EditRadioNo.Value := Position22.RadioNo
-	;----------------------------------------------------
-	TaskAutomatorGui.Add("Text","x22 y575 +0x200", " Time interval in ms (1 second = 1000) ")
+	LastYLine := 507
+	TaskAutomatorGui.Add("Text","x22 y" . LastYLine + 26 . " +0x200", " Time interval in ms (1 second = 1000) ")
 	
 	StartTime := A_TickCount
-	LastYLine := 570
+	LastYLine := 507 +21
 }
 ;----------------------------------------------------
 ; Y-233 / Quick Access
@@ -2376,13 +2287,13 @@ CheckForUpdates(TaskAutomatorGui,
 			if !FileExist(DataFile) {
 				ParseRequest()
 			}
-			TALatestReleaseVersion := IniRead(DataFile, "GeneralData", "TALatestReleaseVersion")
-			if TALatestReleaseVersion == "" {
+			GTLatestReleaseVersion := IniRead(DataFile, "GeneralData", "GTLatestReleaseVersion")
+			if GTLatestReleaseVersion == "" {
 				ParseRequest()
 			}
-			DownloadUrl := IniRead(DataFile, "EncryptedData", "TADownload")
-			TALatestReleaseVersion := IniRead(DataFile, "GeneralData", "TALatestReleaseVersion")
-			if TALatestReleaseVersion != CurrentVersion {
+			DownloadUrl := IniRead(DataFile, "EncryptedData", "GTDownload")
+			GTLatestReleaseVersion := IniRead(DataFile, "GeneralData", "GTLatestReleaseVersion")
+			if GTLatestReleaseVersion != CurrentVersion {
 				if DownloadUrl != "" {
 					TaskAutomatorGui.SetFont("s8 Bold cYellow", LicenseKeyFontType)
 					TaskAutomatorGui.Add("Text","x97 y" . LastYLine + 64 . " w126 h20 +0x200", " New version available ")
@@ -2395,7 +2306,7 @@ CheckForUpdates(TaskAutomatorGui,
 					IniWrite NeedUpdate, IniFile, "Settings", "NeedUpdate"
 				}
 			}
-			if TALatestReleaseVersion == CurrentVersion {
+			if GTLatestReleaseVersion == CurrentVersion {
 				TaskAutomatorGui.SetFont("s8 Bold cLime", LicenseKeyFontType)
 				TaskAutomatorGui.Add("Text","x97 y" . LastYLine + 64 . " w126 h20 +0x200", " Version up to date ")
 				if NeedUpdate == 1 or NeedUpdate == "" {

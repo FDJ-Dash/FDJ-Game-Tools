@@ -2,7 +2,7 @@
 ; Creator: Fernando Daniel Jaime.
 ; Programmer Alias: FDJ-Dash.
 ;------------- File Details ------------
-; App Name: Task Automator.
+; App Name: Game Tools.
 ; File Description: This file creates Task Automator GUI.
 ;----------------------------------------------------
 ; Header list:
@@ -63,6 +63,14 @@ ResizedAutoClickerModule(TaskAutomatorGui,
 						 Position20,
 						 Position21,
 						 Position22,
+						 Position23,
+						 Position24,
+						 Position25,
+						 Position26,
+						 Position27,
+						 Position28,
+						 Position29,
+						 Position30,
 						 &StartTime,
 						 &LastYLine){
 	;-------------------------------
@@ -158,11 +166,11 @@ ResizedAutoClickerModule(TaskAutomatorGui,
 	TextPosX1 := TaskAutomatorGui.Add("Text","x37 y40 h20 +0x200", " X ")
 	TextPosY1 := TaskAutomatorGui.Add("Text","x84 y40 h20 +0x200", " Y ")
 	TextPosInterval1 := TaskAutomatorGui.Add("Text","x121 y40 h20 +0x200", " Interval ")
-	TaskAutomatorGui.Add("Text", "x249 y36 w3 h203 +0x11") ; Vertical Separator
+	TaskAutomatorGui.Add("Text", "x249 y36 w3 h246 +0x11") ; Vertical Separator
 	TextPosX1 := TaskAutomatorGui.Add("Text","x287 y40 h20 +0x200", " X ")
 	TextPosY1 := TaskAutomatorGui.Add("Text","x334 y40 h20 +0x200", " Y ")
 	TextPosInterval1 := TaskAutomatorGui.Add("Text","x371 y40 h20 +0x200", " Interval ")
-	TaskAutomatorGui.Add("Text", "x499 y36 w3 h177 +0x11") ; Vertical Separator
+	TaskAutomatorGui.Add("Text", "x499 y36 w3 h246 +0x11") ; Vertical Separator
 	TextPosX1 := TaskAutomatorGui.Add("Text","x537 y40 h20 +0x200", " X ")
 	TextPosY1 := TaskAutomatorGui.Add("Text","x584 y40 h20 +0x200", " Y ")
 	TextPosInterval1 := TaskAutomatorGui.Add("Text","x621 y40 h20 +0x200", " Interval ")
@@ -222,13 +230,13 @@ ResizedAutoClickerModule(TaskAutomatorGui,
 	;----------------------------------------------------
 	; Position 2
 	;----------------------------------------------------
-	TaskAutomatorGui.Add("Text","x260 y65 h20 +0x200", "2")
+	TaskAutomatorGui.Add("Text","x10 y86 h20 +0x200", "2")
 	TaskAutomatorGui.SetFont()
 	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
 	if EditBoxesAvailable == true {
-		Position2.EditPosX := TaskAutomatorGui.Add("Edit", "vCoordX2 x275 y65 w40 h20 +Number")
+		Position2.EditPosX := TaskAutomatorGui.Add("Edit", "vCoordX2 x25 y86 w40 h20 +Number")
 	} else {
-		Position2.EditPosX := TaskAutomatorGui.Add("Edit", "vCoordX2 x275 y65 w40 h20 +Number +Disabled")
+		Position2.EditPosX := TaskAutomatorGui.Add("Edit", "vCoordX2 x25 y86 w40 h20 +Number +Disabled")
 	}
 	Position2.EditPosX.Opt("" . BackgroundMainColor . "")
 	TaskAutomatorGui.SetFont()
@@ -238,9 +246,9 @@ ResizedAutoClickerModule(TaskAutomatorGui,
 	TaskAutomatorGui.SetFont()
 	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
 	if EditBoxesAvailable == true {
-		Position2.EditPosY := TaskAutomatorGui.Add("Edit", "vCoordY2 x323 y65 w40 h20 +Number")
+		Position2.EditPosY := TaskAutomatorGui.Add("Edit", "vCoordY2 x73 y86 w40 h20 +Number")
 	} else {
-		Position2.EditPosY := TaskAutomatorGui.Add("Edit", "vCoordY2 x323 y65 w40 h20 +Number +Disabled")
+		Position2.EditPosY := TaskAutomatorGui.Add("Edit", "vCoordY2 x73 y86 w40 h20 +Number +Disabled")
 	}
 	Position2.EditPosY.Opt("" . BackgroundMainColor . "")
 	TaskAutomatorGui.SetFont()
@@ -250,29 +258,29 @@ ResizedAutoClickerModule(TaskAutomatorGui,
 	TaskAutomatorGui.SetFont()
 	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
 	if EditBoxesAvailable == true {
-		Position2.EditInterval := TaskAutomatorGui.Add("Edit", "vCoord2Interval x371 y65 w50 h20 +Number")
+		Position2.EditInterval := TaskAutomatorGui.Add("Edit", "vCoord2Interval x121 y86 w50 h20 +Number")
 	} else {
-		Position2.EditInterval := TaskAutomatorGui.Add("Edit", "vCoord2Interval x371 y65 w50 h20 +Number +Disabled")
+		Position2.EditInterval := TaskAutomatorGui.Add("Edit", "vCoord2Interval x121 y86 w50 h20 +Number +Disabled")
 	}
 	Position2.EditInterval.Opt("" . BackgroundMainColor . "")
 	TaskAutomatorGui.SetFont()
 	TaskAutomatorGui.SetFont("Bold " . MainFontColor, MainFontType)
 	Position2.EditInterval.Value := Position2.Interval
 	;--------------------
-	Position2.EditRadioYes := TaskAutomatorGui.Add("Radio", "vRadio2Yes x429 y65 h20", "Y")
+	Position2.EditRadioYes := TaskAutomatorGui.Add("Radio", "vRadio2Yes x179 y86 h20", "Y")
 	Position2.EditRadioYes.Value := Position2.RadioYes
-	Position2.EditRadioNo := TaskAutomatorGui.Add("Radio", "vRadio2No x461 y65 w30 h20", "N")
+	Position2.EditRadioNo := TaskAutomatorGui.Add("Radio", "vRadio2No x211 y86 w30 h20", "N")
 	Position2.EditRadioNo.Value := Position2.RadioNo
 	;----------------------------------------------------
 	; Position 3
 	;----------------------------------------------------
-	TaskAutomatorGui.Add("Text","x510 y65 h20 +0x200", "3")
+	TaskAutomatorGui.Add("Text","x10 y107 h20 +0x200", "3")
 	TaskAutomatorGui.SetFont()
 	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
 	if EditBoxesAvailable == true {
-		Position3.EditPosX := TaskAutomatorGui.Add("Edit", "vCoordX3 x525 y65 w40 h20 +Number")
+		Position3.EditPosX := TaskAutomatorGui.Add("Edit", "vCoordX3 x25 y107 w40 h20 +Number")
 	} else {
-		Position3.EditPosX := TaskAutomatorGui.Add("Edit", "vCoordX3 x525 y65 w40 h20 +Number +Disabled")
+		Position3.EditPosX := TaskAutomatorGui.Add("Edit", "vCoordX3 x25 y107 w40 h20 +Number +Disabled")
 	}
 	Position3.EditPosX.Opt("" . BackgroundMainColor . "")
 	TaskAutomatorGui.SetFont()
@@ -282,9 +290,9 @@ ResizedAutoClickerModule(TaskAutomatorGui,
 	TaskAutomatorGui.SetFont()
 	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
 	if EditBoxesAvailable == true {
-		Position3.EditPosY := TaskAutomatorGui.Add("Edit", "vCoordY3 x573 y65 w40 h20 +Number")
+		Position3.EditPosY := TaskAutomatorGui.Add("Edit", "vCoordY3 x73 y107 w40 h20 +Number")
 	} else {
-		Position3.EditPosY := TaskAutomatorGui.Add("Edit", "vCoordY3 x573 y65 w40 h20 +Number +Disabled")
+		Position3.EditPosY := TaskAutomatorGui.Add("Edit", "vCoordY3 x73 y107 w40 h20 +Number +Disabled")
 	}
 	Position3.EditPosY.Opt("" . BackgroundMainColor . "")
 	TaskAutomatorGui.SetFont()
@@ -294,29 +302,29 @@ ResizedAutoClickerModule(TaskAutomatorGui,
 	TaskAutomatorGui.SetFont()
 	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
 	if EditBoxesAvailable == true {
-		Position3.EditInterval := TaskAutomatorGui.Add("Edit", "vCoord3Interval x621 y65 w50 h20 +Number")
+		Position3.EditInterval := TaskAutomatorGui.Add("Edit", "vCoord3Interval x121 y107 w50 h20 +Number")
 	} else {
-		Position3.EditInterval := TaskAutomatorGui.Add("Edit", "vCoord3Interval x621 y65 w50 h20 +Number +Disabled")
+		Position3.EditInterval := TaskAutomatorGui.Add("Edit", "vCoord3Interval x121 y107 w50 h20 +Number +Disabled")
 	}
 	Position3.EditInterval.Opt("" . BackgroundMainColor . "")
 	TaskAutomatorGui.SetFont()
 	TaskAutomatorGui.SetFont("Bold " . MainFontColor, MainFontType)
 	Position3.EditInterval.Value := Position3.Interval
 	;--------------------
-	Position3.EditRadioYes := TaskAutomatorGui.Add("Radio", "vRadio3Yes x679 y65 h20", "Y")
+	Position3.EditRadioYes := TaskAutomatorGui.Add("Radio", "vRadio3Yes x179 y107 h20", "Y")
 	Position3.EditRadioYes.Value := Position3.RadioYes
-	Position3.EditRadioNo := TaskAutomatorGui.Add("Radio", "vRadio3No x711 y65 w30 h20", "N")
+	Position3.EditRadioNo := TaskAutomatorGui.Add("Radio", "vRadio3No x211 y107 w30 h20", "N")
 	Position3.EditRadioNo.Value := Position3.RadioNo
 	;----------------------------------------------------
 	; Position 4
 	;----------------------------------------------------
-	TaskAutomatorGui.Add("Text","x10 y86 h20 +0x200", "4")
+	TaskAutomatorGui.Add("Text","x10 y128 h20 +0x200", "4")
 	TaskAutomatorGui.SetFont()
 	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
 	if EditBoxesAvailable == true {
-		Position4.EditPosX := TaskAutomatorGui.Add("Edit", "vCoordX4 x25 y86 w40 h20 +Number")
+		Position4.EditPosX := TaskAutomatorGui.Add("Edit", "vCoordX4 x25 y128 w40 h20 +Number")
 	} else {
-		Position4.EditPosX := TaskAutomatorGui.Add("Edit", "vCoordX4 x25 y86 w40 h20 +Number +Disabled")
+		Position4.EditPosX := TaskAutomatorGui.Add("Edit", "vCoordX4 x25 y128 w40 h20 +Number +Disabled")
 	}
 	Position4.EditPosX.Opt("" . BackgroundMainColor . "")
 	TaskAutomatorGui.SetFont()
@@ -326,9 +334,9 @@ ResizedAutoClickerModule(TaskAutomatorGui,
 	TaskAutomatorGui.SetFont()
 	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
 	if EditBoxesAvailable == true {
-		Position4.EditPosY := TaskAutomatorGui.Add("Edit", "vCoordY4 x73 y86 w40 h20 +Number")
+		Position4.EditPosY := TaskAutomatorGui.Add("Edit", "vCoordY4 x73 y128 w40 h20 +Number")
 	} else {
-		Position4.EditPosY := TaskAutomatorGui.Add("Edit", "vCoordY4 x73 y86 w40 h20 +Number +Disabled")
+		Position4.EditPosY := TaskAutomatorGui.Add("Edit", "vCoordY4 x73 y128 w40 h20 +Number +Disabled")
 	}
 	Position4.EditPosY.Opt("" . BackgroundMainColor . "")
 	TaskAutomatorGui.SetFont()
@@ -338,29 +346,29 @@ ResizedAutoClickerModule(TaskAutomatorGui,
 	TaskAutomatorGui.SetFont()
 	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
 	if EditBoxesAvailable == true {
-		Position4.EditInterval := TaskAutomatorGui.Add("Edit", "vCoord4Interval x121 y86 w50 h20 +Number")
+		Position4.EditInterval := TaskAutomatorGui.Add("Edit", "vCoord4Interval x121 y128 w50 h20 +Number")
 	} else {
-		Position4.EditInterval := TaskAutomatorGui.Add("Edit", "vCoord4Interval x121 y86 w50 h20 +Number +Disabled")
+		Position4.EditInterval := TaskAutomatorGui.Add("Edit", "vCoord4Interval x121 y128 w50 h20 +Number +Disabled")
 	}
 	Position4.EditInterval.Opt("" . BackgroundMainColor . "")
 	TaskAutomatorGui.SetFont()
 	TaskAutomatorGui.SetFont("Bold " . MainFontColor, MainFontType)
 	Position4.EditInterval.Value := Position4.Interval
 	;--------------------
-	Position4.EditRadioYes := TaskAutomatorGui.Add("Radio", "vRadio4Yes x179 y86 h20", "Y")
+	Position4.EditRadioYes := TaskAutomatorGui.Add("Radio", "vRadio4Yes x179 y128 h20", "Y")
 	Position4.EditRadioYes.Value := Position4.RadioYes
-	Position4.EditRadioNo := TaskAutomatorGui.Add("Radio", "vRadio4No x211 y86 w30 h20", "N")
+	Position4.EditRadioNo := TaskAutomatorGui.Add("Radio", "vRadio4No x211 y128 w30 h20", "N")
 	Position4.EditRadioNo.Value := Position4.RadioNo
 	;----------------------------------------------------
 	; Position 5
 	;----------------------------------------------------
-	TaskAutomatorGui.Add("Text","x260 y86 h20 +0x200", "5")
+	TaskAutomatorGui.Add("Text","x10 y149 h20 +0x200", "5")
 	TaskAutomatorGui.SetFont()
 	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
 	if EditBoxesAvailable == true {
-		Position5.EditPosX := TaskAutomatorGui.Add("Edit", "vCoordX5 x275 y86 w40 h20 +Number")
+		Position5.EditPosX := TaskAutomatorGui.Add("Edit", "vCoordX5 x25 y149 w40 h20 +Number")
 	} else {
-		Position5.EditPosX := TaskAutomatorGui.Add("Edit", "vCoordX5 x275 y86 w40 h20 +Number +Disabled")
+		Position5.EditPosX := TaskAutomatorGui.Add("Edit", "vCoordX5 x25 y149 w40 h20 +Number +Disabled")
 	}
 	Position5.EditPosX.Opt("" . BackgroundMainColor . "")
 	TaskAutomatorGui.SetFont()
@@ -370,9 +378,9 @@ ResizedAutoClickerModule(TaskAutomatorGui,
 	TaskAutomatorGui.SetFont()
 	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
 	if EditBoxesAvailable == true {
-		Position5.EditPosY := TaskAutomatorGui.Add("Edit", "vCoordY5 x323 y86 w40 h20 +Number")
+		Position5.EditPosY := TaskAutomatorGui.Add("Edit", "vCoordY5 x73 y149 w40 h20 +Number")
 	} else {
-		Position5.EditPosY := TaskAutomatorGui.Add("Edit", "vCoordY5 x323 y86 w40 h20 +Number +Disabled")
+		Position5.EditPosY := TaskAutomatorGui.Add("Edit", "vCoordY5 x73 y149 w40 h20 +Number +Disabled")
 	}
 	Position5.EditPosY.Opt("" . BackgroundMainColor . "")
 	TaskAutomatorGui.SetFont()
@@ -382,29 +390,29 @@ ResizedAutoClickerModule(TaskAutomatorGui,
 	TaskAutomatorGui.SetFont()
 	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
 	if EditBoxesAvailable == true {
-		Position5.EditInterval := TaskAutomatorGui.Add("Edit", "vCoord5Interval x371 y86 w50 h20 +Number")
+		Position5.EditInterval := TaskAutomatorGui.Add("Edit", "vCoord5Interval x121 y149 w50 h20 +Number")
 	} else {
-		Position5.EditInterval := TaskAutomatorGui.Add("Edit", "vCoord5Interval x371 y86 w50 h20 +Number +Disabled")
+		Position5.EditInterval := TaskAutomatorGui.Add("Edit", "vCoord5Interval x121 y149 w50 h20 +Number +Disabled")
 	}
 	Position5.EditInterval.Opt("" . BackgroundMainColor . "")
 	TaskAutomatorGui.SetFont()
 	TaskAutomatorGui.SetFont("Bold " . MainFontColor, MainFontType)
 	Position5.EditInterval.Value := Position5.Interval
 	;--------------------
-	Position5.EditRadioYes := TaskAutomatorGui.Add("Radio", "vRadio5Yes x429 y86 h20", "Y")
+	Position5.EditRadioYes := TaskAutomatorGui.Add("Radio", "vRadio5Yes x179 y149 h20", "Y")
 	Position5.EditRadioYes.Value := Position5.RadioYes
-	Position5.EditRadioNo := TaskAutomatorGui.Add("Radio", "vRadio5No x461 y86 w30 h20", "N")
+	Position5.EditRadioNo := TaskAutomatorGui.Add("Radio", "vRadio5No x211 y149 w30 h20", "N")
 	Position5.EditRadioNo.Value := Position5.RadioNo
 	;----------------------------------------------------
 	; Position 6
 	;----------------------------------------------------
-	TaskAutomatorGui.Add("Text","x510 y86 h20 +0x200", "6")
+	TaskAutomatorGui.Add("Text","x10 y170 h20 +0x200", "6")
 	TaskAutomatorGui.SetFont()
 	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
 	if EditBoxesAvailable == true {
-		Position6.EditPosX := TaskAutomatorGui.Add("Edit", "vCoordX6 x525 y86 w40 h20 +Number")
+		Position6.EditPosX := TaskAutomatorGui.Add("Edit", "vCoordX6 x25 y170 w40 h20 +Number")
 	} else {
-		Position6.EditPosX := TaskAutomatorGui.Add("Edit", "vCoordX6 x525 y86 w40 h20 +Number +Disabled")
+		Position6.EditPosX := TaskAutomatorGui.Add("Edit", "vCoordX6 x25 y170 w40 h20 +Number +Disabled")
 	}
 	Position6.EditPosX.Opt("" . BackgroundMainColor . "")
 	TaskAutomatorGui.SetFont()
@@ -414,9 +422,9 @@ ResizedAutoClickerModule(TaskAutomatorGui,
 	TaskAutomatorGui.SetFont()
 	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
 	if EditBoxesAvailable == true {
-		Position6.EditPosY := TaskAutomatorGui.Add("Edit", "vCoordY6 x573 y86 w40 h20 +Number")
+		Position6.EditPosY := TaskAutomatorGui.Add("Edit", "vCoordY6 x73 y170 w40 h20 +Number")
 	} else {
-		Position6.EditPosY := TaskAutomatorGui.Add("Edit", "vCoordY6 x573 y86 w40 h20 +Number +Disabled")
+		Position6.EditPosY := TaskAutomatorGui.Add("Edit", "vCoordY6 x73 y170 w40 h20 +Number +Disabled")
 	}
 	Position6.EditPosY.Opt("" . BackgroundMainColor . "")
 	TaskAutomatorGui.SetFont()
@@ -426,29 +434,29 @@ ResizedAutoClickerModule(TaskAutomatorGui,
 	TaskAutomatorGui.SetFont()
 	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
 	if EditBoxesAvailable == true {
-		Position6.EditInterval := TaskAutomatorGui.Add("Edit", "vCoord6Interval x621 y86 w50 h20 +Number")
+		Position6.EditInterval := TaskAutomatorGui.Add("Edit", "vCoord6Interval x121 y170 w50 h20 +Number")
 	} else {
-		Position6.EditInterval := TaskAutomatorGui.Add("Edit", "vCoord6Interval x621 y86 w50 h20 +Number +Disabled")
+		Position6.EditInterval := TaskAutomatorGui.Add("Edit", "vCoord6Interval x121 y170 w50 h20 +Number +Disabled")
 	}
 	Position6.EditInterval.Opt("" . BackgroundMainColor . "")
 	TaskAutomatorGui.SetFont()
 	TaskAutomatorGui.SetFont("Bold " . MainFontColor, MainFontType)
 	Position6.EditInterval.Value := Position6.Interval
-	;--------------------;--------------------
-	Position6.EditRadioYes := TaskAutomatorGui.Add("Radio", "vRadio6Yes x679 y86 h20", "Y")
+	;--------------------
+	Position6.EditRadioYes := TaskAutomatorGui.Add("Radio", "vRadio6Yes x179 y170 h20", "Y")
 	Position6.EditRadioYes.Value := Position6.RadioYes
-	Position6.EditRadioNo := TaskAutomatorGui.Add("Radio", "vRadio6No x711 y86 w30 h20", "N")
+	Position6.EditRadioNo := TaskAutomatorGui.Add("Radio", "vRadio6No x211 y170 w30 h20", "N")
 	Position6.EditRadioNo.Value := Position6.RadioNo
 	;----------------------------------------------------
 	; Position 7
 	;----------------------------------------------------
-	TaskAutomatorGui.Add("Text","x10 y107 h20 +0x200", "7")
+	TaskAutomatorGui.Add("Text","x10 y191 h20 +0x200", "7")
 	TaskAutomatorGui.SetFont()
 	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
 	if EditBoxesAvailable == true {
-		Position7.EditPosX := TaskAutomatorGui.Add("Edit", "vCoordX7 x25 y107 w40 h20 +Number")
+		Position7.EditPosX := TaskAutomatorGui.Add("Edit", "vCoordX7 x25 y191 w40 h20 +Number")
 	} else {
-		Position7.EditPosX := TaskAutomatorGui.Add("Edit", "vCoordX7 x25 y107 w40 h20 +Number +Disabled")
+		Position7.EditPosX := TaskAutomatorGui.Add("Edit", "vCoordX7 x25 y191 w40 h20 +Number +Disabled")
 	}
 	Position7.EditPosX.Opt("" . BackgroundMainColor . "")
 	TaskAutomatorGui.SetFont()
@@ -458,9 +466,9 @@ ResizedAutoClickerModule(TaskAutomatorGui,
 	TaskAutomatorGui.SetFont()
 	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
 	if EditBoxesAvailable == true {
-		Position7.EditPosY := TaskAutomatorGui.Add("Edit", "vCoordY7 x73 y107 w40 h20 +Number")
+		Position7.EditPosY := TaskAutomatorGui.Add("Edit", "vCoordY7 x73 y191 w40 h20 +Number")
 	} else {
-		Position7.EditPosY := TaskAutomatorGui.Add("Edit", "vCoordY7 x73 y107 w40 h20 +Number +Disabled")
+		Position7.EditPosY := TaskAutomatorGui.Add("Edit", "vCoordY7 x73 y191 w40 h20 +Number +Disabled")
 	}
 	Position7.EditPosY.Opt("" . BackgroundMainColor . "")
 	TaskAutomatorGui.SetFont()
@@ -470,29 +478,29 @@ ResizedAutoClickerModule(TaskAutomatorGui,
 	TaskAutomatorGui.SetFont()
 	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
 	if EditBoxesAvailable == true {
-		Position7.EditInterval := TaskAutomatorGui.Add("Edit", "vCoord7Interval x121 y107 w50 h20 +Number")
+		Position7.EditInterval := TaskAutomatorGui.Add("Edit", "vCoord7Interval x121 y191 w50 h20 +Number")
 	} else {
-		Position7.EditInterval := TaskAutomatorGui.Add("Edit", "vCoord7Interval x121 y107 w50 h20 +Number +Disabled")
+		Position7.EditInterval := TaskAutomatorGui.Add("Edit", "vCoord7Interval x121 y191 w50 h20 +Number +Disabled")
 	}
 	Position7.EditInterval.Opt("" . BackgroundMainColor . "")
 	TaskAutomatorGui.SetFont()
 	TaskAutomatorGui.SetFont("Bold " . MainFontColor, MainFontType)
 	Position7.EditInterval.Value := Position7.Interval
 	;--------------------
-	Position7.EditRadioYes := TaskAutomatorGui.Add("Radio", "vRadio7Yes x179 y107 h20", "Y")
+	Position7.EditRadioYes := TaskAutomatorGui.Add("Radio", "vRadio7Yes x179 y191 h20", "Y")
 	Position7.EditRadioYes.Value := Position7.RadioYes
-	Position7.EditRadioNo := TaskAutomatorGui.Add("Radio", "vRadio7No x211 y107 w30 h20", "N")
+	Position7.EditRadioNo := TaskAutomatorGui.Add("Radio", "vRadio7No x211 y191 w30 h20", "N")
 	Position7.EditRadioNo.Value := Position7.RadioNo
 	;----------------------------------------------------
 	; Position 8
 	;----------------------------------------------------
-	TaskAutomatorGui.Add("Text","x260 y107 h20 +0x200", "8")
+	TaskAutomatorGui.Add("Text","x10 y212 h20 +0x200", "8")
 	TaskAutomatorGui.SetFont()
 	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
 	if EditBoxesAvailable == true {
-		Position8.EditPosX := TaskAutomatorGui.Add("Edit", "vCoordX8 x275 y107 w40 h20 +Number")
+		Position8.EditPosX := TaskAutomatorGui.Add("Edit", "vCoordX8 x25 y212 w40 h20 +Number")
 	} else {
-		Position8.EditPosX := TaskAutomatorGui.Add("Edit", "vCoordX8 x275 y107 w40 h20 +Number +Disabled")
+		Position8.EditPosX := TaskAutomatorGui.Add("Edit", "vCoordX8 x25 y212 w40 h20 +Number +Disabled")
 	}
 	Position8.EditPosX.Opt("" . BackgroundMainColor . "")
 	TaskAutomatorGui.SetFont()
@@ -502,9 +510,9 @@ ResizedAutoClickerModule(TaskAutomatorGui,
 	TaskAutomatorGui.SetFont()
 	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
 	if EditBoxesAvailable == true {
-		Position8.EditPosY := TaskAutomatorGui.Add("Edit", "vCoordY8 x323 y107 w40 h20 +Number")
+		Position8.EditPosY := TaskAutomatorGui.Add("Edit", "vCoordY8 x73 y212 w40 h20 +Number")
 	} else {
-		Position8.EditPosY := TaskAutomatorGui.Add("Edit", "vCoordY8 x323 y107 w40 h20 +Number +Disabled")
+		Position8.EditPosY := TaskAutomatorGui.Add("Edit", "vCoordY8 x73 y212 w40 h20 +Number +Disabled")
 	}
 	Position8.EditPosY.Opt("" . BackgroundMainColor . "")
 	TaskAutomatorGui.SetFont()
@@ -514,29 +522,29 @@ ResizedAutoClickerModule(TaskAutomatorGui,
 	TaskAutomatorGui.SetFont()
 	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
 	if EditBoxesAvailable == true {
-		Position8.EditInterval := TaskAutomatorGui.Add("Edit", "vCoord8Interval x371 y107 w50 h20 +Number")
+		Position8.EditInterval := TaskAutomatorGui.Add("Edit", "vCoord8Interval x121 y212 w50 h20 +Number")
 	} else {
-		Position8.EditInterval := TaskAutomatorGui.Add("Edit", "vCoord8Interval x371 y107 w50 h20 +Number +Disabled")
+		Position8.EditInterval := TaskAutomatorGui.Add("Edit", "vCoord8Interval x121 y212 w50 h20 +Number +Disabled")
 	}
 	Position8.EditInterval.Opt("" . BackgroundMainColor . "")
 	TaskAutomatorGui.SetFont()
 	TaskAutomatorGui.SetFont("Bold " . MainFontColor, MainFontType)
 	Position8.EditInterval.Value := Position8.Interval
 	;--------------------
-	Position8.EditRadioYes := TaskAutomatorGui.Add("Radio", "vRadio8Yes x429 y107 h20", "Y")
+	Position8.EditRadioYes := TaskAutomatorGui.Add("Radio", "vRadio8Yes x179 y212 h20", "Y")
 	Position8.EditRadioYes.Value := Position8.RadioYes
-	Position8.EditRadioNo := TaskAutomatorGui.Add("Radio", "vRadio8No x461 y107 w30 h20", "N")
+	Position8.EditRadioNo := TaskAutomatorGui.Add("Radio", "vRadio8No x211 y212 w30 h20", "N")
 	Position8.EditRadioNo.Value := Position8.RadioNo
 	;----------------------------------------------------
 	; Position 9
 	;----------------------------------------------------
-	TaskAutomatorGui.Add("Text","x510 y107 h20 +0x200", "9")
+	TaskAutomatorGui.Add("Text","x10 y233 h20 +0x200", "9")
 	TaskAutomatorGui.SetFont()
 	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
 	if EditBoxesAvailable == true {
-		Position9.EditPosX := TaskAutomatorGui.Add("Edit", "vCoordX9 x525 y107 w40 h20 +Number")
+		Position9.EditPosX := TaskAutomatorGui.Add("Edit", "vCoordX9 x25 y233 w40 h20 +Number")
 	} else {
-		Position9.EditPosX := TaskAutomatorGui.Add("Edit", "vCoordX9 x525 y107 w40 h20 +Number +Disabled")
+		Position9.EditPosX := TaskAutomatorGui.Add("Edit", "vCoordX9 x25 y233 w40 h20 +Number +Disabled")
 	}
 	Position9.EditPosX.Opt("" . BackgroundMainColor . "")
 	TaskAutomatorGui.SetFont()
@@ -546,9 +554,9 @@ ResizedAutoClickerModule(TaskAutomatorGui,
 	TaskAutomatorGui.SetFont()
 	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
 	if EditBoxesAvailable == true {
-		Position9.EditPosY := TaskAutomatorGui.Add("Edit", "vCoordY9 x573 y107 w40 h20 +Number")
+		Position9.EditPosY := TaskAutomatorGui.Add("Edit", "vCoordY9 x73 y233 w40 h20 +Number")
 	} else {
-		Position9.EditPosY := TaskAutomatorGui.Add("Edit", "vCoordY9 x573 y107 w40 h20 +Number +Disabled")
+		Position9.EditPosY := TaskAutomatorGui.Add("Edit", "vCoordY9 x73 y233 w40 h20 +Number +Disabled")
 	}
 	Position9.EditPosY.Opt("" . BackgroundMainColor . "")
 	TaskAutomatorGui.SetFont()
@@ -558,29 +566,29 @@ ResizedAutoClickerModule(TaskAutomatorGui,
 	TaskAutomatorGui.SetFont()
 	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
 	if EditBoxesAvailable == true {
-		Position9.EditInterval := TaskAutomatorGui.Add("Edit", "vCoord9Interval x621 y107 w50 h20 +Number")
+		Position9.EditInterval := TaskAutomatorGui.Add("Edit", "vCoord9Interval x121 y233 w50 h20 +Number")
 	} else {
-		Position9.EditInterval := TaskAutomatorGui.Add("Edit", "vCoord9Interval x621 y107 w50 h20 +Number +Disabled")
+		Position9.EditInterval := TaskAutomatorGui.Add("Edit", "vCoord9Interval x121 y233 w50 h20 +Number +Disabled")
 	}
 	Position9.EditInterval.Opt("" . BackgroundMainColor . "")
 	TaskAutomatorGui.SetFont()
 	TaskAutomatorGui.SetFont("Bold " . MainFontColor, MainFontType)
 	Position9.EditInterval.Value := Position9.Interval
 	;--------------------
-	Position9.EditRadioYes := TaskAutomatorGui.Add("Radio", "vRadio9Yes x679 y107 h20", "Y")
+	Position9.EditRadioYes := TaskAutomatorGui.Add("Radio", "vRadio9Yes x179 y233 h20", "Y")
 	Position9.EditRadioYes.Value := Position9.RadioYes
-	Position9.EditRadioNo := TaskAutomatorGui.Add("Radio", "vRadio9No x711 y107 w30 h20", "N")
+	Position9.EditRadioNo := TaskAutomatorGui.Add("Radio", "vRadio9No x211 y233 w30 h20", "N")
 	Position9.EditRadioNo.Value := Position9.RadioNo
 	;----------------------------------------------------
 	; Position 10
 	;----------------------------------------------------
-	TaskAutomatorGui.Add("Text","x7 y128 h20 +0x200", "10")
+	TaskAutomatorGui.Add("Text","x7 y254 h20 +0x200", "10")
 	TaskAutomatorGui.SetFont()
 	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
 	if EditBoxesAvailable == true {
-		Position10.EditPosX := TaskAutomatorGui.Add("Edit", "vCoordX10 x25 y128 w40 h20 +Number")
+		Position10.EditPosX := TaskAutomatorGui.Add("Edit", "vCoordX10 x25 y254 w40 h20 +Number")
 	} else {
-		Position10.EditPosX := TaskAutomatorGui.Add("Edit", "vCoordX10 x25 y128 w40 h20 +Number +Disabled")
+		Position10.EditPosX := TaskAutomatorGui.Add("Edit", "vCoordX10 x25 y254 w40 h20 +Number +Disabled")
 	}
 	Position10.EditPosX.Opt("" . BackgroundMainColor . "")
 	TaskAutomatorGui.SetFont()
@@ -590,9 +598,9 @@ ResizedAutoClickerModule(TaskAutomatorGui,
 	TaskAutomatorGui.SetFont()
 	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
 	if EditBoxesAvailable == true {
-		Position10.EditPosY := TaskAutomatorGui.Add("Edit", "vCoordY10 x73 y128 w40 h20 +Number")
+		Position10.EditPosY := TaskAutomatorGui.Add("Edit", "vCoordY10 x73 y254 w40 h20 +Number")
 	} else {
-		Position10.EditPosY := TaskAutomatorGui.Add("Edit", "vCoordY10 x73 y128 w40 h20 +Number +Disabled")
+		Position10.EditPosY := TaskAutomatorGui.Add("Edit", "vCoordY10 x73 y254 w40 h20 +Number +Disabled")
 	}
 	Position10.EditPosY.Opt("" . BackgroundMainColor . "")
 	TaskAutomatorGui.SetFont()
@@ -602,29 +610,29 @@ ResizedAutoClickerModule(TaskAutomatorGui,
 	TaskAutomatorGui.SetFont()
 	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
 	if EditBoxesAvailable == true {
-		Position10.EditInterval := TaskAutomatorGui.Add("Edit", "vCoord10Interval x121 y128 w50 h20 +Number")
+		Position10.EditInterval := TaskAutomatorGui.Add("Edit", "vCoord10Interval x121 y254 w50 h20 +Number")
 	} else {
-		Position10.EditInterval := TaskAutomatorGui.Add("Edit", "vCoord10Interval x121 y128 w50 h20 +Number +Disabled")
+		Position10.EditInterval := TaskAutomatorGui.Add("Edit", "vCoord10Interval x121 y254 w50 h20 +Number +Disabled")
 	}
 	Position10.EditInterval.Opt("" . BackgroundMainColor . "")
 	TaskAutomatorGui.SetFont()
 	TaskAutomatorGui.SetFont("Bold " . MainFontColor, MainFontType)
 	Position10.EditInterval.Value := Position10.Interval
 	;--------------------
-	Position10.EditRadioYes := TaskAutomatorGui.Add("Radio", "vRadio10Yes x179 y128 h20", "Y")
+	Position10.EditRadioYes := TaskAutomatorGui.Add("Radio", "vRadio10Yes x179 y254 h20", "Y")
 	Position10.EditRadioYes.Value := Position10.RadioYes
-	Position10.EditRadioNo := TaskAutomatorGui.Add("Radio", "vRadio10No x211 y128 w30 h20", "N")
+	Position10.EditRadioNo := TaskAutomatorGui.Add("Radio", "vRadio10No x211 y254 w30 h20", "N")
 	Position10.EditRadioNo.Value := Position10.RadioNo
 	;----------------------------------------------------
 	; Position 11
 	;----------------------------------------------------
-	TaskAutomatorGui.Add("Text","x257 y128 h20 +0x200", "11")
+	TaskAutomatorGui.Add("Text","x257 y65 h20 +0x200", "11")
 	TaskAutomatorGui.SetFont()
 	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
 	if EditBoxesAvailable == true {
-		Position11.EditPosX := TaskAutomatorGui.Add("Edit", "vCoordX11 x275 y128 w40 h20 +Number")
+		Position11.EditPosX := TaskAutomatorGui.Add("Edit", "vCoordX11 x275 y65 w40 h20 +Number")
 	} else {
-		Position11.EditPosX := TaskAutomatorGui.Add("Edit", "vCoordX11 x275 y128 w40 h20 +Number +Disabled")
+		Position11.EditPosX := TaskAutomatorGui.Add("Edit", "vCoordX11 x275 y65 w40 h20 +Number +Disabled")
 	}
 	Position11.EditPosX.Opt("" . BackgroundMainColor . "")
 	TaskAutomatorGui.SetFont()
@@ -634,9 +642,9 @@ ResizedAutoClickerModule(TaskAutomatorGui,
 	TaskAutomatorGui.SetFont()
 	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
 	if EditBoxesAvailable == true {
-		Position11.EditPosY := TaskAutomatorGui.Add("Edit", "vCoordY11 x323 y128 w40 h20 +Number")
+		Position11.EditPosY := TaskAutomatorGui.Add("Edit", "vCoordY11 x323 y65 w40 h20 +Number")
 	} else {
-		Position11.EditPosY := TaskAutomatorGui.Add("Edit", "vCoordY11 x323 y128 w40 h20 +Number +Disabled")
+		Position11.EditPosY := TaskAutomatorGui.Add("Edit", "vCoordY11 x323 y65 w40 h20 +Number +Disabled")
 	}
 	Position11.EditPosY.Opt("" . BackgroundMainColor . "")
 	TaskAutomatorGui.SetFont()
@@ -646,29 +654,29 @@ ResizedAutoClickerModule(TaskAutomatorGui,
 	TaskAutomatorGui.SetFont()
 	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
 	if EditBoxesAvailable == true {
-		Position11.EditInterval := TaskAutomatorGui.Add("Edit", "vCoord11Interval x371 y128 w50 h20 +Number")
+		Position11.EditInterval := TaskAutomatorGui.Add("Edit", "vCoord11Interval x371 y65 w50 h20 +Number")
 	} else {
-		Position11.EditInterval := TaskAutomatorGui.Add("Edit", "vCoord11Interval x371 y128 w50 h20 +Number +Disabled")
+		Position11.EditInterval := TaskAutomatorGui.Add("Edit", "vCoord11Interval x371 y65 w50 h20 +Number +Disabled")
 	}
 	Position11.EditInterval.Opt("" . BackgroundMainColor . "")
 	TaskAutomatorGui.SetFont()
 	TaskAutomatorGui.SetFont("Bold " . MainFontColor, MainFontType)
 	Position11.EditInterval.Value := Position11.Interval
 	;--------------------
-	Position11.EditRadioYes := TaskAutomatorGui.Add("Radio", "vRadio11Yes x429 y128 h20", "Y")
+	Position11.EditRadioYes := TaskAutomatorGui.Add("Radio", "vRadio11Yes x429 y65 h20", "Y")
 	Position11.EditRadioYes.Value := Position11.RadioYes
-	Position11.EditRadioNo := TaskAutomatorGui.Add("Radio", "vRadio11No x461 y128 w30 h20", "N")
+	Position11.EditRadioNo := TaskAutomatorGui.Add("Radio", "vRadio11No x461 y65 w30 h20", "N")
 	Position11.EditRadioNo.Value := Position11.RadioNo
 	;----------------------------------------------------
 	; Position 12
 	;----------------------------------------------------
-	TaskAutomatorGui.Add("Text","x507 y128 h20 +0x200", "12")
+	TaskAutomatorGui.Add("Text","x257 y86 h20 +0x200", "12")
 	TaskAutomatorGui.SetFont()
 	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
 	if EditBoxesAvailable == true {
-		Position12.EditPosX := TaskAutomatorGui.Add("Edit", "vCoordX12 x525 y128 w40 h20 +Number")
+		Position12.EditPosX := TaskAutomatorGui.Add("Edit", "vCoordX12 x275 y86 w40 h20 +Number")
 	} else {
-		Position12.EditPosX := TaskAutomatorGui.Add("Edit", "vCoordX12 x525 y128 w40 h20 +Number +Disabled")
+		Position12.EditPosX := TaskAutomatorGui.Add("Edit", "vCoordX12 x275 y86 w40 h20 +Number +Disabled")
 	}
 	Position12.EditPosX.Opt("" . BackgroundMainColor . "")
 	TaskAutomatorGui.SetFont()
@@ -678,9 +686,9 @@ ResizedAutoClickerModule(TaskAutomatorGui,
 	TaskAutomatorGui.SetFont()
 	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
 	if EditBoxesAvailable == true {
-		Position12.EditPosY := TaskAutomatorGui.Add("Edit", "vCoordY12 x573 y128 w40 h20 +Number")
+		Position12.EditPosY := TaskAutomatorGui.Add("Edit", "vCoordY12 x323 y86 w40 h20 +Number")
 	} else {
-		Position12.EditPosY := TaskAutomatorGui.Add("Edit", "vCoordY12 x573 y128 w40 h20 +Number +Disabled")
+		Position12.EditPosY := TaskAutomatorGui.Add("Edit", "vCoordY12 x323 y86 w40 h20 +Number +Disabled")
 	}
 	Position12.EditPosY.Opt("" . BackgroundMainColor . "")
 	TaskAutomatorGui.SetFont()
@@ -690,29 +698,29 @@ ResizedAutoClickerModule(TaskAutomatorGui,
 	TaskAutomatorGui.SetFont()
 	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
 	if EditBoxesAvailable == true {
-		Position12.EditInterval := TaskAutomatorGui.Add("Edit", "vCoord12Interval x621 y128 w50 h20 +Number")
+		Position12.EditInterval := TaskAutomatorGui.Add("Edit", "vCoord12Interval x371 y86 w50 h20 +Number")
 	} else {
-		Position12.EditInterval := TaskAutomatorGui.Add("Edit", "vCoord12Interval x621 y128 w50 h20 +Number +Disabled")
+		Position12.EditInterval := TaskAutomatorGui.Add("Edit", "vCoord12Interval x371 y86 w50 h20 +Number +Disabled")
 	}
 	Position12.EditInterval.Opt("" . BackgroundMainColor . "")
 	TaskAutomatorGui.SetFont()
 	TaskAutomatorGui.SetFont("Bold " . MainFontColor, MainFontType)
 	Position12.EditInterval.Value := Position12.Interval
 	;--------------------
-	Position12.EditRadioYes := TaskAutomatorGui.Add("Radio", "vRadio12Yes x679 y128 h20", "Y")
+	Position12.EditRadioYes := TaskAutomatorGui.Add("Radio", "vRadio12Yes x429 y86 h20", "Y")
 	Position12.EditRadioYes.Value := Position12.RadioYes
-	Position12.EditRadioNo := TaskAutomatorGui.Add("Radio", "vRadio12No x711 y128 w30 h20", "N")
+	Position12.EditRadioNo := TaskAutomatorGui.Add("Radio", "vRadio12No x461 y86 w30 h20", "N")
 	Position12.EditRadioNo.Value := Position12.RadioNo
 	;----------------------------------------------------
 	; Position 13
 	;----------------------------------------------------
-	TaskAutomatorGui.Add("Text","x7 y149 h20 +0x200", "13")
+	TaskAutomatorGui.Add("Text","x257 y107 h20 +0x200", "13")
 	TaskAutomatorGui.SetFont()
 	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
 	if EditBoxesAvailable == true {
-		Position13.EditPosX := TaskAutomatorGui.Add("Edit", "vCoordX13 x25 y149 w40 h20 +Number")
+		Position13.EditPosX := TaskAutomatorGui.Add("Edit", "vCoordX13 x275 y107 w40 h20 +Number")
 	} else {
-		Position13.EditPosX := TaskAutomatorGui.Add("Edit", "vCoordX13 x25 y149 w40 h20 +Number +Disabled")
+		Position13.EditPosX := TaskAutomatorGui.Add("Edit", "vCoordX13 x275 y107 w40 h20 +Number +Disabled")
 	}
 	Position13.EditPosX.Opt("" . BackgroundMainColor . "")
 	TaskAutomatorGui.SetFont()
@@ -722,9 +730,9 @@ ResizedAutoClickerModule(TaskAutomatorGui,
 	TaskAutomatorGui.SetFont()
 	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
 	if EditBoxesAvailable == true {
-		Position13.EditPosY := TaskAutomatorGui.Add("Edit", "vCoordY13 x73 y149 w40 h20 +Number")
+		Position13.EditPosY := TaskAutomatorGui.Add("Edit", "vCoordY13 x323 y107 w40 h20 +Number")
 	} else {
-		Position13.EditPosY := TaskAutomatorGui.Add("Edit", "vCoordY13 x73 y149 w40 h20 +Number +Disabled")
+		Position13.EditPosY := TaskAutomatorGui.Add("Edit", "vCoordY13 x323 y107 w40 h20 +Number +Disabled")
 	}
 	Position13.EditPosY.Opt("" . BackgroundMainColor . "")
 	TaskAutomatorGui.SetFont()
@@ -734,29 +742,29 @@ ResizedAutoClickerModule(TaskAutomatorGui,
 	TaskAutomatorGui.SetFont()
 	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
 	if EditBoxesAvailable == true {
-		Position13.EditInterval := TaskAutomatorGui.Add("Edit", "vCoord13Interval x121 y149 w50 h20 +Number")
+		Position13.EditInterval := TaskAutomatorGui.Add("Edit", "vCoord13Interval x371 y107 w50 h20 +Number")
 	} else {
-		Position13.EditInterval := TaskAutomatorGui.Add("Edit", "vCoord13Interval x121 y149 w50 h20 +Number +Disabled")
+		Position13.EditInterval := TaskAutomatorGui.Add("Edit", "vCoord13Interval x371 y107 w50 h20 +Number +Disabled")
 	}
 	Position13.EditInterval.Opt("" . BackgroundMainColor . "")
 	TaskAutomatorGui.SetFont()
 	TaskAutomatorGui.SetFont("Bold " . MainFontColor, MainFontType)
 	Position13.EditInterval.Value := Position13.Interval
 	;--------------------
-	Position13.EditRadioYes := TaskAutomatorGui.Add("Radio", "vRadio13Yes x179 y149 h20", "Y")
+	Position13.EditRadioYes := TaskAutomatorGui.Add("Radio", "vRadio13Yes x429 y107 h20", "Y")
 	Position13.EditRadioYes.Value := Position13.RadioYes
-	Position13.EditRadioNo := TaskAutomatorGui.Add("Radio", "vRadio13No x211 y149 w30 h20", "N")
+	Position13.EditRadioNo := TaskAutomatorGui.Add("Radio", "vRadio13No x461 y107 w30 h20", "N")
 	Position13.EditRadioNo.Value := Position13.RadioNo
 	;----------------------------------------------------
 	; Position 14
 	;----------------------------------------------------
-	TaskAutomatorGui.Add("Text","x257 y149 h20 +0x200", "14")
+	TaskAutomatorGui.Add("Text","x257 y128 h20 +0x200", "14")
 	TaskAutomatorGui.SetFont()
 	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
 	if EditBoxesAvailable == true {
-		Position14.EditPosX := TaskAutomatorGui.Add("Edit", "vCoordX14 x275 y149 w40 h20 +Number")
+		Position14.EditPosX := TaskAutomatorGui.Add("Edit", "vCoordX14 x275 y128 w40 h20 +Number")
 	} else {
-		Position14.EditPosX := TaskAutomatorGui.Add("Edit", "vCoordX14 x275 y149 w40 h20 +Number +Disabled")
+		Position14.EditPosX := TaskAutomatorGui.Add("Edit", "vCoordX14 x275 y128 w40 h20 +Number +Disabled")
 	}
 	Position14.EditPosX.Opt("" . BackgroundMainColor . "")
 	TaskAutomatorGui.SetFont()
@@ -766,9 +774,9 @@ ResizedAutoClickerModule(TaskAutomatorGui,
 	TaskAutomatorGui.SetFont()
 	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
 	if EditBoxesAvailable == true {
-		Position14.EditPosY := TaskAutomatorGui.Add("Edit", "vCoordY14 x323 y149 w40 h20 +Number")
+		Position14.EditPosY := TaskAutomatorGui.Add("Edit", "vCoordY14 x323 y128 w40 h20 +Number")
 	} else {
-		Position14.EditPosY := TaskAutomatorGui.Add("Edit", "vCoordY14 x323 y149 w40 h20 +Number +Disabled")
+		Position14.EditPosY := TaskAutomatorGui.Add("Edit", "vCoordY14 x323 y128 w40 h20 +Number +Disabled")
 	}
 	Position14.EditPosY.Opt("" . BackgroundMainColor . "")
 	TaskAutomatorGui.SetFont()
@@ -778,29 +786,29 @@ ResizedAutoClickerModule(TaskAutomatorGui,
 	TaskAutomatorGui.SetFont()
 	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
 	if EditBoxesAvailable == true {
-		Position14.EditInterval := TaskAutomatorGui.Add("Edit", "vCoord14Interval x371 y149 w50 h20 +Number")
+		Position14.EditInterval := TaskAutomatorGui.Add("Edit", "vCoord14Interval x371 y128 w50 h20 +Number")
 	} else {
-		Position14.EditInterval := TaskAutomatorGui.Add("Edit", "vCoord14Interval x371 y149 w50 h20 +Number +Disabled")
+		Position14.EditInterval := TaskAutomatorGui.Add("Edit", "vCoord14Interval x371 y128 w50 h20 +Number +Disabled")
 	}
 	Position14.EditInterval.Opt("" . BackgroundMainColor . "")
 	TaskAutomatorGui.SetFont()
 	TaskAutomatorGui.SetFont("Bold " . MainFontColor, MainFontType)
 	Position14.EditInterval.Value := Position14.Interval
 	;--------------------
-	Position14.EditRadioYes := TaskAutomatorGui.Add("Radio", "vRadio14Yes x429 y149 h20", "Y")
+	Position14.EditRadioYes := TaskAutomatorGui.Add("Radio", "vRadio14Yes x429 y128 h20", "Y")
 	Position14.EditRadioYes.Value := Position14.RadioYes
-	Position14.EditRadioNo := TaskAutomatorGui.Add("Radio", "vRadio14No x461 y149 w30 h20", "N")
+	Position14.EditRadioNo := TaskAutomatorGui.Add("Radio", "vRadio14No x461 y128 w30 h20", "N")
 	Position14.EditRadioNo.Value := Position14.RadioNo
 	;----------------------------------------------------
 	; Position 15
 	;----------------------------------------------------
-	TaskAutomatorGui.Add("Text","x507 y149 h20 +0x200", "15")
+	TaskAutomatorGui.Add("Text","x257 y149 h20 +0x200", "15")
 	TaskAutomatorGui.SetFont()
 	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
 	if EditBoxesAvailable == true {
-		Position15.EditPosX := TaskAutomatorGui.Add("Edit", "vCoordX15 x525 y149 w40 h20 +Number")
+		Position15.EditPosX := TaskAutomatorGui.Add("Edit", "vCoordX15 x275 y149 w40 h20 +Number")
 	} else {
-		Position15.EditPosX := TaskAutomatorGui.Add("Edit", "vCoordX15 x525 y149 w40 h20 +Number +Disabled")
+		Position15.EditPosX := TaskAutomatorGui.Add("Edit", "vCoordX15 x275 y149 w40 h20 +Number +Disabled")
 	}
 	Position15.EditPosX.Opt("" . BackgroundMainColor . "")
 	TaskAutomatorGui.SetFont()
@@ -810,9 +818,9 @@ ResizedAutoClickerModule(TaskAutomatorGui,
 	TaskAutomatorGui.SetFont()
 	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
 	if EditBoxesAvailable == true {
-		Position15.EditPosY := TaskAutomatorGui.Add("Edit", "vCoordY15 x573 y149 w40 h20 +Number")
+		Position15.EditPosY := TaskAutomatorGui.Add("Edit", "vCoordY15 x323 y149 w40 h20 +Number")
 	} else {
-		Position15.EditPosY := TaskAutomatorGui.Add("Edit", "vCoordY15 x573 y149 w40 h20 +Number +Disabled")
+		Position15.EditPosY := TaskAutomatorGui.Add("Edit", "vCoordY15 x323 y149 w40 h20 +Number +Disabled")
 	}
 	Position15.EditPosY.Opt("" . BackgroundMainColor . "")
 	TaskAutomatorGui.SetFont()
@@ -822,29 +830,29 @@ ResizedAutoClickerModule(TaskAutomatorGui,
 	TaskAutomatorGui.SetFont()
 	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
 	if EditBoxesAvailable == true {
-		Position15.EditInterval := TaskAutomatorGui.Add("Edit", "vCoord15Interval x621 y149 w50 h20 +Number")
+		Position15.EditInterval := TaskAutomatorGui.Add("Edit", "vCoord15Interval x371 y149 w50 h20 +Number")
 	} else {
-		Position15.EditInterval := TaskAutomatorGui.Add("Edit", "vCoord15Interval x621 y149 w50 h20 +Number +Disabled")
+		Position15.EditInterval := TaskAutomatorGui.Add("Edit", "vCoord15Interval x371 y149 w50 h20 +Number +Disabled")
 	}
 	Position15.EditInterval.Opt("" . BackgroundMainColor . "")
 	TaskAutomatorGui.SetFont()
 	TaskAutomatorGui.SetFont("Bold " . MainFontColor, MainFontType)
 	Position15.EditInterval.Value := Position15.Interval
 	;--------------------
-	Position15.EditRadioYes := TaskAutomatorGui.Add("Radio", "vRadio15Yes x679 y149 h20", "Y")
+	Position15.EditRadioYes := TaskAutomatorGui.Add("Radio", "vRadio15Yes x429 y149 h20", "Y")
 	Position15.EditRadioYes.Value := Position15.RadioYes
-	Position15.EditRadioNo := TaskAutomatorGui.Add("Radio", "vRadio15No x711 y149 w30 h20", "N")
+	Position15.EditRadioNo := TaskAutomatorGui.Add("Radio", "vRadio15No x461 y149 w30 h20", "N")
 	Position15.EditRadioNo.Value := Position15.RadioNo
 	;----------------------------------------------------
 	; Position 16
 	;----------------------------------------------------
-	TaskAutomatorGui.Add("Text","x7 y170 h20 +0x200", "16")
+	TaskAutomatorGui.Add("Text","x257 y170 h20 +0x200", "16")
 	TaskAutomatorGui.SetFont()
 	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
 	if EditBoxesAvailable == true {
-		Position16.EditPosX := TaskAutomatorGui.Add("Edit", "vCoordX16 x25 y170 w40 h20 +Number")
+		Position16.EditPosX := TaskAutomatorGui.Add("Edit", "vCoordX16 x275 y170 w40 h20 +Number")
 	} else {
-		Position16.EditPosX := TaskAutomatorGui.Add("Edit", "vCoordX16 x25 y170 w40 h20 +Number +Disabled")
+		Position16.EditPosX := TaskAutomatorGui.Add("Edit", "vCoordX16 x275 y170 w40 h20 +Number +Disabled")
 	}
 	Position16.EditPosX.Opt("" . BackgroundMainColor . "")
 	TaskAutomatorGui.SetFont()
@@ -854,9 +862,9 @@ ResizedAutoClickerModule(TaskAutomatorGui,
 	TaskAutomatorGui.SetFont()
 	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
 	if EditBoxesAvailable == true {
-		Position16.EditPosY := TaskAutomatorGui.Add("Edit", "vCoordY16 x73 y170 w40 h20 +Number")
+		Position16.EditPosY := TaskAutomatorGui.Add("Edit", "vCoordY16 x323 y170 w40 h20 +Number")
 	} else {
-		Position16.EditPosY := TaskAutomatorGui.Add("Edit", "vCoordY16 x73 y170 w40 h20 +Number +Disabled")
+		Position16.EditPosY := TaskAutomatorGui.Add("Edit", "vCoordY16 x323 y170 w40 h20 +Number +Disabled")
 	}
 	Position16.EditPosY.Opt("" . BackgroundMainColor . "")
 	TaskAutomatorGui.SetFont()
@@ -866,29 +874,29 @@ ResizedAutoClickerModule(TaskAutomatorGui,
 	TaskAutomatorGui.SetFont()
 	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
 	if EditBoxesAvailable == true {
-		Position16.EditInterval := TaskAutomatorGui.Add("Edit", "vCoord16Interval x121 y170 w50 h20 +Number")
+		Position16.EditInterval := TaskAutomatorGui.Add("Edit", "vCoord16Interval x371 y170 w50 h20 +Number")
 	} else {
-		Position16.EditInterval := TaskAutomatorGui.Add("Edit", "vCoord16Interval x121 y170 w50 h20 +Number +Disabled")
+		Position16.EditInterval := TaskAutomatorGui.Add("Edit", "vCoord16Interval x371 y170 w50 h20 +Number +Disabled")
 	}
 	Position16.EditInterval.Opt("" . BackgroundMainColor . "")
 	TaskAutomatorGui.SetFont()
 	TaskAutomatorGui.SetFont("Bold " . MainFontColor, MainFontType)
 	Position16.EditInterval.Value := Position16.Interval
 	;--------------------
-	Position16.EditRadioYes := TaskAutomatorGui.Add("Radio", "vRadio16Yes x179 y170 h20", "Y")
+	Position16.EditRadioYes := TaskAutomatorGui.Add("Radio", "vRadio16Yes x429 y170 h20", "Y")
 	Position16.EditRadioYes.Value := Position16.RadioYes
-	Position16.EditRadioNo := TaskAutomatorGui.Add("Radio", "vRadio16No x211 y170 w30 h20", "N")
+	Position16.EditRadioNo := TaskAutomatorGui.Add("Radio", "vRadio16No x461 y170 w30 h20", "N")
 	Position16.EditRadioNo.Value := Position16.RadioNo
 	;----------------------------------------------------
 	; Position 17
 	;----------------------------------------------------
-	TaskAutomatorGui.Add("Text","x257 y170 h20 +0x200", "17")
+	TaskAutomatorGui.Add("Text","x257 y191 h20 +0x200", "17")
 	TaskAutomatorGui.SetFont()
 	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
 	if EditBoxesAvailable == true {
-		Position17.EditPosX := TaskAutomatorGui.Add("Edit", "vCoordX17 x275 y170 w40 h20 +Number")
+		Position17.EditPosX := TaskAutomatorGui.Add("Edit", "vCoordX17 x275 y191 w40 h20 +Number")
 	} else {
-		Position17.EditPosX := TaskAutomatorGui.Add("Edit", "vCoordX17 x275 y170 w40 h20 +Number +Disabled")
+		Position17.EditPosX := TaskAutomatorGui.Add("Edit", "vCoordX17 x275 y191 w40 h20 +Number +Disabled")
 	}
 	Position17.EditPosX.Opt("" . BackgroundMainColor . "")
 	TaskAutomatorGui.SetFont()
@@ -898,9 +906,9 @@ ResizedAutoClickerModule(TaskAutomatorGui,
 	TaskAutomatorGui.SetFont()
 	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
 	if EditBoxesAvailable == true {
-		Position17.EditPosY := TaskAutomatorGui.Add("Edit", "vCoordY17 x323 y170 w40 h20 +Number")
+		Position17.EditPosY := TaskAutomatorGui.Add("Edit", "vCoordY17 x323 y191 w40 h20 +Number")
 	} else {
-		Position17.EditPosY := TaskAutomatorGui.Add("Edit", "vCoordY17 x323 y170 w40 h20 +Number +Disabled")
+		Position17.EditPosY := TaskAutomatorGui.Add("Edit", "vCoordY17 x323 y191 w40 h20 +Number +Disabled")
 	}
 	Position17.EditPosY.Opt("" . BackgroundMainColor . "")
 	TaskAutomatorGui.SetFont()
@@ -910,29 +918,29 @@ ResizedAutoClickerModule(TaskAutomatorGui,
 	TaskAutomatorGui.SetFont()
 	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
 	if EditBoxesAvailable == true {
-		Position17.EditInterval := TaskAutomatorGui.Add("Edit", "vCoord17Interval x371 y170 w50 h20 +Number")
+		Position17.EditInterval := TaskAutomatorGui.Add("Edit", "vCoord17Interval x371 y191 w50 h20 +Number")
 	} else {
-		Position17.EditInterval := TaskAutomatorGui.Add("Edit", "vCoord17Interval x371 y170 w50 h20 +Number +Disabled")
+		Position17.EditInterval := TaskAutomatorGui.Add("Edit", "vCoord17Interval x371 y191 w50 h20 +Number +Disabled")
 	}
 	Position17.EditInterval.Opt("" . BackgroundMainColor . "")
 	TaskAutomatorGui.SetFont()
 	TaskAutomatorGui.SetFont("Bold " . MainFontColor, MainFontType)
 	Position17.EditInterval.Value := Position17.Interval
 	;--------------------
-	Position17.EditRadioYes := TaskAutomatorGui.Add("Radio", "vRadio17Yes x429 y170 h20", "Y")
+	Position17.EditRadioYes := TaskAutomatorGui.Add("Radio", "vRadio17Yes x429 y191 h20", "Y")
 	Position17.EditRadioYes.Value := Position17.RadioYes
-	Position17.EditRadioNo := TaskAutomatorGui.Add("Radio", "vRadio17No x461 y170 w30 h20", "N")
+	Position17.EditRadioNo := TaskAutomatorGui.Add("Radio", "vRadio17No x461 y191 w30 h20", "N")
 	Position17.EditRadioNo.Value := Position17.RadioNo
 	;----------------------------------------------------
 	; Position 18
 	;----------------------------------------------------
-	TaskAutomatorGui.Add("Text","x507 y170 h20 +0x200", "18")
+	TaskAutomatorGui.Add("Text","x257 y212 h20 +0x200", "18")
 	TaskAutomatorGui.SetFont()
 	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
 	if EditBoxesAvailable == true {
-		Position18.EditPosX := TaskAutomatorGui.Add("Edit", "vCoordX18 x525 y170 w40 h20 +Number")
+		Position18.EditPosX := TaskAutomatorGui.Add("Edit", "vCoordX18 x275 y212 w40 h20 +Number")
 	} else {
-		Position18.EditPosX := TaskAutomatorGui.Add("Edit", "vCoordX18 x525 y170 w40 h20 +Number +Disabled")
+		Position18.EditPosX := TaskAutomatorGui.Add("Edit", "vCoordX18 x275 y212 w40 h20 +Number +Disabled")
 	}
 	Position18.EditPosX.Opt("" . BackgroundMainColor . "")
 	TaskAutomatorGui.SetFont()
@@ -942,9 +950,9 @@ ResizedAutoClickerModule(TaskAutomatorGui,
 	TaskAutomatorGui.SetFont()
 	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
 	if EditBoxesAvailable == true {
-		Position18.EditPosY := TaskAutomatorGui.Add("Edit", "vCoordY18 x573 y170 w40 h20 +Number")
+		Position18.EditPosY := TaskAutomatorGui.Add("Edit", "vCoordY18 x323 y212 w40 h20 +Number")
 	} else {
-		Position18.EditPosY := TaskAutomatorGui.Add("Edit", "vCoordY18 x573 y170 w40 h20 +Number +Disabled")
+		Position18.EditPosY := TaskAutomatorGui.Add("Edit", "vCoordY18 x323 y212 w40 h20 +Number +Disabled")
 	}
 	Position18.EditPosY.Opt("" . BackgroundMainColor . "")
 	TaskAutomatorGui.SetFont()
@@ -954,29 +962,29 @@ ResizedAutoClickerModule(TaskAutomatorGui,
 	TaskAutomatorGui.SetFont()
 	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
 	if EditBoxesAvailable == true {
-		Position18.EditInterval := TaskAutomatorGui.Add("Edit", "vCoord18Interval x621 y170 w50 h20 +Number")
+		Position18.EditInterval := TaskAutomatorGui.Add("Edit", "vCoord18Interval x371 y212 w50 h20 +Number")
 	} else {
-		Position18.EditInterval := TaskAutomatorGui.Add("Edit", "vCoord18Interval x621 y170 w50 h20 +Number +Disabled")
+		Position18.EditInterval := TaskAutomatorGui.Add("Edit", "vCoord18Interval x371 y212 w50 h20 +Number +Disabled")
 	}
 	Position18.EditInterval.Opt("" . BackgroundMainColor . "")
 	TaskAutomatorGui.SetFont()
 	TaskAutomatorGui.SetFont("Bold " . MainFontColor, MainFontType)
 	Position18.EditInterval.Value := Position18.Interval
 	;--------------------
-	Position18.EditRadioYes := TaskAutomatorGui.Add("Radio", "vRadio18Yes x679 y170 h20", "Y")
+	Position18.EditRadioYes := TaskAutomatorGui.Add("Radio", "vRadio18Yes x429 y212 h20", "Y")
 	Position18.EditRadioYes.Value := Position18.RadioYes
-	Position18.EditRadioNo := TaskAutomatorGui.Add("Radio", "vRadio18No x711 y170 w30 h20", "N")
+	Position18.EditRadioNo := TaskAutomatorGui.Add("Radio", "vRadio18No x461 y212 w30 h20", "N")
 	Position18.EditRadioNo.Value := Position18.RadioNo
 	;----------------------------------------------------
 	; Position 19
 	;----------------------------------------------------
-	TaskAutomatorGui.Add("Text","x7 y191 h20 +0x200", "19")
+	TaskAutomatorGui.Add("Text","x257 y233 h20 +0x200", "19")
 	TaskAutomatorGui.SetFont()
 	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
 	if EditBoxesAvailable == true {
-		Position19.EditPosX := TaskAutomatorGui.Add("Edit", "vCoordX19 x25 y191 w40 h20 +Number")
+		Position19.EditPosX := TaskAutomatorGui.Add("Edit", "vCoordX19 x275 y233 w40 h20 +Number")
 	} else {
-		Position19.EditPosX := TaskAutomatorGui.Add("Edit", "vCoordX19 x25 y191 w40 h20 +Number +Disabled")
+		Position19.EditPosX := TaskAutomatorGui.Add("Edit", "vCoordX19 x275 y233 w40 h20 +Number +Disabled")
 	}
 	Position19.EditPosX.Opt("" . BackgroundMainColor . "")
 	TaskAutomatorGui.SetFont()
@@ -986,9 +994,9 @@ ResizedAutoClickerModule(TaskAutomatorGui,
 	TaskAutomatorGui.SetFont()
 	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
 	if EditBoxesAvailable == true {
-		Position19.EditPosY := TaskAutomatorGui.Add("Edit", "vCoordY19 x73 y191 w40 h20 +Number")
+		Position19.EditPosY := TaskAutomatorGui.Add("Edit", "vCoordY19 x323 y233 w40 h20 +Number")
 	} else {
-		Position19.EditPosY := TaskAutomatorGui.Add("Edit", "vCoordY19 x73 y191 w40 h20 +Number +Disabled")
+		Position19.EditPosY := TaskAutomatorGui.Add("Edit", "vCoordY19 x323 y233 w40 h20 +Number +Disabled")
 	}
 	Position19.EditPosY.Opt("" . BackgroundMainColor . "")
 	TaskAutomatorGui.SetFont()
@@ -998,29 +1006,29 @@ ResizedAutoClickerModule(TaskAutomatorGui,
 	TaskAutomatorGui.SetFont()
 	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
 	if EditBoxesAvailable == true {
-		Position19.EditInterval := TaskAutomatorGui.Add("Edit", "vCoord19Interval x121 y191 w50 h20 +Number")
+		Position19.EditInterval := TaskAutomatorGui.Add("Edit", "vCoord19Interval x371 y233 w50 h20 +Number")
 	} else {
-		Position19.EditInterval := TaskAutomatorGui.Add("Edit", "vCoord19Interval x121 y191 w50 h20 +Number +Disabled")
+		Position19.EditInterval := TaskAutomatorGui.Add("Edit", "vCoord19Interval x371 y233 w50 h20 +Number +Disabled")
 	}
 	Position19.EditInterval.Opt("" . BackgroundMainColor . "")
 	TaskAutomatorGui.SetFont()
 	TaskAutomatorGui.SetFont("Bold " . MainFontColor, MainFontType)
 	Position19.EditInterval.Value := Position19.Interval
 	;--------------------
-	Position19.EditRadioYes := TaskAutomatorGui.Add("Radio", "vRadio19Yes x179 y191 h20", "Y")
+	Position19.EditRadioYes := TaskAutomatorGui.Add("Radio", "vRadio19Yes x429 y233 h20", "Y")
 	Position19.EditRadioYes.Value := Position19.RadioYes
-	Position19.EditRadioNo := TaskAutomatorGui.Add("Radio", "vRadio19No x211 y191 w30 h20", "N")
+	Position19.EditRadioNo := TaskAutomatorGui.Add("Radio", "vRadio19No x461 y233 w30 h20", "N")
 	Position19.EditRadioNo.Value := Position19.RadioNo
 	;----------------------------------------------------
 	; Position 20
 	;----------------------------------------------------
-	TaskAutomatorGui.Add("Text","x257 y191 h20 +0x200", "20")
+	TaskAutomatorGui.Add("Text","x257 y254 h20 +0x200", "20")
 	TaskAutomatorGui.SetFont()
 	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
 	if EditBoxesAvailable == true {
-		Position20.EditPosX := TaskAutomatorGui.Add("Edit", "vCoordX20 x275 y191 w40 h20 +Number")
+		Position20.EditPosX := TaskAutomatorGui.Add("Edit", "vCoordX20 x275 y254 w40 h20 +Number")
 	} else {
-		Position20.EditPosX := TaskAutomatorGui.Add("Edit", "vCoordX20 x275 y191 w40 h20 +Number +Disabled")
+		Position20.EditPosX := TaskAutomatorGui.Add("Edit", "vCoordX20 x275 y254 w40 h20 +Number +Disabled")
 	}
 	Position20.EditPosX.Opt("" . BackgroundMainColor . "")
 	TaskAutomatorGui.SetFont()
@@ -1030,9 +1038,9 @@ ResizedAutoClickerModule(TaskAutomatorGui,
 	TaskAutomatorGui.SetFont()
 	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
 	if EditBoxesAvailable == true {
-		Position20.EditPosY := TaskAutomatorGui.Add("Edit", "vCoordY20 x323 y191 w40 h20 +Number")
+		Position20.EditPosY := TaskAutomatorGui.Add("Edit", "vCoordY20 x323 y254 w40 h20 +Number")
 	} else {
-		Position20.EditPosY := TaskAutomatorGui.Add("Edit", "vCoordY20 x323 y191 w40 h20 +Number +Disabled")
+		Position20.EditPosY := TaskAutomatorGui.Add("Edit", "vCoordY20 x323 y254 w40 h20 +Number +Disabled")
 	}
 	Position20.EditPosY.Opt("" . BackgroundMainColor . "")
 	TaskAutomatorGui.SetFont()
@@ -1042,29 +1050,29 @@ ResizedAutoClickerModule(TaskAutomatorGui,
 	TaskAutomatorGui.SetFont()
 	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
 	if EditBoxesAvailable == true {
-		Position20.EditInterval := TaskAutomatorGui.Add("Edit", "vCoord20Interval x371 y191 w50 h20 +Number")
+		Position20.EditInterval := TaskAutomatorGui.Add("Edit", "vCoord20Interval x371 y254 w50 h20 +Number")
 	} else {
-		Position20.EditInterval := TaskAutomatorGui.Add("Edit", "vCoord20Interval x371 y191 w50 h20 +Number +Disabled")
+		Position20.EditInterval := TaskAutomatorGui.Add("Edit", "vCoord20Interval x371 y254 w50 h20 +Number +Disabled")
 	}
 	Position20.EditInterval.Opt("" . BackgroundMainColor . "")
 	TaskAutomatorGui.SetFont()
 	TaskAutomatorGui.SetFont("Bold " . MainFontColor, MainFontType)
 	Position20.EditInterval.Value := Position20.Interval
 	;--------------------
-	Position20.EditRadioYes := TaskAutomatorGui.Add("Radio", "vRadio20Yes x429 y191 h20", "Y")
+	Position20.EditRadioYes := TaskAutomatorGui.Add("Radio", "vRadio20Yes x429 y254 h20", "Y")
 	Position20.EditRadioYes.Value := Position20.RadioYes
-	Position20.EditRadioNo := TaskAutomatorGui.Add("Radio", "vRadio20No x461 y191 w30 h20", "N")
+	Position20.EditRadioNo := TaskAutomatorGui.Add("Radio", "vRadio20No x461 y254 w30 h20", "N")
 	Position20.EditRadioNo.Value := Position20.RadioNo
 	;----------------------------------------------------
 	; Position 21
 	;----------------------------------------------------
-	TaskAutomatorGui.Add("Text","x507 y191 h20 +0x200", "21")
+	TaskAutomatorGui.Add("Text","x507 y65 h20 +0x200", "21")
 	TaskAutomatorGui.SetFont()
 	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
 	if EditBoxesAvailable == true {
-		Position21.EditPosX := TaskAutomatorGui.Add("Edit", "vCoordX21 x525 y191 w40 h20 +Number")
+		Position21.EditPosX := TaskAutomatorGui.Add("Edit", "vCoordX21 x525 y65 w40 h20 +Number")
 	} else {
-		Position21.EditPosX := TaskAutomatorGui.Add("Edit", "vCoordX21 x525 y191 w40 h20 +Number +Disabled")
+		Position21.EditPosX := TaskAutomatorGui.Add("Edit", "vCoordX21 x525 y65 w40 h20 +Number +Disabled")
 	}
 	Position21.EditPosX.Opt("" . BackgroundMainColor . "")
 	TaskAutomatorGui.SetFont()
@@ -1074,9 +1082,9 @@ ResizedAutoClickerModule(TaskAutomatorGui,
 	TaskAutomatorGui.SetFont()
 	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
 	if EditBoxesAvailable == true {
-		Position21.EditPosY := TaskAutomatorGui.Add("Edit", "vCoordY21 x573 y191 w40 h20 +Number")
+		Position21.EditPosY := TaskAutomatorGui.Add("Edit", "vCoordY21 x573 y65 w40 h20 +Number")
 	} else {
-		Position21.EditPosY := TaskAutomatorGui.Add("Edit", "vCoordY21 x573 y191 w40 h20 +Number +Disabled")
+		Position21.EditPosY := TaskAutomatorGui.Add("Edit", "vCoordY21 x573 y65 w40 h20 +Number +Disabled")
 	}
 	Position21.EditPosY.Opt("" . BackgroundMainColor . "")
 	TaskAutomatorGui.SetFont()
@@ -1086,29 +1094,29 @@ ResizedAutoClickerModule(TaskAutomatorGui,
 	TaskAutomatorGui.SetFont()
 	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
 	if EditBoxesAvailable == true {
-		Position21.EditInterval := TaskAutomatorGui.Add("Edit", "vCoord21Interval x621 y191 w50 h20 +Number")
+		Position21.EditInterval := TaskAutomatorGui.Add("Edit", "vCoord21Interval x621 y65 w50 h20 +Number")
 	} else {
-		Position21.EditInterval := TaskAutomatorGui.Add("Edit", "vCoord21Interval x621 y191 w50 h20 +Number +Disabled")
+		Position21.EditInterval := TaskAutomatorGui.Add("Edit", "vCoord21Interval x621 y65 w50 h20 +Number +Disabled")
 	}
 	Position21.EditInterval.Opt("" . BackgroundMainColor . "")
 	TaskAutomatorGui.SetFont()
 	TaskAutomatorGui.SetFont("Bold " . MainFontColor, MainFontType)
 	Position21.EditInterval.Value := Position21.Interval
 	;--------------------
-	Position21.EditRadioYes := TaskAutomatorGui.Add("Radio", "vRadio21Yes x679 y191 h20", "Y")
+	Position21.EditRadioYes := TaskAutomatorGui.Add("Radio", "vRadio21Yes x679 y65 h20", "Y")
 	Position21.EditRadioYes.Value := Position21.RadioYes
-	Position21.EditRadioNo := TaskAutomatorGui.Add("Radio", "vRadio21No x711 y191 w30 h20", "N")
+	Position21.EditRadioNo := TaskAutomatorGui.Add("Radio", "vRadio21No x711 y65 w30 h20", "N")
 	Position21.EditRadioNo.Value := Position21.RadioNo
 	;----------------------------------------------------
 	; Position 22
 	;----------------------------------------------------
-	TaskAutomatorGui.Add("Text","x7 y212 h20 +0x200", "22")
+	TaskAutomatorGui.Add("Text","x507 y86 h20 +0x200", "22")
 	TaskAutomatorGui.SetFont()
 	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
 	if EditBoxesAvailable == true {
-		Position22.EditPosX := TaskAutomatorGui.Add("Edit", "vCoordX22 x25 y212 w40 h20 +Number")
+		Position22.EditPosX := TaskAutomatorGui.Add("Edit", "vCoordX22 x525 y86 w40 h20 +Number")
 	} else {
-		Position22.EditPosX := TaskAutomatorGui.Add("Edit", "vCoordX22 x25 y212 w40 h20 +Number +Disabled")
+		Position22.EditPosX := TaskAutomatorGui.Add("Edit", "vCoordX22 x525 y86 w40 h20 +Number +Disabled")
 	}
 	Position22.EditPosX.Opt("" . BackgroundMainColor . "")
 	TaskAutomatorGui.SetFont()
@@ -1118,9 +1126,9 @@ ResizedAutoClickerModule(TaskAutomatorGui,
 	TaskAutomatorGui.SetFont()
 	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
 	if EditBoxesAvailable == true {
-		Position22.EditPosY := TaskAutomatorGui.Add("Edit", "vCoordY22 x73 y212 w40 h20 +Number")
+		Position22.EditPosY := TaskAutomatorGui.Add("Edit", "vCoordY22 x573 y86 w40 h20 +Number")
 	} else {
-		Position22.EditPosY := TaskAutomatorGui.Add("Edit", "vCoordY22 x73 y212 w40 h20 +Number +Disabled")
+		Position22.EditPosY := TaskAutomatorGui.Add("Edit", "vCoordY22 x573 y86 w40 h20 +Number +Disabled")
 	}
 	Position22.EditPosY.Opt("" . BackgroundMainColor . "")
 	TaskAutomatorGui.SetFont()
@@ -1130,24 +1138,377 @@ ResizedAutoClickerModule(TaskAutomatorGui,
 	TaskAutomatorGui.SetFont()
 	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
 	if EditBoxesAvailable == true {
-		Position22.EditInterval := TaskAutomatorGui.Add("Edit", "vCoord22Interval x121 y212 w50 h20 +Number")
+		Position22.EditInterval := TaskAutomatorGui.Add("Edit", "vCoord22Interval x621 y86 w50 h20 +Number")
 	} else {
-		Position22.EditInterval := TaskAutomatorGui.Add("Edit", "vCoord22Interval x121 y212 w50 h20 +Number +Disabled")
+		Position22.EditInterval := TaskAutomatorGui.Add("Edit", "vCoord22Interval x621 y86 w50 h20 +Number +Disabled")
 	}
 	Position22.EditInterval.Opt("" . BackgroundMainColor . "")
 	TaskAutomatorGui.SetFont()
 	TaskAutomatorGui.SetFont("Bold " . MainFontColor, MainFontType)
 	Position22.EditInterval.Value := Position22.Interval
-	;--------------------
-	Position22.EditRadioYes := TaskAutomatorGui.Add("Radio", "vRadio22Yes x179 y212 h20", "Y")
+	;--------------------;--------------------
+	Position22.EditRadioYes := TaskAutomatorGui.Add("Radio", "vRadio22Yes x679 y86 h20", "Y")
 	Position22.EditRadioYes.Value := Position22.RadioYes
-	Position22.EditRadioNo := TaskAutomatorGui.Add("Radio", "vRadio22No x211 y212 w30 h20", "N")
+	Position22.EditRadioNo := TaskAutomatorGui.Add("Radio", "vRadio22No x711 y86 w30 h20", "N")
 	Position22.EditRadioNo.Value := Position22.RadioNo
 	;----------------------------------------------------
-	TaskAutomatorGui.Add("Text","x397 y217 +0x200", " Time interval in ms (1 second = 1000) ")
-	
+	; Position 23
+	;----------------------------------------------------
+	TaskAutomatorGui.Add("Text","x507 y107 h20 +0x200", "23")
+	TaskAutomatorGui.SetFont()
+	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
+	if EditBoxesAvailable == true {
+		Position23.EditPosX := TaskAutomatorGui.Add("Edit", "vCoordX23 x525 y107 w40 h20 +Number")
+	} else {
+		Position23.EditPosX := TaskAutomatorGui.Add("Edit", "vCoordX23 x525 y107 w40 h20 +Number +Disabled")
+	}
+	Position23.EditPosX.Opt("" . BackgroundMainColor . "")
+	TaskAutomatorGui.SetFont()
+	TaskAutomatorGui.SetFont("Bold " . MainFontColor, MainFontType)
+	Position23.EditPosX.Value := Position23.CoordX
+	;--------------------
+	TaskAutomatorGui.SetFont()
+	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
+	if EditBoxesAvailable == true {
+		Position23.EditPosY := TaskAutomatorGui.Add("Edit", "vCoordY23 x573 y107 w40 h20 +Number")
+	} else {
+		Position23.EditPosY := TaskAutomatorGui.Add("Edit", "vCoordY23 x573 y107 w40 h20 +Number +Disabled")
+	}
+	Position23.EditPosY.Opt("" . BackgroundMainColor . "")
+	TaskAutomatorGui.SetFont()
+	TaskAutomatorGui.SetFont("Bold " . MainFontColor, MainFontType)
+	Position23.EditPosY.Value := Position23.CoordY
+	;--------------------
+	TaskAutomatorGui.SetFont()
+	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
+	if EditBoxesAvailable == true {
+		Position23.EditInterval := TaskAutomatorGui.Add("Edit", "vCoord23Interval x621 y107 w50 h20 +Number")
+	} else {
+		Position23.EditInterval := TaskAutomatorGui.Add("Edit", "vCoord23Interval x621 y107 w50 h20 +Number +Disabled")
+	}
+	Position23.EditInterval.Opt("" . BackgroundMainColor . "")
+	TaskAutomatorGui.SetFont()
+	TaskAutomatorGui.SetFont("Bold " . MainFontColor, MainFontType)
+	Position23.EditInterval.Value := Position23.Interval
+	;--------------------
+	Position23.EditRadioYes := TaskAutomatorGui.Add("Radio", "vRadio23Yes x679 y107 h20", "Y")
+	Position23.EditRadioYes.Value := Position23.RadioYes
+	Position23.EditRadioNo := TaskAutomatorGui.Add("Radio", "vRadio23No x711 y107 w30 h20", "N")
+	Position23.EditRadioNo.Value := Position23.RadioNo
+	;----------------------------------------------------
+	; Position 24
+	;----------------------------------------------------
+	TaskAutomatorGui.Add("Text","x507 y128 h20 +0x200", "24")
+	TaskAutomatorGui.SetFont()
+	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
+	if EditBoxesAvailable == true {
+		Position24.EditPosX := TaskAutomatorGui.Add("Edit", "vCoordX24 x525 y128 w40 h20 +Number")
+	} else {
+		Position24.EditPosX := TaskAutomatorGui.Add("Edit", "vCoordX24 x525 y128 w40 h20 +Number +Disabled")
+	}
+	Position24.EditPosX.Opt("" . BackgroundMainColor . "")
+	TaskAutomatorGui.SetFont()
+	TaskAutomatorGui.SetFont("Bold " . MainFontColor, MainFontType)
+	Position24.EditPosX.Value := Position24.CoordX
+	;--------------------
+	TaskAutomatorGui.SetFont()
+	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
+	if EditBoxesAvailable == true {
+		Position24.EditPosY := TaskAutomatorGui.Add("Edit", "vCoordY24 x573 y128 w40 h20 +Number")
+	} else {
+		Position24.EditPosY := TaskAutomatorGui.Add("Edit", "vCoordY24 x573 y128 w40 h20 +Number +Disabled")
+	}
+	Position24.EditPosY.Opt("" . BackgroundMainColor . "")
+	TaskAutomatorGui.SetFont()
+	TaskAutomatorGui.SetFont("Bold " . MainFontColor, MainFontType)
+	Position24.EditPosY.Value := Position24.CoordY
+	;--------------------
+	TaskAutomatorGui.SetFont()
+	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
+	if EditBoxesAvailable == true {
+		Position24.EditInterval := TaskAutomatorGui.Add("Edit", "vCoord24Interval x621 y128 w50 h20 +Number")
+	} else {
+		Position24.EditInterval := TaskAutomatorGui.Add("Edit", "vCoord24Interval x621 y128 w50 h20 +Number +Disabled")
+	}
+	Position24.EditInterval.Opt("" . BackgroundMainColor . "")
+	TaskAutomatorGui.SetFont()
+	TaskAutomatorGui.SetFont("Bold " . MainFontColor, MainFontType)
+	Position24.EditInterval.Value := Position24.Interval
+	;--------------------
+	Position24.EditRadioYes := TaskAutomatorGui.Add("Radio", "vRadio24Yes x679 y128 h20", "Y")
+	Position24.EditRadioYes.Value := Position24.RadioYes
+	Position24.EditRadioNo := TaskAutomatorGui.Add("Radio", "vRadio24No x711 y128 w30 h20", "N")
+	Position24.EditRadioNo.Value := Position24.RadioNo
+	;----------------------------------------------------
+	; Position 25
+	;----------------------------------------------------
+	TaskAutomatorGui.Add("Text","x507 y149 h20 +0x200", "25")
+	TaskAutomatorGui.SetFont()
+	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
+	if EditBoxesAvailable == true {
+		Position25.EditPosX := TaskAutomatorGui.Add("Edit", "vCoordX25 x525 y149 w40 h20 +Number")
+	} else {
+		Position25.EditPosX := TaskAutomatorGui.Add("Edit", "vCoordX25 x525 y149 w40 h20 +Number +Disabled")
+	}
+	Position25.EditPosX.Opt("" . BackgroundMainColor . "")
+	TaskAutomatorGui.SetFont()
+	TaskAutomatorGui.SetFont("Bold " . MainFontColor, MainFontType)
+	Position25.EditPosX.Value := Position25.CoordX
+	;--------------------
+	TaskAutomatorGui.SetFont()
+	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
+	if EditBoxesAvailable == true {
+		Position25.EditPosY := TaskAutomatorGui.Add("Edit", "vCoordY25 x573 y149 w40 h20 +Number")
+	} else {
+		Position25.EditPosY := TaskAutomatorGui.Add("Edit", "vCoordY25 x573 y149 w40 h20 +Number +Disabled")
+	}
+	Position25.EditPosY.Opt("" . BackgroundMainColor . "")
+	TaskAutomatorGui.SetFont()
+	TaskAutomatorGui.SetFont("Bold " . MainFontColor, MainFontType)
+	Position25.EditPosY.Value := Position25.CoordY
+	;--------------------
+	TaskAutomatorGui.SetFont()
+	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
+	if EditBoxesAvailable == true {
+		Position25.EditInterval := TaskAutomatorGui.Add("Edit", "vCoord25Interval x621 y149 w50 h20 +Number")
+	} else {
+		Position25.EditInterval := TaskAutomatorGui.Add("Edit", "vCoord25Interval x621 y149 w50 h20 +Number +Disabled")
+	}
+	Position25.EditInterval.Opt("" . BackgroundMainColor . "")
+	TaskAutomatorGui.SetFont()
+	TaskAutomatorGui.SetFont("Bold " . MainFontColor, MainFontType)
+	Position25.EditInterval.Value := Position25.Interval
+	;--------------------
+	Position25.EditRadioYes := TaskAutomatorGui.Add("Radio", "vRadio25Yes x679 y149 h20", "Y")
+	Position25.EditRadioYes.Value := Position25.RadioYes
+	Position25.EditRadioNo := TaskAutomatorGui.Add("Radio", "vRadio25No x711 y149 w30 h20", "N")
+	Position25.EditRadioNo.Value := Position25.RadioNo
+	;----------------------------------------------------
+	; Position 26
+	;----------------------------------------------------
+	TaskAutomatorGui.Add("Text","x507 y170 h20 +0x200", "26")
+	TaskAutomatorGui.SetFont()
+	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
+	if EditBoxesAvailable == true {
+		Position26.EditPosX := TaskAutomatorGui.Add("Edit", "vCoordX26 x525 y170 w40 h20 +Number")
+	} else {
+		Position26.EditPosX := TaskAutomatorGui.Add("Edit", "vCoordX26 x525 y170 w40 h20 +Number +Disabled")
+	}
+	Position26.EditPosX.Opt("" . BackgroundMainColor . "")
+	TaskAutomatorGui.SetFont()
+	TaskAutomatorGui.SetFont("Bold " . MainFontColor, MainFontType)
+	Position26.EditPosX.Value := Position26.CoordX
+	;--------------------
+	TaskAutomatorGui.SetFont()
+	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
+	if EditBoxesAvailable == true {
+		Position26.EditPosY := TaskAutomatorGui.Add("Edit", "vCoordY26 x573 y170 w40 h20 +Number")
+	} else {
+		Position26.EditPosY := TaskAutomatorGui.Add("Edit", "vCoordY26 x573 y170 w40 h20 +Number +Disabled")
+	}
+	Position26.EditPosY.Opt("" . BackgroundMainColor . "")
+	TaskAutomatorGui.SetFont()
+	TaskAutomatorGui.SetFont("Bold " . MainFontColor, MainFontType)
+	Position26.EditPosY.Value := Position26.CoordY
+	;--------------------
+	TaskAutomatorGui.SetFont()
+	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
+	if EditBoxesAvailable == true {
+		Position26.EditInterval := TaskAutomatorGui.Add("Edit", "vCoord26Interval x621 y170 w50 h20 +Number")
+	} else {
+		Position26.EditInterval := TaskAutomatorGui.Add("Edit", "vCoord26Interval x621 y170 w50 h20 +Number +Disabled")
+	}
+	Position26.EditInterval.Opt("" . BackgroundMainColor . "")
+	TaskAutomatorGui.SetFont()
+	TaskAutomatorGui.SetFont("Bold " . MainFontColor, MainFontType)
+	Position26.EditInterval.Value := Position26.Interval
+	;--------------------
+	Position26.EditRadioYes := TaskAutomatorGui.Add("Radio", "vRadio26Yes x679 y170 h20", "Y")
+	Position26.EditRadioYes.Value := Position26.RadioYes
+	Position26.EditRadioNo := TaskAutomatorGui.Add("Radio", "vRadio26No x711 y170 w30 h20", "N")
+	Position26.EditRadioNo.Value := Position26.RadioNo
+	;----------------------------------------------------
+	; Position 27
+	;----------------------------------------------------
+	TaskAutomatorGui.Add("Text","x507 y191 h20 +0x200", "27")
+	TaskAutomatorGui.SetFont()
+	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
+	if EditBoxesAvailable == true {
+		Position27.EditPosX := TaskAutomatorGui.Add("Edit", "vCoordX27 x525 y191 w40 h20 +Number")
+	} else {
+		Position27.EditPosX := TaskAutomatorGui.Add("Edit", "vCoordX27 x525 y191 w40 h20 +Number +Disabled")
+	}
+	Position27.EditPosX.Opt("" . BackgroundMainColor . "")
+	TaskAutomatorGui.SetFont()
+	TaskAutomatorGui.SetFont("Bold " . MainFontColor, MainFontType)
+	Position27.EditPosX.Value := Position27.CoordX
+	;--------------------
+	TaskAutomatorGui.SetFont()
+	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
+	if EditBoxesAvailable == true {
+		Position27.EditPosY := TaskAutomatorGui.Add("Edit", "vCoordY27 x573 y191 w40 h20 +Number")
+	} else {
+		Position27.EditPosY := TaskAutomatorGui.Add("Edit", "vCoordY27 x573 y191 w40 h20 +Number +Disabled")
+	}
+	Position27.EditPosY.Opt("" . BackgroundMainColor . "")
+	TaskAutomatorGui.SetFont()
+	TaskAutomatorGui.SetFont("Bold " . MainFontColor, MainFontType)
+	Position27.EditPosY.Value := Position27.CoordY
+	;--------------------
+	TaskAutomatorGui.SetFont()
+	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
+	if EditBoxesAvailable == true {
+		Position27.EditInterval := TaskAutomatorGui.Add("Edit", "vCoord27Interval x621 y191 w50 h20 +Number")
+	} else {
+		Position27.EditInterval := TaskAutomatorGui.Add("Edit", "vCoord27Interval x621 y191 w50 h20 +Number +Disabled")
+	}
+	Position27.EditInterval.Opt("" . BackgroundMainColor . "")
+	TaskAutomatorGui.SetFont()
+	TaskAutomatorGui.SetFont("Bold " . MainFontColor, MainFontType)
+	Position27.EditInterval.Value := Position27.Interval
+	;--------------------
+	Position27.EditRadioYes := TaskAutomatorGui.Add("Radio", "vRadio27Yes x679 y191 h20", "Y")
+	Position27.EditRadioYes.Value := Position27.RadioYes
+	Position27.EditRadioNo := TaskAutomatorGui.Add("Radio", "vRadio27No x711 y191 w30 h20", "N")
+	Position27.EditRadioNo.Value := Position27.RadioNo
+	;----------------------------------------------------
+	; Position 28
+	;----------------------------------------------------
+	TaskAutomatorGui.Add("Text","x507 y212 h20 +0x200", "28")
+	TaskAutomatorGui.SetFont()
+	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
+	if EditBoxesAvailable == true {
+		Position28.EditPosX := TaskAutomatorGui.Add("Edit", "vCoordX28 x525 y212 w40 h20 +Number")
+	} else {
+		Position28.EditPosX := TaskAutomatorGui.Add("Edit", "vCoordX28 x525 y212 w40 h20 +Number +Disabled")
+	}
+	Position28.EditPosX.Opt("" . BackgroundMainColor . "")
+	TaskAutomatorGui.SetFont()
+	TaskAutomatorGui.SetFont("Bold " . MainFontColor, MainFontType)
+	Position28.EditPosX.Value := Position28.CoordX
+	;--------------------
+	TaskAutomatorGui.SetFont()
+	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
+	if EditBoxesAvailable == true {
+		Position28.EditPosY := TaskAutomatorGui.Add("Edit", "vCoordY28 x573 y212 w40 h20 +Number")
+	} else {
+		Position28.EditPosY := TaskAutomatorGui.Add("Edit", "vCoordY28 x573 y212 w40 h20 +Number +Disabled")
+	}
+	Position28.EditPosY.Opt("" . BackgroundMainColor . "")
+	TaskAutomatorGui.SetFont()
+	TaskAutomatorGui.SetFont("Bold " . MainFontColor, MainFontType)
+	Position28.EditPosY.Value := Position28.CoordY
+	;--------------------
+	TaskAutomatorGui.SetFont()
+	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
+	if EditBoxesAvailable == true {
+		Position28.EditInterval := TaskAutomatorGui.Add("Edit", "vCoord28Interval x621 y212 w50 h20 +Number")
+	} else {
+		Position28.EditInterval := TaskAutomatorGui.Add("Edit", "vCoord28Interval x621 y212 w50 h20 +Number +Disabled")
+	}
+	Position28.EditInterval.Opt("" . BackgroundMainColor . "")
+	TaskAutomatorGui.SetFont()
+	TaskAutomatorGui.SetFont("Bold " . MainFontColor, MainFontType)
+	Position28.EditInterval.Value := Position28.Interval
+	;--------------------
+	Position28.EditRadioYes := TaskAutomatorGui.Add("Radio", "vRadio28Yes x679 y212 h20", "Y")
+	Position28.EditRadioYes.Value := Position28.RadioYes
+	Position28.EditRadioNo := TaskAutomatorGui.Add("Radio", "vRadio28No x711 y212 w30 h20", "N")
+	Position28.EditRadioNo.Value := Position28.RadioNo
+	;----------------------------------------------------
+	; Position 29
+	;----------------------------------------------------
+	TaskAutomatorGui.Add("Text","x507 y233 h20 +0x200", "29")
+	TaskAutomatorGui.SetFont()
+	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
+	if EditBoxesAvailable == true {
+		Position29.EditPosX := TaskAutomatorGui.Add("Edit", "vCoordX29 x525 y233 w40 h20 +Number")
+	} else {
+		Position29.EditPosX := TaskAutomatorGui.Add("Edit", "vCoordX29 x525 y233 w40 h20 +Number +Disabled")
+	}
+	Position29.EditPosX.Opt("" . BackgroundMainColor . "")
+	TaskAutomatorGui.SetFont()
+	TaskAutomatorGui.SetFont("Bold " . MainFontColor, MainFontType)
+	Position29.EditPosX.Value := Position29.CoordX
+	;--------------------
+	TaskAutomatorGui.SetFont()
+	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
+	if EditBoxesAvailable == true {
+		Position29.EditPosY := TaskAutomatorGui.Add("Edit", "vCoordY29 x573 y233 w40 h20 +Number")
+	} else {
+		Position29.EditPosY := TaskAutomatorGui.Add("Edit", "vCoordY29 x573 y233 w40 h20 +Number +Disabled")
+	}
+	Position29.EditPosY.Opt("" . BackgroundMainColor . "")
+	TaskAutomatorGui.SetFont()
+	TaskAutomatorGui.SetFont("Bold " . MainFontColor, MainFontType)
+	Position29.EditPosY.Value := Position29.CoordY
+	;--------------------
+	TaskAutomatorGui.SetFont()
+	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
+	if EditBoxesAvailable == true {
+		Position29.EditInterval := TaskAutomatorGui.Add("Edit", "vCoord29Interval x621 y233 w50 h20 +Number")
+	} else {
+		Position29.EditInterval := TaskAutomatorGui.Add("Edit", "vCoord29Interval x621 y233 w50 h20 +Number +Disabled")
+	}
+	Position29.EditInterval.Opt("" . BackgroundMainColor . "")
+	TaskAutomatorGui.SetFont()
+	TaskAutomatorGui.SetFont("Bold " . MainFontColor, MainFontType)
+	Position29.EditInterval.Value := Position29.Interval
+	;--------------------
+	Position29.EditRadioYes := TaskAutomatorGui.Add("Radio", "vRadio29Yes x679 y233 h20", "Y")
+	Position29.EditRadioYes.Value := Position29.RadioYes
+	Position29.EditRadioNo := TaskAutomatorGui.Add("Radio", "vRadio29No x711 y233 w30 h20", "N")
+	Position29.EditRadioNo.Value := Position29.RadioNo
+	;----------------------------------------------------
+	; Position 30
+	;----------------------------------------------------
+	TaskAutomatorGui.Add("Text","x507 y254 h20 +0x200", "30")
+	TaskAutomatorGui.SetFont()
+	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
+	if EditBoxesAvailable == true {
+		Position30.EditPosX := TaskAutomatorGui.Add("Edit", "vCoordX30 x525 y254 w40 h20 +Number")
+	} else {
+		Position30.EditPosX := TaskAutomatorGui.Add("Edit", "vCoordX30 x525 y254 w40 h20 +Number +Disabled")
+	}
+	Position30.EditPosX.Opt("" . BackgroundMainColor . "")
+	TaskAutomatorGui.SetFont()
+	TaskAutomatorGui.SetFont("Bold " . MainFontColor, MainFontType)
+	Position30.EditPosX.Value := Position30.CoordX
+	;--------------------
+	TaskAutomatorGui.SetFont()
+	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
+	if EditBoxesAvailable == true {
+		Position30.EditPosY := TaskAutomatorGui.Add("Edit", "vCoordY30 x573 y254 w40 h20 +Number")
+	} else {
+		Position30.EditPosY := TaskAutomatorGui.Add("Edit", "vCoordY30 x573 y254 w40 h20 +Number +Disabled")
+	}
+	Position30.EditPosY.Opt("" . BackgroundMainColor . "")
+	TaskAutomatorGui.SetFont()
+	TaskAutomatorGui.SetFont("Bold " . MainFontColor, MainFontType)
+	Position30.EditPosY.Value := Position30.CoordY
+	;--------------------
+	TaskAutomatorGui.SetFont()
+	TaskAutomatorGui.SetFont("Bold " . FontClickerPatternColor . "", MainFontType)
+	if EditBoxesAvailable == true {
+		Position30.EditInterval := TaskAutomatorGui.Add("Edit", "vCoord30Interval x621 y254 w50 h20 +Number")
+	} else {
+		Position30.EditInterval := TaskAutomatorGui.Add("Edit", "vCoord30Interval x621 y254 w50 h20 +Number +Disabled")
+	}
+	Position30.EditInterval.Opt("" . BackgroundMainColor . "")
+	TaskAutomatorGui.SetFont()
+	TaskAutomatorGui.SetFont("Bold " . MainFontColor, MainFontType)
+	Position30.EditInterval.Value := Position30.Interval
+	;--------------------
+	Position30.EditRadioYes := TaskAutomatorGui.Add("Radio", "vRadio30Yes x679 y254 h20", "Y")
+	Position30.EditRadioYes.Value := Position30.RadioYes
+	Position30.EditRadioNo := TaskAutomatorGui.Add("Radio", "vRadio30No x711 y254 w30 h20", "N")
+	Position30.EditRadioNo.Value := Position30.RadioNo
+	;----------------------------------------------------
+	LastYLine := 254 + 25
+	TaskAutomatorGui.Add("Text", "x1 y" . LastYLine . " w750 h2 +0x10") ; Separator
+	TaskAutomatorGui.Add("Text","x50 y" . LastYLine + 5 . " +Center w650 +0x200", " Time interval in ms (1 second = 1000) ")
+
 	StartTime := A_TickCount
-	LastYLine := 212
 }
 ;----------------------------------------------------
 ; Y-LastYLine / Resized Save All EditBox Values
@@ -1275,13 +1636,13 @@ ResizedCheckForUpdates(TaskAutomatorGui,
 			if !FileExist(DataFile) {
 				ParseRequest()
 			}
-			TALatestReleaseVersion := IniRead(DataFile, "GeneralData", "TALatestReleaseVersion")
-			if TALatestReleaseVersion == "" {
+			GTLatestReleaseVersion := IniRead(DataFile, "GeneralData", "GTLatestReleaseVersion")
+			if GTLatestReleaseVersion == "" {
 				ParseRequest()
 			}
-			DownloadUrl := IniRead(DataFile, "EncryptedData", "TADownload")
-			TALatestReleaseVersion := IniRead(DataFile, "GeneralData", "TALatestReleaseVersion")
-			if TALatestReleaseVersion != CurrentVersion {
+			DownloadUrl := IniRead(DataFile, "EncryptedData", "GTDownload")
+			GTLatestReleaseVersion := IniRead(DataFile, "GeneralData", "GTLatestReleaseVersion")
+			if GTLatestReleaseVersion != CurrentVersion {
 				if DownloadUrl != "" {
 					TaskAutomatorGui.SetFont("s8 Bold cYellow", LicenseKeyFontType)
 					TaskAutomatorGui.Add("Text","x597 y" . LastYLine + 32 . " w126 h20 +0x200", " New version available ")
@@ -1294,7 +1655,7 @@ ResizedCheckForUpdates(TaskAutomatorGui,
 					IniWrite NeedUpdate, IniFile, "Settings", "NeedUpdate"
 				}
 			}
-			if TALatestReleaseVersion == CurrentVersion {
+			if GTLatestReleaseVersion == CurrentVersion {
 				TaskAutomatorGui.SetFont("s8 Bold cLime", LicenseKeyFontType)
 				TaskAutomatorGui.Add("Text","x597 y" . LastYLine + 32 . " w126 h20 +0x200", " Version up to date ")
 				if NeedUpdate == 1 or NeedUpdate == "" {

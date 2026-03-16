@@ -2,7 +2,7 @@
 ; Creator: Fernando Daniel Jaime.
 ; Programmer Alias: FDJ-Dash.
 ;------------- File Details ------------
-; App Name: Task Automator.
+; App Name: Game Tools.
 ; File Description: This file contains all menu handlers.
 ;----------------------------------------------------
 ; Header list:
@@ -42,16 +42,16 @@ MenuHandlerUpdate(*){
 		return
 	}
 	ParseRequest()
-	DownloadUrl := IniRead(DataFile, "EncryptedData", "TADownload")
-	TALatestReleaseVersion := IniRead(DataFile, "GeneralData", "TALatestReleaseVersion")
+	DownloadUrl := IniRead(DataFile, "EncryptedData", "GTDownload")
+	GTLatestReleaseVersion := IniRead(DataFile, "GeneralData", "GTLatestReleaseVersion")
 	IniWrite A_Now, IniFile, "Settings", "LastUpdateCheckTimeStamp"
-	if TALatestReleaseVersion != CurrentVersion {
+	if GTLatestReleaseVersion != CurrentVersion {
 		if DownloadUrl != "" {
 			IniWrite true, IniFile, "Settings", "NeedUpdate"
-			NewVersionAvailableMessage(TALatestReleaseVersion)
+			NewVersionAvailableMessage(GTLatestReleaseVersion)
 		}
 	}
-	if TALatestReleaseVersion == CurrentVersion {
+	if GTLatestReleaseVersion == CurrentVersion {
 		if NeedUpdate == 1 {
 			IniWrite false, IniFile, "Settings", "NeedUpdate"
 		}
@@ -198,10 +198,6 @@ GuiPriorityAlwaysOnTopHandler(*){
 	IniWrite PosX, IniFile, "Properties", "PositionX"
 	IniWrite PosY, IniFile, "Properties", "PositionY"
 	IniWrite true, TempSystemFile, "GeneralData", "DynamicReload"
-}
-;----------------------------------------------------
-MenuHandlerManageDevices(*) {
-    MenuManageDevices()
 }
 ;----------------------------------------------------
 KbAutoRunOFFHandler(*){

@@ -2,7 +2,7 @@
 ; Creator: Fernando Daniel Jaime.
 ; Programmer Alias: FDJ-Dash.
 ;------------- File Details ------------
-; App Name: Task Automator.
+; App Name: Game Tools.
 ; File Description: This file contains the Setup Menu that interacts with the GUI.
 ;----------------------------------------------------
 ; Header list:
@@ -45,6 +45,8 @@ SetupMenuBar(&MenuBar_Storage,
 	OptionsMenu.Add("3b. Switch &Quick Access Hotkeys/Buttons", QuickAccessButtonsHandler)
 	OptionsMenu.Insert()
 	OptionsMenu.Add("4. Switch &Clicker", SwitchClickerHandler)
+	OptionsMenu.Add("Resize Clicker Large Module ON/OFF", ResizeModuleHandler)
+	OptionsMenu.Insert()
 	OptionsMenu.Add("5. Switch &Jumps", SwitchJumpsHandler)
 	OptionsMenu.Insert()
 	OptionsMenu.Add("Change Background &Image", ChangeBackgroundHandler)
@@ -58,6 +60,11 @@ SetupMenuBar(&MenuBar_Storage,
 		OptionsMenu.SetIcon("3a. Switch Quick &Access", IconLib . "\Switch2.ico")
 		OptionsMenu.SetIcon("3b. Switch &Quick Access Hotkeys/Buttons", IconLib . "\Switch2.ico")
 		OptionsMenu.SetIcon("4. Switch &Clicker", IconLib . "\Switch2.ico")
+		if ResizeModule == true {
+			OptionsMenu.SetIcon("Resize Clicker Large Module ON/OFF", IconLib . "\Switch1.ico")
+		} else {
+			OptionsMenu.SetIcon("Resize Clicker Large Module ON/OFF", IconLib . "\Switch2.ico")
+		}
 		OptionsMenu.SetIcon("5. Switch &Jumps", IconLib . "\Switch2.ico")
 		OptionsMenu.SetIcon("Change Background &Image", IconLib . "\ChangeBackground.png")
 		OptionsMenu.SetIcon("Change M&essage Background Image", IconLib . "\ChangeBackground.png")
@@ -71,13 +78,9 @@ SetupMenuBar(&MenuBar_Storage,
 	SettingsMenu.Add("Hotkey Mode: Active/Edit", HotkeyEditModeHandler)
 	SettingsMenu.Add("EditBox Mode: Locked/Unlocked", EditBoxesHandler)
 	SettingsMenu.Insert()
-	SettingsMenu.Add("Resize Large Modules", ResizeModuleHandler)
-	SettingsMenu.Insert()
 	SettingsMenu.Add("Check for updates &daily", MenuHandlerCheckUptDaily)
 	SettingsMenu.Add("Check for updates &weekly", MenuHandlerCheckUptWeekly)
 	SettingsMenu.Add("&Never check for updates", MenuHandlerNeverCheckUpt)
-	SettingsMenu.Insert()
-	SettingsMenu.Add("&Manage app licenses across multiple devices", MenuHandlerManageDevices)
 
 	try {
 		if EditBoxesAvailable == true {
@@ -90,15 +93,9 @@ SetupMenuBar(&MenuBar_Storage,
 		} else {
 			SettingsMenu.SetIcon("Hotkey Mode: Active/Edit", IconLib . "\Locked.ico")
 		}
-		if ResizeModule == true {
-			SettingsMenu.SetIcon("Resize Large Modules", IconLib . "\Switch1.ico")
-		} else {
-			SettingsMenu.SetIcon("Resize Large Modules", IconLib . "\Switch2.ico")
-		}
 		SettingsMenu.SetIcon("Check for updates &daily", IconLib . "\CheckDaily.png")
 		SettingsMenu.SetIcon("Check for updates &weekly", IconLib . "\CheckWeekly.png")
 		SettingsMenu.SetIcon("&Never check for updates", IconLib . "\stop.ico")
-		SettingsMenu.SetIcon("&Manage app licenses across multiple devices", IconLib . "\info.ico")
 	}
 	catch {
 	}

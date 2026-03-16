@@ -2,13 +2,12 @@
 ; Creator: Fernando Daniel Jaime.
 ; Programmer Alias: FDJ-Dash.
 ;------------- File Details ------------
-; App Name: Task Automator.
+; App Name: Game Tools.
 ; File Description: This file contains file creations needed.
 ;----------------------------------------------------
 ; Class list:
 ;----------------------------------------------------
 ; Position()
-; Devices()
 ;----------------------------------------------------
 ; Position()
 ;----------------------------------------------------
@@ -54,21 +53,13 @@ Position19 := Position()
 Position20 := Position()
 Position21 := Position()
 Position22 := Position()
-;----------------------------------------------------
-; Devices()
-;----------------------------------------------------
-class Devices {
-	; Instance Variables
-	Customer_Id := ""
-	DeviceNumber := []
-	StoredMacAddress := []
-	CurrentMacAddress := ""
-	
-	; Methods
-	Call() {
-		; Method Call
-	}
-}
+Position23 := Position()
+Position24 := Position()
+Position25 := Position()
+Position26 := Position()
+Position27 := Position()
+Position28 := Position()
+Position29 := Position()
+Position30 := Position()
 
-UserDevices := Devices()
 
