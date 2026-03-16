@@ -2,7 +2,7 @@
 ; Creator: Fernando Daniel Jaime.
 ; Programmer Alias: FDJ-Dash.
 ;------------- File Details ------------
-; App Name: Task Automator.
+; App Name: Game Tools.
 ; File Description: This file contains file creations needed.
 ;----------------------------------------------------
 ; Header list:
@@ -15,7 +15,7 @@ CreateNewIniFile(*) {
 	FileAppend "; Creator: Fernando Daniel Jaime.`n" , IniFile
 	FileAppend "; Programmer Alias: FDJ-Dash.`n" , IniFile
 	FileAppend "; ------------ App Details ------------`n" , IniFile
-	FileAppend "; App Name: Task Automator.`n" , IniFile
+	FileAppend "; App Name: Game Tools.`n" , IniFile
 	FileAppend ";--------------------------------------------------`n" , IniFile
 	FileAppend "; Description: This is an app aimed towards repetitive tasks like holding a`n" , IniFile
 	FileAppend "; button down for extended time, mouse clicks or even click patterns.`n" , IniFile
@@ -300,6 +300,54 @@ CreateNewIniFile(*) {
 	FileAppend "Coord22Interval=100`n" , IniFile
 	FileAppend "Radio22Yes=0`n" , IniFile
 	FileAppend "Radio22No=1`n" , IniFile
+	FileAppend ";----------`n" , IniFile
+	FileAppend "CoordX23=`n" , IniFile
+	FileAppend "CoordY23=`n" , IniFile
+	FileAppend "Coord23Interval=100`n" , IniFile
+	FileAppend "Radio23Yes=0`n" , IniFile
+	FileAppend "Radio23No=1`n" , IniFile
+	FileAppend ";----------`n" , IniFile
+	FileAppend "CoordX24=`n" , IniFile
+	FileAppend "CoordY24=`n" , IniFile
+	FileAppend "Coord24Interval=100`n" , IniFile
+	FileAppend "Radio24Yes=0`n" , IniFile
+	FileAppend "Radio24No=1`n" , IniFile
+	FileAppend ";----------`n" , IniFile
+	FileAppend "CoordX25=`n" , IniFile
+	FileAppend "CoordY25=`n" , IniFile
+	FileAppend "Coord25Interval=100`n" , IniFile
+	FileAppend "Radio25Yes=0`n" , IniFile
+	FileAppend "Radio25No=1`n" , IniFile
+	FileAppend ";----------`n" , IniFile
+	FileAppend "CoordX26=`n" , IniFile
+	FileAppend "CoordY26=`n" , IniFile
+	FileAppend "Coord26Interval=100`n" , IniFile
+	FileAppend "Radio26Yes=0`n" , IniFile
+	FileAppend "Radio26No=1`n" , IniFile
+	FileAppend ";----------`n" , IniFile
+	FileAppend "CoordX27=`n" , IniFile
+	FileAppend "CoordY27=`n" , IniFile
+	FileAppend "Coord27Interval=100`n" , IniFile
+	FileAppend "Radio27Yes=0`n" , IniFile
+	FileAppend "Radio27No=1`n" , IniFile
+	FileAppend ";----------`n" , IniFile
+	FileAppend "CoordX28=`n" , IniFile
+	FileAppend "CoordY28=`n" , IniFile
+	FileAppend "Coord28Interval=100`n" , IniFile
+	FileAppend "Radio28Yes=0`n" , IniFile
+	FileAppend "Radio28No=1`n" , IniFile
+	FileAppend ";----------`n" , IniFile
+	FileAppend "CoordX29=`n" , IniFile
+	FileAppend "CoordY29=`n" , IniFile
+	FileAppend "Coord29Interval=100`n" , IniFile
+	FileAppend "Radio29Yes=0`n" , IniFile
+	FileAppend "Radio29No=1`n" , IniFile
+	FileAppend ";----------`n" , IniFile
+	FileAppend "CoordX30=`n" , IniFile
+	FileAppend "CoordY30=`n" , IniFile
+	FileAppend "Coord30Interval=100`n" , IniFile
+	FileAppend "Radio30Yes=0`n" , IniFile
+	FileAppend "Radio30No=1`n" , IniFile
 }
 ;----------------------------------------------------
 CreateNewAuxHkDataFile(*){

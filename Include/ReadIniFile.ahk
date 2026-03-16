@@ -2,7 +2,7 @@
 ; Creator: Fernando Daniel Jaime.
 ; Programmer Alias: FDJ-Dash.
 ;------------- File Details ------------
-; App Name: Task Automator.
+; App Name: Game Tools.
 ; File Description: This file reads and validates ini file variables.
 ;----------------------------------------------------
 ; Header list:
@@ -484,7 +484,15 @@ ReadCursorLocationClicker(Position1,
 						  Position19,
 						  Position20,
 						  Position21,
-						  Position22){
+						  Position22,
+						  Position23,
+						  Position24,
+						  Position25,
+						  Position26,
+						  Position27,
+						  Position28,
+						  Position29,
+						  Position30){
 	;-------------------------------
 	Position1.CoordX := IniRead(IniFile, "CursorLocationClicker", "CoordX1")
 	Position1.CoordY := IniRead(IniFile, "CursorLocationClicker", "CoordY1")
@@ -617,6 +625,54 @@ ReadCursorLocationClicker(Position1,
 	Position22.Interval := IniRead(IniFile, "CursorLocationClicker", "Coord22Interval")
 	Position22.RadioYes := IniRead(IniFile, "CursorLocationClicker", "Radio22Yes")
 	Position22.RadioNo := IniRead(IniFile, "CursorLocationClicker", "Radio22No")
+	;-------------------------------
+	Position23.CoordX := IniRead(IniFile, "CursorLocationClicker", "CoordX23")
+	Position23.CoordY := IniRead(IniFile, "CursorLocationClicker", "CoordY23")
+	Position23.Interval := IniRead(IniFile, "CursorLocationClicker", "Coord23Interval")
+	Position23.RadioYes := IniRead(IniFile, "CursorLocationClicker", "Radio23Yes")
+	Position23.RadioNo := IniRead(IniFile, "CursorLocationClicker", "Radio23No")
+	;-------------------------------
+	Position24.CoordX := IniRead(IniFile, "CursorLocationClicker", "CoordX24")
+	Position24.CoordY := IniRead(IniFile, "CursorLocationClicker", "CoordY24")
+	Position24.Interval := IniRead(IniFile, "CursorLocationClicker", "Coord24Interval")
+	Position24.RadioYes := IniRead(IniFile, "CursorLocationClicker", "Radio24Yes")
+	Position24.RadioNo := IniRead(IniFile, "CursorLocationClicker", "Radio24No")
+	;-------------------------------
+	Position25.CoordX := IniRead(IniFile, "CursorLocationClicker", "CoordX25")
+	Position25.CoordY := IniRead(IniFile, "CursorLocationClicker", "CoordY25")
+	Position25.Interval := IniRead(IniFile, "CursorLocationClicker", "Coord25Interval")
+	Position25.RadioYes := IniRead(IniFile, "CursorLocationClicker", "Radio25Yes")
+	Position25.RadioNo := IniRead(IniFile, "CursorLocationClicker", "Radio25No")
+	;-------------------------------
+	Position26.CoordX := IniRead(IniFile, "CursorLocationClicker", "CoordX26")
+	Position26.CoordY := IniRead(IniFile, "CursorLocationClicker", "CoordY26")
+	Position26.Interval := IniRead(IniFile, "CursorLocationClicker", "Coord26Interval")
+	Position26.RadioYes := IniRead(IniFile, "CursorLocationClicker", "Radio26Yes")
+	Position26.RadioNo := IniRead(IniFile, "CursorLocationClicker", "Radio26No")
+	;-------------------------------
+	Position27.CoordX := IniRead(IniFile, "CursorLocationClicker", "CoordX27")
+	Position27.CoordY := IniRead(IniFile, "CursorLocationClicker", "CoordY27")
+	Position27.Interval := IniRead(IniFile, "CursorLocationClicker", "Coord27Interval")
+	Position27.RadioYes := IniRead(IniFile, "CursorLocationClicker", "Radio27Yes")
+	Position27.RadioNo := IniRead(IniFile, "CursorLocationClicker", "Radio27No")
+	;-------------------------------
+	Position28.CoordX := IniRead(IniFile, "CursorLocationClicker", "CoordX28")
+	Position28.CoordY := IniRead(IniFile, "CursorLocationClicker", "CoordY28")
+	Position28.Interval := IniRead(IniFile, "CursorLocationClicker", "Coord28Interval")
+	Position28.RadioYes := IniRead(IniFile, "CursorLocationClicker", "Radio28Yes")
+	Position28.RadioNo := IniRead(IniFile, "CursorLocationClicker", "Radio28No")
+	;-------------------------------
+	Position29.CoordX := IniRead(IniFile, "CursorLocationClicker", "CoordX29")
+	Position29.CoordY := IniRead(IniFile, "CursorLocationClicker", "CoordY29")
+	Position29.Interval := IniRead(IniFile, "CursorLocationClicker", "Coord29Interval")
+	Position29.RadioYes := IniRead(IniFile, "CursorLocationClicker", "Radio29Yes")
+	Position29.RadioNo := IniRead(IniFile, "CursorLocationClicker", "Radio29No")
+	;-------------------------------
+	Position30.CoordX := IniRead(IniFile, "CursorLocationClicker", "CoordX30")
+	Position30.CoordY := IniRead(IniFile, "CursorLocationClicker", "CoordY30")
+	Position30.Interval := IniRead(IniFile, "CursorLocationClicker", "Coord30Interval")
+	Position30.RadioYes := IniRead(IniFile, "CursorLocationClicker", "Radio30Yes")
+	Position30.RadioNo := IniRead(IniFile, "CursorLocationClicker", "Radio30No")
 }
 ;----------------------------------------------------
 ; Read ini QuickAccessPath

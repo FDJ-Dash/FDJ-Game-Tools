@@ -2,7 +2,7 @@
 ; Creator: Fernando Daniel Jaime.
 ; Programmer Alias: FDJ-Dash.
 ;------------- File Details ------------
-; App Name: Task Automator.
+; App Name: Game Tools.
 ; File Description: This file contains functions related to hotkey processing.
 ;----------------------------------------------------
 ; Header list:
@@ -639,1420 +639,3203 @@ ProcessPatternClicker(CurrentHotkey, *){
 	
 	static toggle := false
 	static SendKey := Send.Bind('{Click}')
+	ResizeModule := IniRead(IniFile, "Settings", "ResizeModule")
 	;----------------------------------------------------
-	if (toggle := !toggle){
-		TextPatternClickerOnOff.Value := " ON"
-		ClickInterval := Saved.ClickInterval
-		RandomOffset := Saved.RandomOffset
-		CoordMode "Mouse", "Screen"
-		Count := 0
-		LoopAmount := Saved.LoopAmount
+	if ResizeModule == true {
+	    if (toggle := !toggle){
+	        TextPatternClickerOnOff.Value := " ON"
+	        ClickInterval := Saved.ClickInterval
+	        RandomOffset := Saved.RandomOffset
+	        CoordMode "Mouse", "Screen"
+	        Count := 0
+	        LoopAmount := Saved.LoopAmount
+
+	        CoordX1 := Saved.CoordX1
+	        CoordY1 := Saved.CoordY1
+	        Coord1Interval := Saved.Coord1Interval
+
+	        CoordX2 := Saved.CoordX2
+	        CoordY2 := Saved.CoordY2
+	        Coord2Interval := Saved.Coord2Interval
+	
+	        CoordX3 := Saved.CoordX3
+	        CoordY3 := Saved.CoordY3
+	        Coord3Interval := Saved.Coord3Interval
+
+	        CoordX4 := Saved.CoordX4
+	        CoordY4 := Saved.CoordY4
+	        Coord4Interval := Saved.Coord4Interval
+
+	        CoordX5 := Saved.CoordX5
+	        CoordY5 := Saved.CoordY5
+	        Coord5Interval := Saved.Coord5Interval
+	
+	        CoordX6 := Saved.CoordX6
+	        CoordY6 := Saved.CoordY6
+	        Coord6Interval := Saved.Coord6Interval
+
+	        CoordX7 := Saved.CoordX7
+	        CoordY7 := Saved.CoordY7
+	        Coord7Interval := Saved.Coord7Interval
+
+	        CoordX8 := Saved.CoordX8
+	        CoordY8 := Saved.CoordY8
+	        Coord8Interval := Saved.Coord8Interval
+
+	        CoordX9 := Saved.CoordX9
+	        CoordY9 := Saved.CoordY9
+	        Coord9Interval := Saved.Coord9Interval
+
+	        CoordX10 := Saved.CoordX10
+	        CoordY10 := Saved.CoordY10
+	        Coord10Interval := Saved.Coord10Interval
+
+	        CoordX11 := Saved.CoordX11
+	        CoordY11 := Saved.CoordY11
+	        Coord11Interval := Saved.Coord11Interval
+
+	        CoordX12 := Saved.CoordX12
+	        CoordY12 := Saved.CoordY12
+	        Coord12Interval := Saved.Coord12Interval
+
+	        CoordX13 := Saved.CoordX13
+	        CoordY13 := Saved.CoordY13
+	        Coord13Interval := Saved.Coord13Interval
+
+	        CoordX14 := Saved.CoordX14
+	        CoordY14 := Saved.CoordY14
+	        Coord14Interval := Saved.Coord14Interval
+
+	        CoordX15 := Saved.CoordX15
+	        CoordY15 := Saved.CoordY15
+	        Coord15Interval := Saved.Coord15Interval
+
+	        CoordX16 := Saved.CoordX16
+	        CoordY16 := Saved.CoordY16
+	        Coord16Interval := Saved.Coord16Interval
+
+	        CoordX17 := Saved.CoordX17
+	        CoordY17 := Saved.CoordY17
+	        Coord17Interval := Saved.Coord17Interval
+
+	        CoordX18 := Saved.CoordX18
+	        CoordY18 := Saved.CoordY18
+	        Coord18Interval := Saved.Coord18Interval
+
+	        CoordX19 := Saved.CoordX19
+	        CoordY19 := Saved.CoordY19
+	        Coord19Interval := Saved.Coord19Interval
+
+	        CoordX20 := Saved.CoordX20
+	        CoordY20 := Saved.CoordY20
+	        Coord20Interval := Saved.Coord20Interval
+
+	        CoordX21 := Saved.CoordX21
+	        CoordY21 := Saved.CoordY21
+	        Coord21Interval := Saved.Coord21Interval
+
+	        CoordX22 := Saved.CoordX22
+	        CoordY22 := Saved.CoordY22
+	        Coord22Interval := Saved.Coord22Interval
+			
+			CoordX23 := Saved.CoordX23
+	        CoordY23 := Saved.CoordY23
+	        Coord23Interval := Saved.Coord23Interval
+			
+			CoordX24 := Saved.CoordX24
+	        CoordY24 := Saved.CoordY24
+	        Coord24Interval := Saved.Coord24Interval
+			
+			CoordX25 := Saved.CoordX25
+	        CoordY25 := Saved.CoordY25
+	        Coord25Interval := Saved.Coord25Interval
+			
+			CoordX26 := Saved.CoordX26
+	        CoordY26 := Saved.CoordY26
+	        Coord26Interval := Saved.Coord26Interval
+			
+			CoordX27 := Saved.CoordX27
+	        CoordY27 := Saved.CoordY27
+	        Coord27Interval := Saved.Coord27Interval
+			
+			CoordX28 := Saved.CoordX28
+	        CoordY28 := Saved.CoordY28
+	        Coord28Interval := Saved.Coord28Interval
+			
+			CoordX29 := Saved.CoordX29
+	        CoordY29 := Saved.CoordY29
+	        Coord29Interval := Saved.Coord29Interval
+			
+			CoordX30 := Saved.CoordX30
+	        CoordY30 := Saved.CoordY30
+	        Coord30Interval := Saved.Coord30Interval
+
+	        RadioPos1_15AnyYes := false
+	        RadioPos16_30AnyYes := false
+	        if Position1.EditRadioYes.Value == true or Position2.EditRadioYes.Value == true or 
+	           Position3.EditRadioYes.Value == true or Position4.EditRadioYes.Value == true or 
+		       Position5.EditRadioYes.Value == true or Position6.EditRadioYes.Value == true or 
+		       Position7.EditRadioYes.Value == true or Position8.EditRadioYes.Value == true or
+		       Position9.EditRadioYes.Value == true or Position10.EditRadioYes.Value == true or
+			   Position11.EditRadioYes.Value == true or Position12.EditRadioYes.Value == true or
+		       Position13.EditRadioYes.Value == true or Position14.EditRadioYes.Value == true or
+		       Position15.EditRadioYes.Value == true {
+		        RadioPos1_15AnyYes := true
+	        }
+	        if Position16.EditRadioYes.Value == true or Position17.EditRadioYes.Value == true or
+		       Position18.EditRadioYes.Value == true or Position19.EditRadioYes.Value == true or
+		       Position20.EditRadioYes.Value == true or Position21.EditRadioYes.Value == true or
+		       Position22.EditRadioYes.Value == true or Position23.EditRadioYes.Value == true or
+               Position24.EditRadioYes.Value == true or Position25.EditRadioYes.Value == true or
+               Position26.EditRadioYes.Value == true or Position27.EditRadioYes.Value == true or 
+			   Position28.EditRadioYes.Value == true or Position29.EditRadioYes.Value == true or
+			   Position30.EditRadioYes.Value == true {
+		        RadioPos16_30AnyYes := true
+	        }
 		
-		CoordX1 := Saved.CoordX1
-		CoordY1 := Saved.CoordY1
-		Coord1Interval := Saved.Coord1Interval
-		
-		CoordX2 := Saved.CoordX2
-		CoordY2 := Saved.CoordY2
-		Coord2Interval := Saved.Coord2Interval
-		
-		CoordX3 := Saved.CoordX3
-		CoordY3 := Saved.CoordY3
-		Coord3Interval := Saved.Coord3Interval
-		
-		CoordX4 := Saved.CoordX4
-		CoordY4 := Saved.CoordY4
-		Coord4Interval := Saved.Coord4Interval
-		
-		CoordX5 := Saved.CoordX5
-		CoordY5 := Saved.CoordY5
-		Coord5Interval := Saved.Coord5Interval
-		
-		CoordX6 := Saved.CoordX6
-		CoordY6 := Saved.CoordY6
-		Coord6Interval := Saved.Coord6Interval
-		
-		CoordX7 := Saved.CoordX7
-		CoordY7 := Saved.CoordY7
-		Coord7Interval := Saved.Coord7Interval
-		
-		CoordX8:= Saved.CoordX8
-		CoordY8 := Saved.CoordY8
-		Coord8Interval := Saved.Coord8Interval
-		
-		CoordX9:= Saved.CoordX9
-		CoordY9 := Saved.CoordY9
-		Coord9Interval := Saved.Coord9Interval
-		
-		CoordX10:= Saved.CoordX10
-		CoordY10 := Saved.CoordY10
-		Coord10Interval := Saved.Coord10Interval
-		
-		CoordX11:= Saved.CoordX11
-		CoordY11 := Saved.CoordY11
-		Coord11Interval := Saved.Coord11Interval
-		
-		CoordX12:= Saved.CoordX12
-		CoordY12 := Saved.CoordY12
-		Coord12Interval := Saved.Coord12Interval
-		
-		CoordX13:= Saved.CoordX13
-		CoordY13 := Saved.CoordY13
-		Coord13Interval := Saved.Coord13Interval
-		
-		CoordX14:= Saved.CoordX14
-		CoordY14 := Saved.CoordY14
-		Coord14Interval := Saved.Coord14Interval
-		
-		CoordX15:= Saved.CoordX15
-		CoordY15 := Saved.CoordY15
-		Coord15Interval := Saved.Coord15Interval
-		
-		CoordX16:= Saved.CoordX16
-		CoordY16 := Saved.CoordY16
-		Coord16Interval := Saved.Coord16Interval
-		
-		CoordX17:= Saved.CoordX17
-		CoordY17 := Saved.CoordY17
-		Coord17Interval := Saved.Coord17Interval
-		
-		CoordX18:= Saved.CoordX18
-		CoordY18 := Saved.CoordY18
-		Coord18Interval := Saved.Coord18Interval
-		
-		CoordX19:= Saved.CoordX19
-		CoordY19 := Saved.CoordY19
-		Coord19Interval := Saved.Coord19Interval
-		
-		CoordX20:= Saved.CoordX20
-		CoordY20 := Saved.CoordY20
-		Coord20Interval := Saved.Coord20Interval
-		
-		CoordX21:= Saved.CoordX21
-		CoordY21 := Saved.CoordY21
-		Coord21Interval := Saved.Coord21Interval
-		
-		CoordX22:= Saved.CoordX22
-		CoordY22 := Saved.CoordY22
-		Coord22Interval := Saved.Coord22Interval
-		
-		RadioPos1_10AnyYes := false
-		RadioPos11_22AnyYes := false
-		if Position1.EditRadioYes.Value == true or Position2.EditRadioYes.Value == true or 
-		   Position3.EditRadioYes.Value == true or Position4.EditRadioYes.Value == true or 
-		   Position5.EditRadioYes.Value == true or Position6.EditRadioYes.Value == true or 
-		   Position7.EditRadioYes.Value == true or Position8.EditRadioYes.Value == true or
-		   Position9.EditRadioYes.Value == true or Position10.EditRadioYes.Value == true {
-			RadioPos1_10AnyYes := true
-		}
-		if Position11.EditRadioYes.Value == true or Position12.EditRadioYes.Value == true or
-		   Position13.EditRadioYes.Value == true or Position14.EditRadioYes.Value == true or
-		   Position15.EditRadioYes.Value == true or Position16.EditRadioYes.Value == true or
-		   Position17.EditRadioYes.Value == true or Position18.EditRadioYes.Value == true or
-		   Position19.EditRadioYes.Value == true or Position20.EditRadioYes.Value == true or
-		   Position21.EditRadioYes.Value == true or Position22.EditRadioYes.Value == true {
-			RadioPos11_22AnyYes := true
-		}
-		
-		Switch true {
-		case RadioCountLoopsYes.Value:
-			if  RadioPos1_10AnyYes == false and RadioPos11_22AnyYes == false {
-				SB.SetText("Clicker Active. Count: " Count)
-				sleep StartDelay
-				Loop LoopAmount {
-					switch true {
-					case countParseHK == 1:
-						if GetKeyState(PatternClickerHotkey, "P") {
-							KeyPressed := true
-						}
-					case countParseHK == 2:
-						if GetKeyState(PatternClickerHotkey1, "P") and 
-							GetKeyState(PatternClickerHotkey, "P") {
-							KeyPressed := true
-						}
-					case countParseHK == 3:
-						if GetKeyState(PatternClickerHotkey1, "P") and
-							GetKeyState(PatternClickerHotkey2, "P") and
-							GetKeyState(PatternClickerHotkey, "P") {
-							KeyPressed := true	
-						}
-					}
-					if KeyPressed == true {
-						KeyPressed := false
-						break
-					} 
-					SendKey
-					Count++
-					SB.SetText("Clicker Active. Count: " Count)
-					sleep Random(ClickInterval, ClickInterval + RandomOffset) 
-				}
-			} 
-			if RadioPos1_10AnyYes == true or RadioPos11_22AnyYes == true {
-				SB.SetText("Pattern Clicker Active. Count: " Count)
-				sleep StartDelay
-				Loop LoopAmount {
-					if Position1.EditRadioYes.Value == true {
-						Position1.RadioNo := false
-						DllCall("SetCursorPos", "int", CoordX1, "int", CoordY1)
-						SendKey
-						sleep Coord1Interval
-					}
-					switch true {
-					case countParseHK == 1:
-						if GetKeyState(PatternClickerHotkey, "P") {
-							KeyPressed := true
-						}
-					case countParseHK == 2:
-						if GetKeyState(PatternClickerHotkey1, "P") and 
-							GetKeyState(PatternClickerHotkey, "P") {
-							KeyPressed := true
-						}
-					case countParseHK == 3:
-						if GetKeyState(PatternClickerHotkey1, "P") and
-							GetKeyState(PatternClickerHotkey2, "P") and
-							GetKeyState(PatternClickerHotkey, "P") {
-							KeyPressed := true	
-						}
-					}
-					if KeyPressed == true {
-						KeyPressed := false
-						break
-					}
+	        Switch true {
+	        case RadioCountLoopsYes.Value:
+		        if  RadioPos1_15AnyYes == false and RadioPos16_30AnyYes == false {
+			        SB.SetText("Clicker Active. Count: " Count)
+			        sleep StartDelay
+			        Loop LoopAmount {
+				        switch true {
+				        case countParseHK == 1:
+					        if GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true
+					        }
+				        case countParseHK == 2:
+					        if GetKeyState(PatternClickerHotkey1, "P") and 
+						       GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true
+					        }
+				        case countParseHK == 3:
+					        if GetKeyState(PatternClickerHotkey1, "P") and
+						       GetKeyState(PatternClickerHotkey2, "P") and
+						       GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true	
+					        }
+				        }
+				        if KeyPressed == true {
+					        KeyPressed := false
+					        break
+				        } 
+				        SendKey
+				        Count++
+				        SB.SetText("Clicker Active. Count: " Count)
+				        sleep Random(ClickInterval, ClickInterval + RandomOffset) 
+			        }
+		        } 
+		        if RadioPos1_15AnyYes == true or RadioPos16_30AnyYes == true {
+			        SB.SetText("Pattern Clicker Active. Count: " Count)
+			        sleep StartDelay
+			        Loop LoopAmount {
+				        if Position1.EditRadioYes.Value == true {
+					        Position1.RadioNo := false
+					        DllCall("SetCursorPos", "int", CoordX1, "int", CoordY1)
+					        SendKey
+					        sleep Coord1Interval
+				        }
+				        switch true {
+				        case countParseHK == 1:
+					        if GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true
+					        }
+				        case countParseHK == 2:
+					        if GetKeyState(PatternClickerHotkey1, "P") and 
+						        GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true
+					        }
+				        case countParseHK == 3:
+					        if GetKeyState(PatternClickerHotkey1, "P") and
+						        GetKeyState(PatternClickerHotkey2, "P") and
+						        GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true	
+					        }
+				        }
+				        if KeyPressed == true {
+					        KeyPressed := false
+					        break
+				        }
+				        ;------------------------------
+				        if Position2.EditRadioYes.Value == true {
+					        Position2.RadioNo := false
+					        DllCall("SetCursorPos", "int", CoordX2, "int", CoordY2)
+					        SendKey
+					        sleep Coord2Interval
+				        }
+				        switch true {
+				        case countParseHK == 1:
+					        if GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true
+					        }
+				        case countParseHK == 2:
+					        if GetKeyState(PatternClickerHotkey1, "P") and 
+						       GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true
+					        }
+				        case countParseHK == 3:
+					        if GetKeyState(PatternClickerHotkey1, "P") and
+						       GetKeyState(PatternClickerHotkey2, "P") and
+						       GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true	
+					        }
+				        }
+				        if KeyPressed == true {
+					        KeyPressed := false
+					        break
+				        }
+				        ;------------------------------
+				        if Position3.EditRadioYes.Value == true {
+					        Position3.RadioNo := false
+					        DllCall("SetCursorPos", "int", CoordX3, "int", CoordY3)
+					        SendKey
+					        sleep Coord3Interval
+				        }
+				        switch true {
+				        case countParseHK == 1:
+					        if GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true
+					        }
+				        case countParseHK == 2:
+					        if GetKeyState(PatternClickerHotkey1, "P") and 
+						       GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true
+					        }
+				        case countParseHK == 3:
+					        if GetKeyState(PatternClickerHotkey1, "P") and
+						       GetKeyState(PatternClickerHotkey2, "P") and
+						       GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true	
+					        }
+				        }
+				        if KeyPressed == true {
+					        KeyPressed := false
+					        break
+				        }
+				        ;------------------------------
+				        if Position4.EditRadioYes.Value == true {
+					        Position4.RadioNo := false
+					        DllCall("SetCursorPos", "int", CoordX4, "int", CoordY4)
+					        SendKey
+					        sleep Coord4Interval
+				        }
+				        switch true {
+				        case countParseHK == 1:
+					        if GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true
+					        }
+				        case countParseHK == 2:
+					        if GetKeyState(PatternClickerHotkey1, "P") and 
+						       GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true
+					        }
+				        case countParseHK == 3:
+					        if GetKeyState(PatternClickerHotkey1, "P") and
+						       GetKeyState(PatternClickerHotkey2, "P") and
+						       GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true	
+					        }
+				        }
+				        if KeyPressed == true {
+					        KeyPressed := false
+					        break
+				        }
+				        ;------------------------------
+				        if Position5.EditRadioYes.Value == true {
+					        Position5.RadioNo := false
+					        DllCall("SetCursorPos", "int", CoordX5, "int", CoordY5)
+					        SendKey
+					        sleep Coord5Interval
+				        }
+				        switch true {
+				        case countParseHK == 1:
+					        if GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true
+					        }
+				        case countParseHK == 2:
+					        if GetKeyState(PatternClickerHotkey1, "P") and 
+						       GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true
+					        }
+				        case countParseHK == 3:
+					        if GetKeyState(PatternClickerHotkey1, "P") and
+						       GetKeyState(PatternClickerHotkey2, "P") and
+						       GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true	
+					        }
+				        }
+				        if KeyPressed == true {
+					        KeyPressed := false
+					        break
+				        }
+				        ;------------------------------
+				        if Position6.EditRadioYes.Value == true {
+					        Position6.RadioNo := false
+					        DllCall("SetCursorPos", "int", CoordX6, "int", CoordY6)
+					        SendKey
+					        sleep Coord6Interval
+				        }
+				        switch true {
+				        case countParseHK == 1:
+					        if GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true
+					        }
+				        case countParseHK == 2:
+					        if GetKeyState(PatternClickerHotkey1, "P") and 
+						       GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true
+					        }
+				        case countParseHK == 3:
+					        if GetKeyState(PatternClickerHotkey1, "P") and
+						       GetKeyState(PatternClickerHotkey2, "P") and
+						       GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true	
+					        }
+				        }
+				        if KeyPressed == true {
+					        KeyPressed := false
+					        break
+				        }
+				        ;------------------------------
+				        if Position7.EditRadioYes.Value == true {
+					        Position7.RadioNo := false
+					        DllCall("SetCursorPos", "int", CoordX7, "int", CoordY7)
+					        SendKey
+					        sleep Coord7Interval
+				        }
+				        switch true {
+				        case countParseHK == 1:
+					        if GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true
+					        }
+				        case countParseHK == 2:
+					        if GetKeyState(PatternClickerHotkey1, "P") and 
+						       GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true
+					        }
+				        case countParseHK == 3:
+					        if GetKeyState(PatternClickerHotkey1, "P") and
+						       GetKeyState(PatternClickerHotkey2, "P") and
+						       GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true	
+					        }
+				        }
+				        if KeyPressed == true {
+					        KeyPressed := false
+					        break
+				        }
+				        ;------------------------------
+				        if Position8.EditRadioYes.Value == true {
+					        Position8.RadioNo := false
+					        DllCall("SetCursorPos", "int", CoordX8, "int", CoordY8)
+					        SendKey
+					        sleep Coord8Interval
+				        }
+				        switch true {
+				        case countParseHK == 1:
+					        if GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true
+					        }
+				        case countParseHK == 2:
+					        if GetKeyState(PatternClickerHotkey1, "P") and 
+						       GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true
+					        }
+				        case countParseHK == 3:
+					        if GetKeyState(PatternClickerHotkey1, "P") and
+						       GetKeyState(PatternClickerHotkey2, "P") and
+						       GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true	
+					        }
+				        }
+				        if KeyPressed == true {
+					        KeyPressed := false
+					        break
+				        }
+				        ;------------------------------
+				        if Position9.EditRadioYes.Value == true {
+					        Position9.RadioNo := false
+					        DllCall("SetCursorPos", "int", CoordX9, "int", CoordY9)
+					        SendKey
+					        sleep Coord9Interval
+				        }
+				        switch true {
+				        case countParseHK == 1:
+					        if GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true
+					        }
+				        case countParseHK == 2:
+					        if GetKeyState(PatternClickerHotkey1, "P") and 
+						       GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true
+					        }
+				        case countParseHK == 3:
+					        if GetKeyState(PatternClickerHotkey1, "P") and
+						       GetKeyState(PatternClickerHotkey2, "P") and
+						       GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true	
+					        }
+				        }
+				        if KeyPressed == true {
+					        KeyPressed := false
+					        break
+				        }
+				        ;------------------------------
+				        if Position10.EditRadioYes.Value == true {
+					        Position10.RadioNo := false
+					        DllCall("SetCursorPos", "int", CoordX10, "int", CoordY10)
+					        SendKey
+					        sleep Coord10Interval
+				        }
+				        switch true {
+				        case countParseHK == 1:
+					        if GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true
+					        }
+				        case countParseHK == 2:
+					        if GetKeyState(PatternClickerHotkey1, "P") and 
+						        GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true
+					        }
+				        case countParseHK == 3:
+					        if GetKeyState(PatternClickerHotkey1, "P") and
+						       GetKeyState(PatternClickerHotkey2, "P") and
+						       GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true	
+					        }
+				        }
+				        if KeyPressed == true {
+					        KeyPressed := false
+					        break
+				        }
+				        ;------------------------------
+				        if Position11.EditRadioYes.Value == true {
+					        Position11.RadioNo := false
+					        DllCall("SetCursorPos", "int", CoordX11, "int", CoordY11)
+					        SendKey
+					        sleep Coord11Interval
+				        }
+				        switch true {
+				        case countParseHK == 1:
+					        if GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true
+					        }
+				        case countParseHK == 2:
+					        if GetKeyState(PatternClickerHotkey1, "P") and 
+						       GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true
+					        }
+				        case countParseHK == 3:
+					        if GetKeyState(PatternClickerHotkey1, "P") and
+						       GetKeyState(PatternClickerHotkey2, "P") and
+						       GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true	
+					        }
+				        }
+				        if KeyPressed == true {
+					        KeyPressed := false
+					        break
+				        }
+				        ;------------------------------
+				        if Position12.EditRadioYes.Value == true {
+					        Position12.RadioNo := false
+					        DllCall("SetCursorPos", "int", CoordX12, "int", CoordY12)
+					        SendKey
+					        sleep Coord12Interval
+				        }
+				        switch true {
+				        case countParseHK == 1:
+					        if GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true
+					        }
+				        case countParseHK == 2:
+					        if GetKeyState(PatternClickerHotkey1, "P") and 
+						       GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true
+					        }
+				        case countParseHK == 3:
+					        if GetKeyState(PatternClickerHotkey1, "P") and
+						       GetKeyState(PatternClickerHotkey2, "P") and
+						       GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true	
+					        }
+				        }
+				        if KeyPressed == true {
+					        KeyPressed := false
+					        break
+				        }
+				        ;------------------------------
+				        if Position13.EditRadioYes.Value == true {
+					        Position13.RadioNo := false
+					        DllCall("SetCursorPos", "int", CoordX13, "int", CoordY13)
+					        SendKey
+					        sleep Coord13Interval
+				        }
+				        switch true {
+				        case countParseHK == 1:
+					        if GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true
+					        }
+				        case countParseHK == 2:
+					        if GetKeyState(PatternClickerHotkey1, "P") and 
+						        GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true
+					        }
+				        case countParseHK == 3:
+					        if GetKeyState(PatternClickerHotkey1, "P") and
+						       GetKeyState(PatternClickerHotkey2, "P") and
+						       GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true	
+					        }
+				        }
+				        if KeyPressed == true {
+					        KeyPressed := false
+					        break
+				        }
+				        ;------------------------------
+				        if Position14.EditRadioYes.Value == true {
+					        Position14.RadioNo := false
+					        DllCall("SetCursorPos", "int", CoordX14, "int", CoordY14)
+					        SendKey
+					        sleep Coord14Interval
+				        }
+				        switch true {
+				        case countParseHK == 1:
+					        if GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true
+					        }
+				        case countParseHK == 2:
+					        if GetKeyState(PatternClickerHotkey1, "P") and 
+						       GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true
+					        }
+				        case countParseHK == 3:
+					        if GetKeyState(PatternClickerHotkey1, "P") and
+						       GetKeyState(PatternClickerHotkey2, "P") and
+						       GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true	
+					        }
+				        }
+				        if KeyPressed == true {
+					        KeyPressed := false
+					        break
+				        }
+				        ;------------------------------
+				        if Position15.EditRadioYes.Value == true {
+					        Position15.RadioNo := false
+					        DllCall("SetCursorPos", "int", CoordX15, "int", CoordY15)
+					        SendKey
+					        sleep Coord15Interval
+				        }
+				        switch true {
+				        case countParseHK == 1:
+					        if GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true
+					        }
+				        case countParseHK == 2:
+					        if GetKeyState(PatternClickerHotkey1, "P") and 
+						        GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true
+					        }
+				        case countParseHK == 3:
+					        if GetKeyState(PatternClickerHotkey1, "P") and
+						       GetKeyState(PatternClickerHotkey2, "P") and
+						       GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true	
+					        }
+				        }
+				        if KeyPressed == true {
+					        KeyPressed := false
+					        break
+				        }
+				        ;------------------------------
+				        if Position16.EditRadioYes.Value == true {
+					        Position16.RadioNo := false
+					        DllCall("SetCursorPos", "int", CoordX16, "int", CoordY16)
+					        SendKey
+					        sleep Coord16Interval
+				        }
+				        switch true {
+				        case countParseHK == 1:
+					        if GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true
+					        }
+				        case countParseHK == 2:
+					        if GetKeyState(PatternClickerHotkey1, "P") and 
+						       GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true
+					        }
+				        case countParseHK == 3:
+					        if GetKeyState(PatternClickerHotkey1, "P") and
+						        GetKeyState(PatternClickerHotkey2, "P") and
+						        GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true	
+					        }
+				        }
+				        if KeyPressed == true {
+					        KeyPressed := false
+					        break
+				        }
+				        ;------------------------------
+				        if Position17.EditRadioYes.Value == true {
+					        Position17.RadioNo := false
+					        DllCall("SetCursorPos", "int", CoordX17, "int", CoordY17)
+					        SendKey
+					        sleep Coord17Interval
+				        }
+					    switch true {
+				        case countParseHK == 1:
+					        if GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true
+					        }
+				        case countParseHK == 2:
+					        if GetKeyState(PatternClickerHotkey1, "P") and 
+						       GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true
+					        }
+				        case countParseHK == 3:
+					        if GetKeyState(PatternClickerHotkey1, "P") and
+						        GetKeyState(PatternClickerHotkey2, "P") and
+						        GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true	
+					        }
+				        }
+				        if KeyPressed == true {
+					        KeyPressed := false
+					        break
+				        }
+				        ;------------------------------
+				        if Position18.EditRadioYes.Value == true {
+					        Position18.RadioNo := false
+					        DllCall("SetCursorPos", "int", CoordX18, "int", CoordY18)
+					        SendKey
+					        sleep Coord18Interval
+				        }
+					    switch true {
+				        case countParseHK == 1:
+					        if GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true
+					        }
+				        case countParseHK == 2:
+					        if GetKeyState(PatternClickerHotkey1, "P") and 
+						       GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true
+					        }
+				        case countParseHK == 3:
+					        if GetKeyState(PatternClickerHotkey1, "P") and
+						        GetKeyState(PatternClickerHotkey2, "P") and
+						        GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true	
+					        }
+				        }
+				        if KeyPressed == true {
+					        KeyPressed := false
+					        break
+				        }
+				        ;------------------------------
+				        if Position19.EditRadioYes.Value == true {
+					        Position19.RadioNo := false
+					        DllCall("SetCursorPos", "int", CoordX19, "int", CoordY19)
+					        SendKey
+					        sleep Coord19Interval
+				        }
+					    switch true {
+				        case countParseHK == 1:
+					        if GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true
+					        }
+				        case countParseHK == 2:
+					        if GetKeyState(PatternClickerHotkey1, "P") and 
+						       GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true
+					        }
+				        case countParseHK == 3:
+					        if GetKeyState(PatternClickerHotkey1, "P") and
+						        GetKeyState(PatternClickerHotkey2, "P") and
+						        GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true	
+					        }
+				        }
+				        if KeyPressed == true {
+					        KeyPressed := false
+					        break
+				        }
+				        ;------------------------------
+				        if Position20.EditRadioYes.Value == true {
+					        Position20.RadioNo := false
+					        DllCall("SetCursorPos", "int", CoordX20, "int", CoordY20)
+					        SendKey
+					        sleep Coord20Interval
+				        }
+					    switch true {
+				        case countParseHK == 1:
+					        if GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true
+					        }
+				        case countParseHK == 2:
+					        if GetKeyState(PatternClickerHotkey1, "P") and 
+						       GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true
+					        }
+				        case countParseHK == 3:
+					        if GetKeyState(PatternClickerHotkey1, "P") and
+						        GetKeyState(PatternClickerHotkey2, "P") and
+						        GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true	
+					        }
+				        }
+				        if KeyPressed == true {
+					        KeyPressed := false
+					        break
+				        }
+				        ;------------------------------
+				        if Position21.EditRadioYes.Value == true {
+					        Position21.RadioNo := false
+					        DllCall("SetCursorPos", "int", CoordX21, "int", CoordY21)
+					        SendKey
+					        sleep Coord21Interval
+				        }
+					    switch true {
+				        case countParseHK == 1:
+					        if GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true
+					        }
+				        case countParseHK == 2:
+					        if GetKeyState(PatternClickerHotkey1, "P") and 
+						       GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true
+					        }
+				        case countParseHK == 3:
+					        if GetKeyState(PatternClickerHotkey1, "P") and
+						        GetKeyState(PatternClickerHotkey2, "P") and
+						        GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true	
+					        }
+				        }
+				        if KeyPressed == true {
+					        KeyPressed := false
+					        break
+				        }
+				        ;------------------------------
+				        if Position22.EditRadioYes.Value == true {
+					        Position22.RadioNo := false
+					        DllCall("SetCursorPos", "int", CoordX22, "int", CoordY22)
+					        SendKey
+					        sleep Coord22Interval
+				        }
+					    switch true {
+				        case countParseHK == 1:
+					        if GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true
+					        }
+				        case countParseHK == 2:
+					        if GetKeyState(PatternClickerHotkey1, "P") and 
+						       GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true
+					        }
+				        case countParseHK == 3:
+					        if GetKeyState(PatternClickerHotkey1, "P") and
+						        GetKeyState(PatternClickerHotkey2, "P") and
+						        GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true	
+					        }
+				        }
+				        if KeyPressed == true {
+					        KeyPressed := false
+					        break
+				        }
+						;------------------------------
+				        if Position23.EditRadioYes.Value == true {
+					        Position23.RadioNo := false
+					        DllCall("SetCursorPos", "int", CoordX23, "int", CoordY23)
+					        SendKey
+					        sleep Coord23Interval
+				        }
+					    switch true {
+				        case countParseHK == 1:
+					        if GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true
+					        }
+				        case countParseHK == 2:
+					        if GetKeyState(PatternClickerHotkey1, "P") and 
+						       GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true
+					        }
+				        case countParseHK == 3:
+					        if GetKeyState(PatternClickerHotkey1, "P") and
+						        GetKeyState(PatternClickerHotkey2, "P") and
+						        GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true	
+					        }
+				        }
+				        if KeyPressed == true {
+					        KeyPressed := false
+					        break
+				        }
+						;------------------------------
+				        if Position24.EditRadioYes.Value == true {
+					        Position24.RadioNo := false
+					        DllCall("SetCursorPos", "int", CoordX24, "int", CoordY24)
+					        SendKey
+					        sleep Coord24Interval
+				        }
+					    switch true {
+				        case countParseHK == 1:
+					        if GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true
+					        }
+				        case countParseHK == 2:
+					        if GetKeyState(PatternClickerHotkey1, "P") and 
+						       GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true
+					        }
+				        case countParseHK == 3:
+					        if GetKeyState(PatternClickerHotkey1, "P") and
+						        GetKeyState(PatternClickerHotkey2, "P") and
+						        GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true	
+					        }
+				        }
+				        if KeyPressed == true {
+					        KeyPressed := false
+					        break
+				        }
+						;------------------------------
+				        if Position25.EditRadioYes.Value == true {
+					        Position25.RadioNo := false
+					        DllCall("SetCursorPos", "int", CoordX25, "int", CoordY25)
+					        SendKey
+					        sleep Coord25Interval
+				        }
+					    switch true {
+				        case countParseHK == 1:
+					        if GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true
+					        }
+				        case countParseHK == 2:
+					        if GetKeyState(PatternClickerHotkey1, "P") and 
+						       GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true
+					        }
+				        case countParseHK == 3:
+					        if GetKeyState(PatternClickerHotkey1, "P") and
+						        GetKeyState(PatternClickerHotkey2, "P") and
+						        GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true	
+					        }
+				        }
+				        if KeyPressed == true {
+					        KeyPressed := false
+					        break
+				        }
+						;------------------------------
+				        if Position26.EditRadioYes.Value == true {
+					        Position26.RadioNo := false
+					        DllCall("SetCursorPos", "int", CoordX26, "int", CoordY26)
+					        SendKey
+					        sleep Coord26Interval
+				        }
+					    switch true {
+				        case countParseHK == 1:
+					        if GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true
+					        }
+				        case countParseHK == 2:
+					        if GetKeyState(PatternClickerHotkey1, "P") and 
+						       GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true
+					        }
+				        case countParseHK == 3:
+					        if GetKeyState(PatternClickerHotkey1, "P") and
+						        GetKeyState(PatternClickerHotkey2, "P") and
+						        GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true	
+					        }
+				        }
+				        if KeyPressed == true {
+					        KeyPressed := false
+					        break
+				        }
+						;------------------------------
+				        if Position27.EditRadioYes.Value == true {
+					        Position27.RadioNo := false
+					        DllCall("SetCursorPos", "int", CoordX27, "int", CoordY27)
+					        SendKey
+					        sleep Coord27Interval
+				        }
+					    switch true {
+				        case countParseHK == 1:
+					        if GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true
+					        }
+				        case countParseHK == 2:
+					        if GetKeyState(PatternClickerHotkey1, "P") and 
+						       GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true
+					        }
+				        case countParseHK == 3:
+					        if GetKeyState(PatternClickerHotkey1, "P") and
+						        GetKeyState(PatternClickerHotkey2, "P") and
+						        GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true	
+					        }
+				        }
+				        if KeyPressed == true {
+					        KeyPressed := false
+					        break
+				        }
+						;------------------------------
+				        if Position28.EditRadioYes.Value == true {
+					        Position28.RadioNo := false
+					        DllCall("SetCursorPos", "int", CoordX28, "int", CoordY28)
+					        SendKey
+					        sleep Coord28Interval
+				        }
+					    switch true {
+				        case countParseHK == 1:
+					        if GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true
+					        }
+				        case countParseHK == 2:
+					        if GetKeyState(PatternClickerHotkey1, "P") and 
+						       GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true
+					        }
+				        case countParseHK == 3:
+					        if GetKeyState(PatternClickerHotkey1, "P") and
+						        GetKeyState(PatternClickerHotkey2, "P") and
+						        GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true	
+					        }
+				        }
+				        if KeyPressed == true {
+					        KeyPressed := false
+					        break
+				        }
+						;------------------------------
+				        if Position29.EditRadioYes.Value == true {
+					        Position29.RadioNo := false
+					        DllCall("SetCursorPos", "int", CoordX29, "int", CoordY29)
+					        SendKey
+					        sleep Coord29Interval
+				        }
+					    switch true {
+				        case countParseHK == 1:
+					        if GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true
+					        }
+				        case countParseHK == 2:
+					        if GetKeyState(PatternClickerHotkey1, "P") and 
+						       GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true
+					        }
+				        case countParseHK == 3:
+					        if GetKeyState(PatternClickerHotkey1, "P") and
+						        GetKeyState(PatternClickerHotkey2, "P") and
+						        GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true	
+					        }
+				        }
+				        if KeyPressed == true {
+					        KeyPressed := false
+					        break
+				        }
+						;------------------------------
+				        if Position30.EditRadioYes.Value == true {
+					        Position30.RadioNo := false
+					        DllCall("SetCursorPos", "int", CoordX30, "int", CoordY30)
+					        SendKey
+					        sleep Coord30Interval
+				        }
+					    switch true {
+				        case countParseHK == 1:
+					        if GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true
+					        }
+				        case countParseHK == 2:
+					        if GetKeyState(PatternClickerHotkey1, "P") and 
+						       GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true
+					        }
+				        case countParseHK == 3:
+					        if GetKeyState(PatternClickerHotkey1, "P") and
+						        GetKeyState(PatternClickerHotkey2, "P") and
+						        GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true	
+					        }
+				        }
+				        if KeyPressed == true {
+					        KeyPressed := false
+					        break
+				        }
+				        ;------------------------------
+				        Count++
+				        SB.SetText("Pattern Clicker Active. Count: " Count)
+				        sleep Random(ClickInterval, ClickInterval + RandomOffset)
+			        } ; End Loop
+		        }
+		        toggle := !toggle
+		        TextPatternClickerOnOff.Value := " OFF"
+		        SB.SetText("Clicker Stopped. Count: " Count)
+		        sleep StopDelay
+		        return
+	        case RadioPos1_15AnyYes == true or RadioPos16_30AnyYes == true:
+		        SB.SetText("Infinite Pattern Clicker Active. Count: " Count)
+		        sleep StartDelay
+		        Loop {
+			        if Position1.EditRadioYes.Value == true {
+				        Position1.RadioNo := false
+				        DllCall("SetCursorPos", "int", CoordX1, "int", CoordY1)
+				        SendKey
+				        sleep Coord1Interval
+			        }
+			        switch true {
+			        case countParseHK == 1:
+				        if GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true
+				        }
+			        case countParseHK == 2:
+				        if GetKeyState(PatternClickerHotkey1, "P") and 
+					       GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true
+				        }
+			        case countParseHK == 3:
+				        if GetKeyState(PatternClickerHotkey1, "P") and
+					       GetKeyState(PatternClickerHotkey2, "P") and
+					       GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true	
+				        }
+			        }
+			        if KeyPressed == true {
+				        KeyPressed := false
+				        break
+			        }
+			        ;------------------------------
+			        if Position2.EditRadioYes.Value == true {
+				        Position2.RadioNo := false
+				        DllCall("SetCursorPos", "int", CoordX2, "int", CoordY2)
+				        SendKey
+				        sleep Coord2Interval
+			        }
+				    switch true {
+			        case countParseHK == 1:
+				        if GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true
+				        }
+			        case countParseHK == 2:
+				        if GetKeyState(PatternClickerHotkey1, "P") and 
+					       GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true
+				        }
+			        case countParseHK == 3:
+				        if GetKeyState(PatternClickerHotkey1, "P") and
+					       GetKeyState(PatternClickerHotkey2, "P") and
+					       GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true	
+				        }
+			        }
+			        if KeyPressed == true {
+				        KeyPressed := false
+				        break
+			        }
+			        ;------------------------------
+			        if Position3.EditRadioYes.Value == true {
+				        Position3.RadioNo := false
+				        DllCall("SetCursorPos", "int", CoordX3, "int", CoordY3)
+				        SendKey
+				        sleep Coord3Interval
+			        }
+				    switch true {
+			        case countParseHK == 1:
+				        if GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true
+				        }
+			        case countParseHK == 2:
+				        if GetKeyState(PatternClickerHotkey1, "P") and 
+					       GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true
+				        }
+			        case countParseHK == 3:
+				        if GetKeyState(PatternClickerHotkey1, "P") and
+					       GetKeyState(PatternClickerHotkey2, "P") and
+					       GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true	
+				        }
+			        }
+			        if KeyPressed == true {
+				        KeyPressed := false
+				        break
+			        }
+			        ;------------------------------
+			        if Position4.EditRadioYes.Value == true {
+				        Position4.RadioNo := false
+				        DllCall("SetCursorPos", "int", CoordX4, "int", CoordY4)
+				        SendKey
+				        sleep Coord4Interval
+			        }
+				    switch true {
+			        case countParseHK == 1:
+				        if GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true
+				        }
+			        case countParseHK == 2:
+				        if GetKeyState(PatternClickerHotkey1, "P") and 
+					       GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true
+				        }
+			        case countParseHK == 3:
+				        if GetKeyState(PatternClickerHotkey1, "P") and
+					       GetKeyState(PatternClickerHotkey2, "P") and
+					       GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true	
+				        }
+			        }
+			        if KeyPressed == true {
+				        KeyPressed := false
+				        break
+			        }
+			        ;------------------------------
+			        if Position5.EditRadioYes.Value == true {
+				        Position5.RadioNo := false
+				        DllCall("SetCursorPos", "int", CoordX5, "int", CoordY5)
+				        SendKey
+				        sleep Coord5Interval
+			        }
+				    switch true {
+			        case countParseHK == 1:
+				        if GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true
+				        }
+			        case countParseHK == 2:
+				        if GetKeyState(PatternClickerHotkey1, "P") and 
+					       GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true
+				        }
+			        case countParseHK == 3:
+				        if GetKeyState(PatternClickerHotkey1, "P") and
+					       GetKeyState(PatternClickerHotkey2, "P") and
+					       GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true	
+				        }
+			        }
+			        if KeyPressed == true {
+				        KeyPressed := false
+				        break
+			        }
+			        ;------------------------------
+			        if Position6.EditRadioYes.Value == true {
+				        Position6.RadioNo := false
+				        DllCall("SetCursorPos", "int", CoordX6, "int", CoordY6)
+				        SendKey
+				        sleep Coord6Interval
+			        }
+				    switch true {
+			        case countParseHK == 1:
+				        if GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true
+				        }
+			        case countParseHK == 2:
+				        if GetKeyState(PatternClickerHotkey1, "P") and 
+					       GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true
+				        }
+			        case countParseHK == 3:
+				        if GetKeyState(PatternClickerHotkey1, "P") and
+					       GetKeyState(PatternClickerHotkey2, "P") and
+					       GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true	
+				        }
+			        }
+			        if KeyPressed == true {
+				        KeyPressed := false
+				        break
+			        }
+			        ;------------------------------
+			        if Position7.EditRadioYes.Value == true {
+				        Position7.RadioNo := false
+				        DllCall("SetCursorPos", "int", CoordX7, "int", CoordY7)
+				        SendKey
+				        sleep Coord7Interval
+			        }
+				    switch true {
+			        case countParseHK == 1:
+				        if GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true
+				        }
+			        case countParseHK == 2:
+				        if GetKeyState(PatternClickerHotkey1, "P") and 
+					       GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true
+				        }
+			        case countParseHK == 3:
+				        if GetKeyState(PatternClickerHotkey1, "P") and
+					       GetKeyState(PatternClickerHotkey2, "P") and
+					       GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true	
+				        }
+			        }
+			        if KeyPressed == true {
+				        KeyPressed := false
+				        break
+			        }
+			        ;------------------------------
+			        if Position8.EditRadioYes.Value == true {
+				        Position8.RadioNo := false
+				        DllCall("SetCursorPos", "int", CoordX8, "int", CoordY8)
+				        SendKey
+				        sleep Coord8Interval
+			        }
+				    switch true {
+			        case countParseHK == 1:
+				        if GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true
+				        }
+			        case countParseHK == 2:
+				        if GetKeyState(PatternClickerHotkey1, "P") and 
+					       GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true
+				        }
+			        case countParseHK == 3:
+				        if GetKeyState(PatternClickerHotkey1, "P") and
+					       GetKeyState(PatternClickerHotkey2, "P") and
+					       GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true	
+				        }
+			        }
+			        if KeyPressed == true {
+				        KeyPressed := false
+				        break
+			        }
+			        ;------------------------------
+			        if Position9.EditRadioYes.Value == true {
+				        Position9.RadioNo := false
+				        DllCall("SetCursorPos", "int", CoordX9, "int", CoordY9)
+				        SendKey
+				        sleep Coord9Interval
+			        }
+				    switch true {
+			        case countParseHK == 1:
+				        if GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true
+				        }
+			        case countParseHK == 2:
+				        if GetKeyState(PatternClickerHotkey1, "P") and 
+					       GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true
+				        }
+			        case countParseHK == 3:
+				        if GetKeyState(PatternClickerHotkey1, "P") and
+					       GetKeyState(PatternClickerHotkey2, "P") and
+					       GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true	
+				        }
+			        }
+			        if KeyPressed == true {
+				        KeyPressed := false
+				        break
+			        }
+			        ;------------------------------
+			        if Position10.EditRadioYes.Value == true {
+				        Position10.RadioNo := false
+				        DllCall("SetCursorPos", "int", CoordX10, "int", CoordY10)
+				        SendKey
+				        sleep Coord10Interval
+			        }
+				    switch true {
+			        case countParseHK == 1:
+				        if GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true
+				        }
+			        case countParseHK == 2:
+				        if GetKeyState(PatternClickerHotkey1, "P") and 
+					       GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true
+				        }
+			        case countParseHK == 3:
+				        if GetKeyState(PatternClickerHotkey1, "P") and
+					       GetKeyState(PatternClickerHotkey2, "P") and
+					       GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true	
+				        }
+			        }
+			        if KeyPressed == true {
+				        KeyPressed := false
+				        break
+			        }
+			        ;------------------------------
+			        if Position11.EditRadioYes.Value == true {
+				        Position11.RadioNo := false
+				        DllCall("SetCursorPos", "int", CoordX11, "int", CoordY11)
+				        SendKey
+				        sleep Coord11Interval
+			        }
+				    switch true {
+			        case countParseHK == 1:
+				        if GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true
+				        }
+			        case countParseHK == 2:
+				        if GetKeyState(PatternClickerHotkey1, "P") and 
+					       GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true
+				        }
+			        case countParseHK == 3:
+				        if GetKeyState(PatternClickerHotkey1, "P") and
+					       GetKeyState(PatternClickerHotkey2, "P") and
+					       GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true	
+				        }
+			        }
+			        if KeyPressed == true {
+				        KeyPressed := false
+				        break
+			        }
+			        ;------------------------------
+			        if Position12.EditRadioYes.Value == true {
+				        Position12.RadioNo := false
+				        DllCall("SetCursorPos", "int", CoordX12, "int", CoordY12)
+				        SendKey
+				        sleep Coord12Interval
+			        }
+				    switch true {
+			        case countParseHK == 1:
+				        if GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true
+				        }
+			        case countParseHK == 2:
+				        if GetKeyState(PatternClickerHotkey1, "P") and 
+					       GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true
+				        }
+			        case countParseHK == 3:
+				        if GetKeyState(PatternClickerHotkey1, "P") and
+					       GetKeyState(PatternClickerHotkey2, "P") and
+					       GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true	
+				        }
+			        }
+			        if KeyPressed == true {
+				        KeyPressed := false
+				        break
+			        }
+			        ;------------------------------
+			        if Position13.EditRadioYes.Value == true {
+				        Position13.RadioNo := false
+				        DllCall("SetCursorPos", "int", CoordX13, "int", CoordY13)
+				        SendKey
+				        sleep Coord13Interval
+			        }
+				    switch true {
+			        case countParseHK == 1:
+				        if GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true
+				        }
+			        case countParseHK == 2:
+				        if GetKeyState(PatternClickerHotkey1, "P") and 
+					       GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true
+				        }
+			        case countParseHK == 3:
+				        if GetKeyState(PatternClickerHotkey1, "P") and
+					       GetKeyState(PatternClickerHotkey2, "P") and
+					       GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true	
+				        }
+			        }
+			        if KeyPressed == true {
+				        KeyPressed := false
+				        break
+			        }
+			        ;------------------------------
+			        if Position14.EditRadioYes.Value == true {
+				        Position14.RadioNo := false
+				        DllCall("SetCursorPos", "int", CoordX14, "int", CoordY14)
+				        SendKey
+				        sleep Coord14Interval
+			        }
+				    switch true {
+			        case countParseHK == 1:
+				        if GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true
+				        }
+			        case countParseHK == 2:
+				        if GetKeyState(PatternClickerHotkey1, "P") and 
+					       GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true
+				        }
+			        case countParseHK == 3:
+				        if GetKeyState(PatternClickerHotkey1, "P") and
+					       GetKeyState(PatternClickerHotkey2, "P") and
+					       GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true	
+				        }
+			        }
+			        if KeyPressed == true {
+				        KeyPressed := false
+				        break
+			        }
+			        ;------------------------------
+			        if Position15.EditRadioYes.Value == true {
+				        Position15.RadioNo := false
+				        DllCall("SetCursorPos", "int", CoordX15, "int", CoordY15)
+				        SendKey
+				        sleep Coord15Interval
+			        }
+				    switch true {
+			        case countParseHK == 1:
+				        if GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true
+				        }
+			        case countParseHK == 2:
+				        if GetKeyState(PatternClickerHotkey1, "P") and 
+					       GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true
+				        }
+			        case countParseHK == 3:
+				        if GetKeyState(PatternClickerHotkey1, "P") and
+					       GetKeyState(PatternClickerHotkey2, "P") and
+					       GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true	
+				        }
+			        }
+			        if KeyPressed == true {
+				        KeyPressed := false
+				        break
+			        }
+			        ;------------------------------
+			        if Position16.EditRadioYes.Value == true {
+				        Position16.RadioNo := false
+				        DllCall("SetCursorPos", "int", CoordX16, "int", CoordY16)
+				        SendKey
+				        sleep Coord16Interval
+			        }
+				    switch true {
+			        case countParseHK == 1:
+				        if GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true
+				        }
+			        case countParseHK == 2:
+				        if GetKeyState(PatternClickerHotkey1, "P") and 
+					       GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true
+				        }
+			        case countParseHK == 3:
+				        if GetKeyState(PatternClickerHotkey1, "P") and
+					       GetKeyState(PatternClickerHotkey2, "P") and
+					       GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true	
+				        }
+			        }
+			        if KeyPressed == true {
+				        KeyPressed := false
+				        break
+			        }
+			        ;------------------------------
+			        if Position17.EditRadioYes.Value == true {
+				        Position17.RadioNo := false
+				        DllCall("SetCursorPos", "int", CoordX17, "int", CoordY17)
+				        SendKey
+				        sleep Coord17Interval
+			        }
+				    switch true {
+			        case countParseHK == 1:
+				        if GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true
+				        }
+			        case countParseHK == 2:
+				        if GetKeyState(PatternClickerHotkey1, "P") and 
+					       GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true
+				        }
+			        case countParseHK == 3:
+				        if GetKeyState(PatternClickerHotkey1, "P") and
+					       GetKeyState(PatternClickerHotkey2, "P") and
+					       GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true	
+				        }
+			        }
+			        if KeyPressed == true {
+				        KeyPressed := false
+				        break
+			        }
+			        ;------------------------------
+			        if Position18.EditRadioYes.Value == true {
+				        Position18.RadioNo := false
+				        DllCall("SetCursorPos", "int", CoordX18, "int", CoordY18)
+				        SendKey
+				        sleep Coord18Interval
+			        }
+				    switch true {
+			        case countParseHK == 1:
+				        if GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true
+				        }
+			        case countParseHK == 2:
+				        if GetKeyState(PatternClickerHotkey1, "P") and 
+					       GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true
+				        }
+			        case countParseHK == 3:
+				        if GetKeyState(PatternClickerHotkey1, "P") and
+					       GetKeyState(PatternClickerHotkey2, "P") and
+					       GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true	
+				        }
+			        }
+			        if KeyPressed == true {
+				        KeyPressed := false
+				        break
+			        }
+			        ;------------------------------
+			        if Position19.EditRadioYes.Value == true {
+				        Position19.RadioNo := false
+				        DllCall("SetCursorPos", "int", CoordX19, "int", CoordY19)
+				        SendKey
+				        sleep Coord19Interval
+			        }
+				    switch true {
+			        case countParseHK == 1:
+				        if GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true
+				        }
+			        case countParseHK == 2:
+				        if GetKeyState(PatternClickerHotkey1, "P") and 
+					       GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true
+				        }
+			        case countParseHK == 3:
+				        if GetKeyState(PatternClickerHotkey1, "P") and
+					       GetKeyState(PatternClickerHotkey2, "P") and
+					       GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true	
+				        }
+			        }
+			        if KeyPressed == true {
+				        KeyPressed := false
+				        break
+			        }
+			        ;------------------------------
+			        if Position20.EditRadioYes.Value == true {
+				        Position20.RadioNo := false
+				        DllCall("SetCursorPos", "int", CoordX20, "int", CoordY20)
+				        SendKey
+				        sleep Coord20Interval
+			        }
+				    switch true {
+			        case countParseHK == 1:
+				        if GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true
+				        }
+			        case countParseHK == 2:
+				        if GetKeyState(PatternClickerHotkey1, "P") and 
+					       GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true
+				        }
+			        case countParseHK == 3:
+				        if GetKeyState(PatternClickerHotkey1, "P") and
+					       GetKeyState(PatternClickerHotkey2, "P") and
+					       GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true	
+				        }
+			        }
+			        if KeyPressed == true {
+				        KeyPressed := false
+				        break
+			        }
+			        ;------------------------------
+			        if Position21.EditRadioYes.Value == true {
+				        Position21.RadioNo := false
+				        DllCall("SetCursorPos", "int", CoordX21, "int", CoordY21)
+				        SendKey
+				        sleep Coord21Interval
+			        }
+				    switch true {
+			        case countParseHK == 1:
+				        if GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true
+				        }
+			        case countParseHK == 2:
+				        if GetKeyState(PatternClickerHotkey1, "P") and 
+					       GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true
+				        }
+			        case countParseHK == 3:
+				        if GetKeyState(PatternClickerHotkey1, "P") and
+					       GetKeyState(PatternClickerHotkey2, "P") and
+					       GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true	
+				        }
+			        }
+			        if KeyPressed == true {
+				        KeyPressed := false
+				        break
+			        }
+			        ;------------------------------
+			        if Position22.EditRadioYes.Value == true {
+				        Position22.RadioNo := false
+				        DllCall("SetCursorPos", "int", CoordX22, "int", CoordY22)
+				        SendKey
+				        sleep Coord22Interval
+			        }
+				    switch true {
+			        case countParseHK == 1:
+				        if GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true
+				        }
+			        case countParseHK == 2:
+				        if GetKeyState(PatternClickerHotkey1, "P") and 
+					       GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true
+				        }
+			        case countParseHK == 3:
+				        if GetKeyState(PatternClickerHotkey1, "P") and
+					       GetKeyState(PatternClickerHotkey2, "P") and
+					       GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true	
+				        }
+			        }
+			        if KeyPressed == true {
+				        KeyPressed := false
+				        break
+			        }
 					;------------------------------
-					if Position2.EditRadioYes.Value == true {
-						Position2.RadioNo := false
-						DllCall("SetCursorPos", "int", CoordX2, "int", CoordY2)
-						SendKey
-						sleep Coord2Interval
-					}
-					switch true {
-					case countParseHK == 1:
-						if GetKeyState(PatternClickerHotkey, "P") {
-							KeyPressed := true
-						}
-					case countParseHK == 2:
-						if GetKeyState(PatternClickerHotkey1, "P") and 
-							GetKeyState(PatternClickerHotkey, "P") {
-							KeyPressed := true
-						}
-					case countParseHK == 3:
-						if GetKeyState(PatternClickerHotkey1, "P") and
-							GetKeyState(PatternClickerHotkey2, "P") and
-							GetKeyState(PatternClickerHotkey, "P") {
-							KeyPressed := true	
-						}
-					}
-					if KeyPressed == true {
-						KeyPressed := false
-						break
-					}
+			        if Position23.EditRadioYes.Value == true {
+				        Position23.RadioNo := false
+				        DllCall("SetCursorPos", "int", CoordX23, "int", CoordY23)
+				        SendKey
+				        sleep Coord23Interval
+			        }
+				    switch true {
+			        case countParseHK == 1:
+				        if GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true
+				        }
+			        case countParseHK == 2:
+				        if GetKeyState(PatternClickerHotkey1, "P") and 
+					       GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true
+				        }
+			        case countParseHK == 3:
+				        if GetKeyState(PatternClickerHotkey1, "P") and
+					       GetKeyState(PatternClickerHotkey2, "P") and
+					       GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true	
+				        }
+			        }
+			        if KeyPressed == true {
+				        KeyPressed := false
+				        break
+			        }
 					;------------------------------
-					if Position3.EditRadioYes.Value == true {
-						Position3.RadioNo := false
-						DllCall("SetCursorPos", "int", CoordX3, "int", CoordY3)
-						SendKey
-						sleep Coord3Interval
-					}
-					switch true {
-					case countParseHK == 1:
-						if GetKeyState(PatternClickerHotkey, "P") {
-							KeyPressed := true
-						}
-					case countParseHK == 2:
-						if GetKeyState(PatternClickerHotkey1, "P") and 
-							GetKeyState(PatternClickerHotkey, "P") {
-							KeyPressed := true
-						}
-					case countParseHK == 3:
-						if GetKeyState(PatternClickerHotkey1, "P") and
-							GetKeyState(PatternClickerHotkey2, "P") and
-							GetKeyState(PatternClickerHotkey, "P") {
-							KeyPressed := true	
-						}
-					}
-					if KeyPressed == true {
-						KeyPressed := false
-						break
-					}
+			        if Position24.EditRadioYes.Value == true {
+				        Position24.RadioNo := false
+				        DllCall("SetCursorPos", "int", CoordX24, "int", CoordY24)
+				        SendKey
+				        sleep Coord24Interval
+			        }
+				    switch true {
+			        case countParseHK == 1:
+				        if GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true
+				        }
+			        case countParseHK == 2:
+				        if GetKeyState(PatternClickerHotkey1, "P") and 
+					       GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true
+				        }
+			        case countParseHK == 3:
+				        if GetKeyState(PatternClickerHotkey1, "P") and
+					       GetKeyState(PatternClickerHotkey2, "P") and
+					       GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true	
+				        }
+			        }
+			        if KeyPressed == true {
+				        KeyPressed := false
+				        break
+			        }
 					;------------------------------
-					if Position4.EditRadioYes.Value == true {
-						Position4.RadioNo := false
-						DllCall("SetCursorPos", "int", CoordX4, "int", CoordY4)
-						SendKey
-						sleep Coord4Interval
-					}
-					switch true {
-					case countParseHK == 1:
-						if GetKeyState(PatternClickerHotkey, "P") {
-							KeyPressed := true
-						}
-					case countParseHK == 2:
-						if GetKeyState(PatternClickerHotkey1, "P") and 
-							GetKeyState(PatternClickerHotkey, "P") {
-							KeyPressed := true
-						}
-					case countParseHK == 3:
-						if GetKeyState(PatternClickerHotkey1, "P") and
-							GetKeyState(PatternClickerHotkey2, "P") and
-							GetKeyState(PatternClickerHotkey, "P") {
-							KeyPressed := true	
-						}
-					}
-					if KeyPressed == true {
-						KeyPressed := false
-						break
-					}
+			        if Position25.EditRadioYes.Value == true {
+				        Position25.RadioNo := false
+				        DllCall("SetCursorPos", "int", CoordX25, "int", CoordY25)
+				        SendKey
+				        sleep Coord25Interval
+			        }
+				    switch true {
+			        case countParseHK == 1:
+				        if GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true
+				        }
+			        case countParseHK == 2:
+				        if GetKeyState(PatternClickerHotkey1, "P") and 
+					       GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true
+				        }
+			        case countParseHK == 3:
+				        if GetKeyState(PatternClickerHotkey1, "P") and
+					       GetKeyState(PatternClickerHotkey2, "P") and
+					       GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true	
+				        }
+			        }
+			        if KeyPressed == true {
+				        KeyPressed := false
+				        break
+			        }
 					;------------------------------
-					if Position5.EditRadioYes.Value == true {
-						Position5.RadioNo := false
-						DllCall("SetCursorPos", "int", CoordX5, "int", CoordY5)
-						SendKey
-						sleep Coord5Interval
-					}
-					switch true {
-					case countParseHK == 1:
-						if GetKeyState(PatternClickerHotkey, "P") {
-							KeyPressed := true
-						}
-					case countParseHK == 2:
-						if GetKeyState(PatternClickerHotkey1, "P") and 
-							GetKeyState(PatternClickerHotkey, "P") {
-							KeyPressed := true
-						}
-					case countParseHK == 3:
-						if GetKeyState(PatternClickerHotkey1, "P") and
-							GetKeyState(PatternClickerHotkey2, "P") and
-							GetKeyState(PatternClickerHotkey, "P") {
-							KeyPressed := true	
-						}
-					}
-					if KeyPressed == true {
-						KeyPressed := false
-						break
-					}
+			        if Position26.EditRadioYes.Value == true {
+				        Position26.RadioNo := false
+				        DllCall("SetCursorPos", "int", CoordX26, "int", CoordY26)
+				        SendKey
+				        sleep Coord26Interval
+			        }
+				    switch true {
+			        case countParseHK == 1:
+				        if GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true
+				        }
+			        case countParseHK == 2:
+				        if GetKeyState(PatternClickerHotkey1, "P") and 
+					       GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true
+				        }
+			        case countParseHK == 3:
+				        if GetKeyState(PatternClickerHotkey1, "P") and
+					       GetKeyState(PatternClickerHotkey2, "P") and
+					       GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true	
+				        }
+			        }
+			        if KeyPressed == true {
+				        KeyPressed := false
+				        break
+			        }
 					;------------------------------
-					if Position6.EditRadioYes.Value == true {
-						Position6.RadioNo := false
-						DllCall("SetCursorPos", "int", CoordX6, "int", CoordY6)
-						SendKey
-						sleep Coord6Interval
-					}
-					switch true {
-					case countParseHK == 1:
-						if GetKeyState(PatternClickerHotkey, "P") {
-							KeyPressed := true
-						}
-					case countParseHK == 2:
-						if GetKeyState(PatternClickerHotkey1, "P") and 
-							GetKeyState(PatternClickerHotkey, "P") {
-							KeyPressed := true
-						}
-					case countParseHK == 3:
-						if GetKeyState(PatternClickerHotkey1, "P") and
-							GetKeyState(PatternClickerHotkey2, "P") and
-							GetKeyState(PatternClickerHotkey, "P") {
-							KeyPressed := true	
-						}
-					}
-					if KeyPressed == true {
-						KeyPressed := false
-						break
-					}
+			        if Position27.EditRadioYes.Value == true {
+				        Position27.RadioNo := false
+				        DllCall("SetCursorPos", "int", CoordX27, "int", CoordY27)
+				        SendKey
+				        sleep Coord27Interval
+			        }
+				    switch true {
+			        case countParseHK == 1:
+				        if GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true
+				        }
+			        case countParseHK == 2:
+				        if GetKeyState(PatternClickerHotkey1, "P") and 
+					       GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true
+				        }
+			        case countParseHK == 3:
+				        if GetKeyState(PatternClickerHotkey1, "P") and
+					       GetKeyState(PatternClickerHotkey2, "P") and
+					       GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true	
+				        }
+			        }
+			        if KeyPressed == true {
+				        KeyPressed := false
+				        break
+			        }
 					;------------------------------
-					if Position7.EditRadioYes.Value == true {
-						Position7.RadioNo := false
-						DllCall("SetCursorPos", "int", CoordX7, "int", CoordY7)
-						SendKey
-						sleep Coord7Interval
-					}
-					switch true {
-					case countParseHK == 1:
-						if GetKeyState(PatternClickerHotkey, "P") {
-							KeyPressed := true
-						}
-					case countParseHK == 2:
-						if GetKeyState(PatternClickerHotkey1, "P") and 
-							GetKeyState(PatternClickerHotkey, "P") {
-							KeyPressed := true
-						}
-					case countParseHK == 3:
-						if GetKeyState(PatternClickerHotkey1, "P") and
-							GetKeyState(PatternClickerHotkey2, "P") and
-							GetKeyState(PatternClickerHotkey, "P") {
-							KeyPressed := true	
-						}
-					}
-					if KeyPressed == true {
-						KeyPressed := false
-						break
-					}
+			        if Position28.EditRadioYes.Value == true {
+				        Position28.RadioNo := false
+				        DllCall("SetCursorPos", "int", CoordX28, "int", CoordY28)
+				        SendKey
+				        sleep Coord28Interval
+			        }
+				    switch true {
+			        case countParseHK == 1:
+				        if GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true
+				        }
+			        case countParseHK == 2:
+				        if GetKeyState(PatternClickerHotkey1, "P") and 
+					       GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true
+				        }
+			        case countParseHK == 3:
+				        if GetKeyState(PatternClickerHotkey1, "P") and
+					       GetKeyState(PatternClickerHotkey2, "P") and
+					       GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true	
+				        }
+			        }
+			        if KeyPressed == true {
+				        KeyPressed := false
+				        break
+			        }
 					;------------------------------
-					if Position8.EditRadioYes.Value == true {
-						Position8.RadioNo := false
-						DllCall("SetCursorPos", "int", CoordX8, "int", CoordY8)
-						SendKey
-						sleep Coord8Interval
-					}
-					switch true {
-					case countParseHK == 1:
-						if GetKeyState(PatternClickerHotkey, "P") {
-							KeyPressed := true
-						}
-					case countParseHK == 2:
-						if GetKeyState(PatternClickerHotkey1, "P") and 
-							GetKeyState(PatternClickerHotkey, "P") {
-							KeyPressed := true
-						}
-					case countParseHK == 3:
-						if GetKeyState(PatternClickerHotkey1, "P") and
-							GetKeyState(PatternClickerHotkey2, "P") and
-							GetKeyState(PatternClickerHotkey, "P") {
-							KeyPressed := true	
-						}
-					}
-					if KeyPressed == true {
-						KeyPressed := false
-						break
-					}
+			        if Position29.EditRadioYes.Value == true {
+				        Position29.RadioNo := false
+				        DllCall("SetCursorPos", "int", CoordX29, "int", CoordY29)
+				        SendKey
+				        sleep Coord29Interval
+			        }
+				    switch true {
+			        case countParseHK == 1:
+				        if GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true
+				        }
+			        case countParseHK == 2:
+				        if GetKeyState(PatternClickerHotkey1, "P") and 
+					       GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true
+				        }
+			        case countParseHK == 3:
+				        if GetKeyState(PatternClickerHotkey1, "P") and
+					       GetKeyState(PatternClickerHotkey2, "P") and
+					       GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true	
+				        }
+			        }
+			        if KeyPressed == true {
+				        KeyPressed := false
+				        break
+			        }
 					;------------------------------
-					if Position9.EditRadioYes.Value == true {
-						Position9.RadioNo := false
-						DllCall("SetCursorPos", "int", CoordX9, "int", CoordY9)
-						SendKey
-						sleep Coord9Interval
-					}
-					switch true {
-					case countParseHK == 1:
-						if GetKeyState(PatternClickerHotkey, "P") {
-							KeyPressed := true
-						}
-					case countParseHK == 2:
-						if GetKeyState(PatternClickerHotkey1, "P") and 
-							GetKeyState(PatternClickerHotkey, "P") {
-							KeyPressed := true
-						}
-					case countParseHK == 3:
-						if GetKeyState(PatternClickerHotkey1, "P") and
-							GetKeyState(PatternClickerHotkey2, "P") and
-							GetKeyState(PatternClickerHotkey, "P") {
-							KeyPressed := true	
-						}
-					}
-					if KeyPressed == true {
-						KeyPressed := false
-						break
-					}
-					;------------------------------
-					if Position10.EditRadioYes.Value == true {
-						Position10.RadioNo := false
-						DllCall("SetCursorPos", "int", CoordX10, "int", CoordY10)
-						SendKey
-						sleep Coord10Interval
-					}
-					switch true {
-					case countParseHK == 1:
-						if GetKeyState(PatternClickerHotkey, "P") {
-							KeyPressed := true
-						}
-					case countParseHK == 2:
-						if GetKeyState(PatternClickerHotkey1, "P") and 
-							GetKeyState(PatternClickerHotkey, "P") {
-							KeyPressed := true
-						}
-					case countParseHK == 3:
-						if GetKeyState(PatternClickerHotkey1, "P") and
-							GetKeyState(PatternClickerHotkey2, "P") and
-							GetKeyState(PatternClickerHotkey, "P") {
-							KeyPressed := true	
-						}
-					}
-					if KeyPressed == true {
-						KeyPressed := false
-						break
-					}
-					;------------------------------
-					if Position11.EditRadioYes.Value == true {
-						Position11.RadioNo := false
-						DllCall("SetCursorPos", "int", CoordX11, "int", CoordY11)
-						SendKey
-						sleep Coord11Interval
-					}
-					switch true {
-					case countParseHK == 1:
-						if GetKeyState(PatternClickerHotkey, "P") {
-							KeyPressed := true
-						}
-					case countParseHK == 2:
-						if GetKeyState(PatternClickerHotkey1, "P") and 
-							GetKeyState(PatternClickerHotkey, "P") {
-							KeyPressed := true
-						}
-					case countParseHK == 3:
-						if GetKeyState(PatternClickerHotkey1, "P") and
-							GetKeyState(PatternClickerHotkey2, "P") and
-							GetKeyState(PatternClickerHotkey, "P") {
-							KeyPressed := true	
-						}
-					}
-					if KeyPressed == true {
-						KeyPressed := false
-						break
-					}
-					;------------------------------
-					if Position12.EditRadioYes.Value == true {
-						Position12.RadioNo := false
-						DllCall("SetCursorPos", "int", CoordX12, "int", CoordY12)
-						SendKey
-						sleep Coord12Interval
-					}
-					switch true {
-					case countParseHK == 1:
-						if GetKeyState(PatternClickerHotkey, "P") {
-							KeyPressed := true
-						}
-					case countParseHK == 2:
-						if GetKeyState(PatternClickerHotkey1, "P") and 
-							GetKeyState(PatternClickerHotkey, "P") {
-							KeyPressed := true
-						}
-					case countParseHK == 3:
-						if GetKeyState(PatternClickerHotkey1, "P") and
-							GetKeyState(PatternClickerHotkey2, "P") and
-							GetKeyState(PatternClickerHotkey, "P") {
-							KeyPressed := true	
-						}
-					}
-					if KeyPressed == true {
-						KeyPressed := false
-						break
-					}
-					;------------------------------
-					if Position13.EditRadioYes.Value == true {
-						Position13.RadioNo := false
-						DllCall("SetCursorPos", "int", CoordX13, "int", CoordY13)
-						SendKey
-						sleep Coord13Interval
-					}
-					switch true {
-					case countParseHK == 1:
-						if GetKeyState(PatternClickerHotkey, "P") {
-							KeyPressed := true
-						}
-					case countParseHK == 2:
-						if GetKeyState(PatternClickerHotkey1, "P") and 
-							GetKeyState(PatternClickerHotkey, "P") {
-							KeyPressed := true
-						}
-					case countParseHK == 3:
-						if GetKeyState(PatternClickerHotkey1, "P") and
-							GetKeyState(PatternClickerHotkey2, "P") and
-							GetKeyState(PatternClickerHotkey, "P") {
-							KeyPressed := true	
-						}
-					}
-					if KeyPressed == true {
-						KeyPressed := false
-						break
-					}
-					;------------------------------
-					if Position14.EditRadioYes.Value == true {
-						Position14.RadioNo := false
-						DllCall("SetCursorPos", "int", CoordX14, "int", CoordY14)
-						SendKey
-						sleep Coord14Interval
-					}
-					switch true {
-					case countParseHK == 1:
-						if GetKeyState(PatternClickerHotkey, "P") {
-							KeyPressed := true
-						}
-					case countParseHK == 2:
-						if GetKeyState(PatternClickerHotkey1, "P") and 
-							GetKeyState(PatternClickerHotkey, "P") {
-							KeyPressed := true
-						}
-					case countParseHK == 3:
-						if GetKeyState(PatternClickerHotkey1, "P") and
-							GetKeyState(PatternClickerHotkey2, "P") and
-							GetKeyState(PatternClickerHotkey, "P") {
-							KeyPressed := true	
-						}
-					}
-					if KeyPressed == true {
-						KeyPressed := false
-						break
-					}
-					;------------------------------
-					if Position15.EditRadioYes.Value == true {
-						Position15.RadioNo := false
-						DllCall("SetCursorPos", "int", CoordX15, "int", CoordY15)
-						SendKey
-						sleep Coord15Interval
-					}
-					switch true {
-					case countParseHK == 1:
-						if GetKeyState(PatternClickerHotkey, "P") {
-							KeyPressed := true
-						}
-					case countParseHK == 2:
-						if GetKeyState(PatternClickerHotkey1, "P") and 
-							GetKeyState(PatternClickerHotkey, "P") {
-							KeyPressed := true
-						}
-					case countParseHK == 3:
-						if GetKeyState(PatternClickerHotkey1, "P") and
-							GetKeyState(PatternClickerHotkey2, "P") and
-							GetKeyState(PatternClickerHotkey, "P") {
-							KeyPressed := true	
-						}
-					}
-					if KeyPressed == true {
-						KeyPressed := false
-						break
-					}
-					;------------------------------
-					if Position16.EditRadioYes.Value == true {
-						Position16.RadioNo := false
-						DllCall("SetCursorPos", "int", CoordX16, "int", CoordY16)
-						SendKey
-						sleep Coord16Interval
-					}
-					switch true {
-					case countParseHK == 1:
-						if GetKeyState(PatternClickerHotkey, "P") {
-							KeyPressed := true
-						}
-					case countParseHK == 2:
-						if GetKeyState(PatternClickerHotkey1, "P") and 
-							GetKeyState(PatternClickerHotkey, "P") {
-							KeyPressed := true
-						}
-					case countParseHK == 3:
-						if GetKeyState(PatternClickerHotkey1, "P") and
-							GetKeyState(PatternClickerHotkey2, "P") and
-							GetKeyState(PatternClickerHotkey, "P") {
-							KeyPressed := true	
-						}
-					}
-					if KeyPressed == true {
-						KeyPressed := false
-						break
-					}
-					;------------------------------
-					if Position17.EditRadioYes.Value == true {
-						Position17.RadioNo := false
-						DllCall("SetCursorPos", "int", CoordX17, "int", CoordY17)
-						SendKey
-						sleep Coord17Interval
-					}
-					switch true {
-					case countParseHK == 1:
-						if GetKeyState(PatternClickerHotkey, "P") {
-							KeyPressed := true
-						}
-					case countParseHK == 2:
-						if GetKeyState(PatternClickerHotkey1, "P") and 
-							GetKeyState(PatternClickerHotkey, "P") {
-							KeyPressed := true
-						}
-					case countParseHK == 3:
-						if GetKeyState(PatternClickerHotkey1, "P") and
-							GetKeyState(PatternClickerHotkey2, "P") and
-							GetKeyState(PatternClickerHotkey, "P") {
-							KeyPressed := true	
-						}
-					}
-					if KeyPressed == true {
-						KeyPressed := false
-						break
-					}
-					;------------------------------
-					if Position18.EditRadioYes.Value == true {
-						Position18.RadioNo := false
-						DllCall("SetCursorPos", "int", CoordX18, "int", CoordY18)
-						SendKey
-						sleep Coord18Interval
-					}
-					switch true {
-					case countParseHK == 1:
-						if GetKeyState(PatternClickerHotkey, "P") {
-							KeyPressed := true
-						}
-					case countParseHK == 2:
-						if GetKeyState(PatternClickerHotkey1, "P") and 
-							GetKeyState(PatternClickerHotkey, "P") {
-							KeyPressed := true
-						}
-					case countParseHK == 3:
-						if GetKeyState(PatternClickerHotkey1, "P") and
-							GetKeyState(PatternClickerHotkey2, "P") and
-							GetKeyState(PatternClickerHotkey, "P") {
-							KeyPressed := true	
-						}
-					}
-					if KeyPressed == true {
-						KeyPressed := false
-						break
-					}
-					;------------------------------
-					if Position19.EditRadioYes.Value == true {
-						Position19.RadioNo := false
-						DllCall("SetCursorPos", "int", CoordX19, "int", CoordY19)
-						SendKey
-						sleep Coord19Interval
-					}
-					switch true {
-					case countParseHK == 1:
-						if GetKeyState(PatternClickerHotkey, "P") {
-							KeyPressed := true
-						}
-					case countParseHK == 2:
-						if GetKeyState(PatternClickerHotkey1, "P") and 
-							GetKeyState(PatternClickerHotkey, "P") {
-							KeyPressed := true
-						}
-					case countParseHK == 3:
-						if GetKeyState(PatternClickerHotkey1, "P") and
-							GetKeyState(PatternClickerHotkey2, "P") and
-							GetKeyState(PatternClickerHotkey, "P") {
-							KeyPressed := true	
-						}
-					}
-					if KeyPressed == true {
-						KeyPressed := false
-						break
-					}
-					;------------------------------
-					if Position20.EditRadioYes.Value == true {
-						Position20.RadioNo := false
-						DllCall("SetCursorPos", "int", CoordX20, "int", CoordY20)
-						SendKey
-						sleep Coord20Interval
-					}
-					switch true {
-					case countParseHK == 1:
-						if GetKeyState(PatternClickerHotkey, "P") {
-							KeyPressed := true
-						}
-					case countParseHK == 2:
-						if GetKeyState(PatternClickerHotkey1, "P") and 
-							GetKeyState(PatternClickerHotkey, "P") {
-							KeyPressed := true
-						}
-					case countParseHK == 3:
-						if GetKeyState(PatternClickerHotkey1, "P") and
-							GetKeyState(PatternClickerHotkey2, "P") and
-							GetKeyState(PatternClickerHotkey, "P") {
-							KeyPressed := true	
-						}
-					}
-					if KeyPressed == true {
-						KeyPressed := false
-						break
-					}
-					;------------------------------
-					if Position21.EditRadioYes.Value == true {
-						Position21.RadioNo := false
-						DllCall("SetCursorPos", "int", CoordX21, "int", CoordY21)
-						SendKey
-						sleep Coord21Interval
-					}
-					switch true {
-					case countParseHK == 1:
-						if GetKeyState(PatternClickerHotkey, "P") {
-							KeyPressed := true
-						}
-					case countParseHK == 2:
-						if GetKeyState(PatternClickerHotkey1, "P") and 
-							GetKeyState(PatternClickerHotkey, "P") {
-							KeyPressed := true
-						}
-					case countParseHK == 3:
-						if GetKeyState(PatternClickerHotkey1, "P") and
-							GetKeyState(PatternClickerHotkey2, "P") and
-							GetKeyState(PatternClickerHotkey, "P") {
-							KeyPressed := true	
-						}
-					}
-					if KeyPressed == true {
-						KeyPressed := false
-						break
-					}
-					;------------------------------
-					if Position22.EditRadioYes.Value == true {
-						Position22.RadioNo := false
-						DllCall("SetCursorPos", "int", CoordX22, "int", CoordY22)
-						SendKey
-						sleep Coord22Interval
-					}
-					switch true {
-					case countParseHK == 1:
-						if GetKeyState(PatternClickerHotkey, "P") {
-							KeyPressed := true
-						}
-					case countParseHK == 2:
-						if GetKeyState(PatternClickerHotkey1, "P") and 
-							GetKeyState(PatternClickerHotkey, "P") {
-							KeyPressed := true
-						}
-					case countParseHK == 3:
-						if GetKeyState(PatternClickerHotkey1, "P") and
-							GetKeyState(PatternClickerHotkey2, "P") and
-							GetKeyState(PatternClickerHotkey, "P") {
-							KeyPressed := true	
-						}
-					}
-					if KeyPressed == true {
-						KeyPressed := false
-						break
-					}
-					;------------------------------
-					Count++
-					SB.SetText("Pattern Clicker Active. Count: " Count)
-					sleep Random(ClickInterval, ClickInterval + RandomOffset)
-				} ; End Loop
-			}
-			toggle := !toggle
-			TextPatternClickerOnOff.Value := " OFF"
-			SB.SetText("Clicker Stopped. Count: " Count)
-			sleep StopDelay
-			return
-		case RadioPos1_10AnyYes == true or RadioPos11_22AnyYes == true:
-			SB.SetText("Infinite Pattern Clicker Active. Count: " Count)
-			sleep StartDelay
-			Loop {
-				if Position1.EditRadioYes.Value == true {
-					Position1.RadioNo := false
-					DllCall("SetCursorPos", "int", CoordX1, "int", CoordY1)
-					SendKey
-					sleep Coord1Interval
-				}
-				switch true {
-				case countParseHK == 1:
-					if GetKeyState(PatternClickerHotkey, "P") {
-						KeyPressed := true
-					}
-				case countParseHK == 2:
-					if GetKeyState(PatternClickerHotkey1, "P") and 
-						GetKeyState(PatternClickerHotkey, "P") {
-						KeyPressed := true
-					}
-				case countParseHK == 3:
-					if GetKeyState(PatternClickerHotkey1, "P") and
-						GetKeyState(PatternClickerHotkey2, "P") and
-						GetKeyState(PatternClickerHotkey, "P") {
-						KeyPressed := true	
-					}
-				}
-				if KeyPressed == true {
-					KeyPressed := false
-					break
-				}
-				;------------------------------
-				if Position2.EditRadioYes.Value == true {
-					Position2.RadioNo := false
-					DllCall("SetCursorPos", "int", CoordX2, "int", CoordY2)
-					SendKey
-					sleep Coord2Interval
-				}
-				switch true {
-				case countParseHK == 1:
-					if GetKeyState(PatternClickerHotkey, "P") {
-						KeyPressed := true
-					}
-				case countParseHK == 2:
-					if GetKeyState(PatternClickerHotkey1, "P") and 
-						GetKeyState(PatternClickerHotkey, "P") {
-						KeyPressed := true
-					}
-				case countParseHK == 3:
-					if GetKeyState(PatternClickerHotkey1, "P") and
-						GetKeyState(PatternClickerHotkey2, "P") and
-						GetKeyState(PatternClickerHotkey, "P") {
-						KeyPressed := true	
-					}
-				}
-				if KeyPressed == true {
-					KeyPressed := false
-					break
-				}
-				;------------------------------
-				if Position3.EditRadioYes.Value == true {
-					Position3.RadioNo := false
-					DllCall("SetCursorPos", "int", CoordX3, "int", CoordY3)
-					SendKey
-					sleep Coord3Interval
-				}
-				switch true {
-				case countParseHK == 1:
-					if GetKeyState(PatternClickerHotkey, "P") {
-						KeyPressed := true
-					}
-				case countParseHK == 2:
-					if GetKeyState(PatternClickerHotkey1, "P") and 
-						GetKeyState(PatternClickerHotkey, "P") {
-						KeyPressed := true
-					}
-				case countParseHK == 3:
-					if GetKeyState(PatternClickerHotkey1, "P") and
-						GetKeyState(PatternClickerHotkey2, "P") and
-						GetKeyState(PatternClickerHotkey, "P") {
-						KeyPressed := true	
-					}
-				}
-				if KeyPressed == true {
-					KeyPressed := false
-					break
-				}
-				;------------------------------
-				if Position4.EditRadioYes.Value == true {
-					Position4.RadioNo := false
-					DllCall("SetCursorPos", "int", CoordX4, "int", CoordY4)
-					SendKey
-					sleep Coord4Interval
-				}
-				switch true {
-				case countParseHK == 1:
-					if GetKeyState(PatternClickerHotkey, "P") {
-						KeyPressed := true
-					}
-				case countParseHK == 2:
-					if GetKeyState(PatternClickerHotkey1, "P") and 
-						GetKeyState(PatternClickerHotkey, "P") {
-						KeyPressed := true
-					}
-				case countParseHK == 3:
-					if GetKeyState(PatternClickerHotkey1, "P") and
-						GetKeyState(PatternClickerHotkey2, "P") and
-						GetKeyState(PatternClickerHotkey, "P") {
-						KeyPressed := true	
-					}
-				}
-				if KeyPressed == true {
-					KeyPressed := false
-					break
-				}
-				;------------------------------
-				if Position5.EditRadioYes.Value == true {
-					Position5.RadioNo := false
-					DllCall("SetCursorPos", "int", CoordX5, "int", CoordY5)
-					SendKey
-					sleep Coord5Interval
-				}
-				switch true {
-				case countParseHK == 1:
-					if GetKeyState(PatternClickerHotkey, "P") {
-						KeyPressed := true
-					}
-				case countParseHK == 2:
-					if GetKeyState(PatternClickerHotkey1, "P") and 
-						GetKeyState(PatternClickerHotkey, "P") {
-						KeyPressed := true
-					}
-				case countParseHK == 3:
-					if GetKeyState(PatternClickerHotkey1, "P") and
-						GetKeyState(PatternClickerHotkey2, "P") and
-						GetKeyState(PatternClickerHotkey, "P") {
-						KeyPressed := true	
-					}
-				}
-				if KeyPressed == true {
-					KeyPressed := false
-					break
-				}
-				;------------------------------
-				if Position6.EditRadioYes.Value == true {
-					Position6.RadioNo := false
-					DllCall("SetCursorPos", "int", CoordX6, "int", CoordY6)
-					SendKey
-					sleep Coord6Interval
-				}
-				switch true {
-				case countParseHK == 1:
-					if GetKeyState(PatternClickerHotkey, "P") {
-						KeyPressed := true
-					}
-				case countParseHK == 2:
-					if GetKeyState(PatternClickerHotkey1, "P") and 
-						GetKeyState(PatternClickerHotkey, "P") {
-						KeyPressed := true
-					}
-				case countParseHK == 3:
-					if GetKeyState(PatternClickerHotkey1, "P") and
-						GetKeyState(PatternClickerHotkey2, "P") and
-						GetKeyState(PatternClickerHotkey, "P") {
-						KeyPressed := true	
-					}
-				}
-				if KeyPressed == true {
-					KeyPressed := false
-					break
-				}
-				;------------------------------
-				if Position7.EditRadioYes.Value == true {
-					Position7.RadioNo := false
-					DllCall("SetCursorPos", "int", CoordX7, "int", CoordY7)
-					SendKey
-					sleep Coord7Interval
-				}
-				switch true {
-				case countParseHK == 1:
-					if GetKeyState(PatternClickerHotkey, "P") {
-						KeyPressed := true
-					}
-				case countParseHK == 2:
-					if GetKeyState(PatternClickerHotkey1, "P") and 
-						GetKeyState(PatternClickerHotkey, "P") {
-						KeyPressed := true
-					}
-				case countParseHK == 3:
-					if GetKeyState(PatternClickerHotkey1, "P") and
-						GetKeyState(PatternClickerHotkey2, "P") and
-						GetKeyState(PatternClickerHotkey, "P") {
-						KeyPressed := true	
-					}
-				}
-				if KeyPressed == true {
-					KeyPressed := false
-					break
-				}
-				;------------------------------
-				if Position8.EditRadioYes.Value == true {
-					Position8.RadioNo := false
-					DllCall("SetCursorPos", "int", CoordX8, "int", CoordY8)
-					SendKey
-					sleep Coord8Interval
-				}
-				switch true {
-				case countParseHK == 1:
-					if GetKeyState(PatternClickerHotkey, "P") {
-						KeyPressed := true
-					}
-				case countParseHK == 2:
-					if GetKeyState(PatternClickerHotkey1, "P") and 
-						GetKeyState(PatternClickerHotkey, "P") {
-						KeyPressed := true
-					}
-				case countParseHK == 3:
-					if GetKeyState(PatternClickerHotkey1, "P") and
-						GetKeyState(PatternClickerHotkey2, "P") and
-						GetKeyState(PatternClickerHotkey, "P") {
-						KeyPressed := true	
-					}
-				}
-				if KeyPressed == true {
-					KeyPressed := false
-					break
-				}
-				;------------------------------
-				if Position9.EditRadioYes.Value == true {
-					Position9.RadioNo := false
-					DllCall("SetCursorPos", "int", CoordX9, "int", CoordY9)
-					SendKey
-					sleep Coord9Interval
-				}
-				switch true {
-				case countParseHK == 1:
-					if GetKeyState(PatternClickerHotkey, "P") {
-						KeyPressed := true
-					}
-				case countParseHK == 2:
-					if GetKeyState(PatternClickerHotkey1, "P") and 
-						GetKeyState(PatternClickerHotkey, "P") {
-						KeyPressed := true
-					}
-				case countParseHK == 3:
-					if GetKeyState(PatternClickerHotkey1, "P") and
-						GetKeyState(PatternClickerHotkey2, "P") and
-						GetKeyState(PatternClickerHotkey, "P") {
-						KeyPressed := true	
-					}
-				}
-				if KeyPressed == true {
-					KeyPressed := false
-					break
-				}
-				;------------------------------
-				if Position10.EditRadioYes.Value == true {
-					Position10.RadioNo := false
-					DllCall("SetCursorPos", "int", CoordX10, "int", CoordY10)
-					SendKey
-					sleep Coord10Interval
-				}
-				switch true {
-				case countParseHK == 1:
-					if GetKeyState(PatternClickerHotkey, "P") {
-						KeyPressed := true
-					}
-				case countParseHK == 2:
-					if GetKeyState(PatternClickerHotkey1, "P") and 
-						GetKeyState(PatternClickerHotkey, "P") {
-						KeyPressed := true
-					}
-				case countParseHK == 3:
-					if GetKeyState(PatternClickerHotkey1, "P") and
-						GetKeyState(PatternClickerHotkey2, "P") and
-						GetKeyState(PatternClickerHotkey, "P") {
-						KeyPressed := true	
-					}
-				}
-				if KeyPressed == true {
-					KeyPressed := false
-					break
-				}
-				;------------------------------
-				if Position11.EditRadioYes.Value == true {
-					Position11.RadioNo := false
-					DllCall("SetCursorPos", "int", CoordX11, "int", CoordY11)
-					SendKey
-					sleep Coord11Interval
-				}
-				switch true {
-				case countParseHK == 1:
-					if GetKeyState(PatternClickerHotkey, "P") {
-						KeyPressed := true
-					}
-				case countParseHK == 2:
-					if GetKeyState(PatternClickerHotkey1, "P") and 
-						GetKeyState(PatternClickerHotkey, "P") {
-						KeyPressed := true
-					}
-				case countParseHK == 3:
-					if GetKeyState(PatternClickerHotkey1, "P") and
-						GetKeyState(PatternClickerHotkey2, "P") and
-						GetKeyState(PatternClickerHotkey, "P") {
-						KeyPressed := true	
-					}
-				}
-				if KeyPressed == true {
-					KeyPressed := false
-					break
-				}
-				;------------------------------
-				if Position12.EditRadioYes.Value == true {
-					Position12.RadioNo := false
-					DllCall("SetCursorPos", "int", CoordX12, "int", CoordY12)
-					SendKey
-					sleep Coord12Interval
-				}
-				switch true {
-				case countParseHK == 1:
-					if GetKeyState(PatternClickerHotkey, "P") {
-						KeyPressed := true
-					}
-				case countParseHK == 2:
-					if GetKeyState(PatternClickerHotkey1, "P") and 
-						GetKeyState(PatternClickerHotkey, "P") {
-						KeyPressed := true
-					}
-				case countParseHK == 3:
-					if GetKeyState(PatternClickerHotkey1, "P") and
-						GetKeyState(PatternClickerHotkey2, "P") and
-						GetKeyState(PatternClickerHotkey, "P") {
-						KeyPressed := true	
-					}
-				}
-				if KeyPressed == true {
-					KeyPressed := false
-					break
-				}
-				;------------------------------
-				if Position13.EditRadioYes.Value == true {
-					Position13.RadioNo := false
-					DllCall("SetCursorPos", "int", CoordX13, "int", CoordY13)
-					SendKey
-					sleep Coord13Interval
-				}
-				switch true {
-				case countParseHK == 1:
-					if GetKeyState(PatternClickerHotkey, "P") {
-						KeyPressed := true
-					}
-				case countParseHK == 2:
-					if GetKeyState(PatternClickerHotkey1, "P") and 
-						GetKeyState(PatternClickerHotkey, "P") {
-						KeyPressed := true
-					}
-				case countParseHK == 3:
-					if GetKeyState(PatternClickerHotkey1, "P") and
-						GetKeyState(PatternClickerHotkey2, "P") and
-						GetKeyState(PatternClickerHotkey, "P") {
-						KeyPressed := true	
-					}
-				}
-				if KeyPressed == true {
-					KeyPressed := false
-					break
-				}
-				;------------------------------
-				if Position14.EditRadioYes.Value == true {
-					Position14.RadioNo := false
-					DllCall("SetCursorPos", "int", CoordX14, "int", CoordY14)
-					SendKey
-					sleep Coord14Interval
-				}
-				switch true {
-				case countParseHK == 1:
-					if GetKeyState(PatternClickerHotkey, "P") {
-						KeyPressed := true
-					}
-				case countParseHK == 2:
-					if GetKeyState(PatternClickerHotkey1, "P") and 
-						GetKeyState(PatternClickerHotkey, "P") {
-						KeyPressed := true
-					}
-				case countParseHK == 3:
-					if GetKeyState(PatternClickerHotkey1, "P") and
-						GetKeyState(PatternClickerHotkey2, "P") and
-						GetKeyState(PatternClickerHotkey, "P") {
-						KeyPressed := true	
-					}
-				}
-				if KeyPressed == true {
-					KeyPressed := false
-					break
-				}
-				;------------------------------
-				if Position15.EditRadioYes.Value == true {
-					Position15.RadioNo := false
-					DllCall("SetCursorPos", "int", CoordX15, "int", CoordY15)
-					SendKey
-					sleep Coord15Interval
-				}
-				switch true {
-				case countParseHK == 1:
-					if GetKeyState(PatternClickerHotkey, "P") {
-						KeyPressed := true
-					}
-				case countParseHK == 2:
-					if GetKeyState(PatternClickerHotkey1, "P") and 
-						GetKeyState(PatternClickerHotkey, "P") {
-						KeyPressed := true
-					}
-				case countParseHK == 3:
-					if GetKeyState(PatternClickerHotkey1, "P") and
-						GetKeyState(PatternClickerHotkey2, "P") and
-						GetKeyState(PatternClickerHotkey, "P") {
-						KeyPressed := true	
-					}
-				}
-				if KeyPressed == true {
-					KeyPressed := false
-					break
-				}
-				;------------------------------
-				if Position16.EditRadioYes.Value == true {
-					Position16.RadioNo := false
-					DllCall("SetCursorPos", "int", CoordX16, "int", CoordY16)
-					SendKey
-					sleep Coord16Interval
-				}
-				switch true {
-				case countParseHK == 1:
-					if GetKeyState(PatternClickerHotkey, "P") {
-						KeyPressed := true
-					}
-				case countParseHK == 2:
-					if GetKeyState(PatternClickerHotkey1, "P") and 
-						GetKeyState(PatternClickerHotkey, "P") {
-						KeyPressed := true
-					}
-				case countParseHK == 3:
-					if GetKeyState(PatternClickerHotkey1, "P") and
-						GetKeyState(PatternClickerHotkey2, "P") and
-						GetKeyState(PatternClickerHotkey, "P") {
-						KeyPressed := true	
-					}
-				}
-				if KeyPressed == true {
-					KeyPressed := false
-					break
-				}
-				;------------------------------
-				if Position17.EditRadioYes.Value == true {
-					Position17.RadioNo := false
-					DllCall("SetCursorPos", "int", CoordX17, "int", CoordY17)
-					SendKey
-					sleep Coord17Interval
-				}
-				switch true {
-				case countParseHK == 1:
-					if GetKeyState(PatternClickerHotkey, "P") {
-						KeyPressed := true
-					}
-				case countParseHK == 2:
-					if GetKeyState(PatternClickerHotkey1, "P") and 
-						GetKeyState(PatternClickerHotkey, "P") {
-						KeyPressed := true
-					}
-				case countParseHK == 3:
-					if GetKeyState(PatternClickerHotkey1, "P") and
-						GetKeyState(PatternClickerHotkey2, "P") and
-						GetKeyState(PatternClickerHotkey, "P") {
-						KeyPressed := true	
-					}
-				}
-				if KeyPressed == true {
-					KeyPressed := false
-					break
-				}
-				;------------------------------
-				if Position18.EditRadioYes.Value == true {
-					Position18.RadioNo := false
-					DllCall("SetCursorPos", "int", CoordX18, "int", CoordY18)
-					SendKey
-					sleep Coord18Interval
-				}
-				switch true {
-				case countParseHK == 1:
-					if GetKeyState(PatternClickerHotkey, "P") {
-						KeyPressed := true
-					}
-				case countParseHK == 2:
-					if GetKeyState(PatternClickerHotkey1, "P") and 
-						GetKeyState(PatternClickerHotkey, "P") {
-						KeyPressed := true
-					}
-				case countParseHK == 3:
-					if GetKeyState(PatternClickerHotkey1, "P") and
-						GetKeyState(PatternClickerHotkey2, "P") and
-						GetKeyState(PatternClickerHotkey, "P") {
-						KeyPressed := true	
-					}
-				}
-				if KeyPressed == true {
-					KeyPressed := false
-					break
-				}
-				;------------------------------
-				if Position19.EditRadioYes.Value == true {
-					Position19.RadioNo := false
-					DllCall("SetCursorPos", "int", CoordX19, "int", CoordY19)
-					SendKey
-					sleep Coord19Interval
-				}
-				switch true {
-				case countParseHK == 1:
-					if GetKeyState(PatternClickerHotkey, "P") {
-						KeyPressed := true
-					}
-				case countParseHK == 2:
-					if GetKeyState(PatternClickerHotkey1, "P") and 
-						GetKeyState(PatternClickerHotkey, "P") {
-						KeyPressed := true
-					}
-				case countParseHK == 3:
-					if GetKeyState(PatternClickerHotkey1, "P") and
-						GetKeyState(PatternClickerHotkey2, "P") and
-						GetKeyState(PatternClickerHotkey, "P") {
-						KeyPressed := true	
-					}
-				}
-				if KeyPressed == true {
-					KeyPressed := false
-					break
-				}
-				;------------------------------
-				if Position20.EditRadioYes.Value == true {
-					Position20.RadioNo := false
-					DllCall("SetCursorPos", "int", CoordX20, "int", CoordY20)
-					SendKey
-					sleep Coord20Interval
-				}
-				switch true {
-				case countParseHK == 1:
-					if GetKeyState(PatternClickerHotkey, "P") {
-						KeyPressed := true
-					}
-				case countParseHK == 2:
-					if GetKeyState(PatternClickerHotkey1, "P") and 
-						GetKeyState(PatternClickerHotkey, "P") {
-						KeyPressed := true
-					}
-				case countParseHK == 3:
-					if GetKeyState(PatternClickerHotkey1, "P") and
-						GetKeyState(PatternClickerHotkey2, "P") and
-						GetKeyState(PatternClickerHotkey, "P") {
-						KeyPressed := true	
-					}
-				}
-				if KeyPressed == true {
-					KeyPressed := false
-					break
-				}
-				;------------------------------
-				if Position21.EditRadioYes.Value == true {
-					Position21.RadioNo := false
-					DllCall("SetCursorPos", "int", CoordX21, "int", CoordY21)
-					SendKey
-					sleep Coord21Interval
-				}
-				switch true {
-				case countParseHK == 1:
-					if GetKeyState(PatternClickerHotkey, "P") {
-						KeyPressed := true
-					}
-				case countParseHK == 2:
-					if GetKeyState(PatternClickerHotkey1, "P") and 
-						GetKeyState(PatternClickerHotkey, "P") {
-						KeyPressed := true
-					}
-				case countParseHK == 3:
-					if GetKeyState(PatternClickerHotkey1, "P") and
-						GetKeyState(PatternClickerHotkey2, "P") and
-						GetKeyState(PatternClickerHotkey, "P") {
-						KeyPressed := true	
-					}
-				}
-				if KeyPressed == true {
-					KeyPressed := false
-					break
-				}
-				;------------------------------
-				if Position22.EditRadioYes.Value == true {
-					Position22.RadioNo := false
-					DllCall("SetCursorPos", "int", CoordX22, "int", CoordY22)
-					SendKey
-					sleep Coord22Interval
-				}
-				switch true {
-				case countParseHK == 1:
-					if GetKeyState(PatternClickerHotkey, "P") {
-						KeyPressed := true
-					}
-				case countParseHK == 2:
-					if GetKeyState(PatternClickerHotkey1, "P") and 
-						GetKeyState(PatternClickerHotkey, "P") {
-						KeyPressed := true
-					}
-				case countParseHK == 3:
-					if GetKeyState(PatternClickerHotkey1, "P") and
-						GetKeyState(PatternClickerHotkey2, "P") and
-						GetKeyState(PatternClickerHotkey, "P") {
-						KeyPressed := true	
-					}
-				}
-				if KeyPressed == true {
-					KeyPressed := false
-					break
-				}
-				;------------------------------
-				Count++
-				SB.SetText("Infinite Pattern Clicker Active. Count: " Count)
-			} ; End Loop
-			toggle := !toggle
-			TextPatternClickerOnOff.Value := " OFF"
-			SB.SetText("Clicker Stopped. Count: " Count)
-			sleep StopDelay
-			return
-		Default:
-			SB.SetText("Infinite Clicker Active. Count: 0")
-			sleep StartDelay
-			SetTimer(SendKey, Random(ClickInterval, ClickInterval + RandomOffset))
-			return
-		}
+			        if Position30.EditRadioYes.Value == true {
+				        Position30.RadioNo := false
+				        DllCall("SetCursorPos", "int", CoordX30, "int", CoordY30)
+				        SendKey
+				        sleep Coord30Interval
+			        }
+				    switch true {
+			        case countParseHK == 1:
+				        if GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true
+				        }
+			        case countParseHK == 2:
+				        if GetKeyState(PatternClickerHotkey1, "P") and 
+					       GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true
+				        }
+			        case countParseHK == 3:
+				        if GetKeyState(PatternClickerHotkey1, "P") and
+					       GetKeyState(PatternClickerHotkey2, "P") and
+					       GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true	
+				        }
+			        }
+			        if KeyPressed == true {
+				        KeyPressed := false
+				        break
+			        }
+			        ;------------------------------
+			        Count++
+			        SB.SetText("Infinite Pattern Clicker Active. Count: " Count)
+		        } ; End Loop
+		        toggle := !toggle
+		        TextPatternClickerOnOff.Value := " OFF"
+		        SB.SetText("Clicker Stopped. Count: " Count)
+		        sleep StopDelay
+		        return
+	        Default:
+		        SB.SetText("Infinite Clicker Active. Count: 0")
+		        sleep StartDelay
+		        SetTimer(SendKey, Random(ClickInterval, ClickInterval + RandomOffset))
+		        return
+	        }
+        } else {
+	        TextPatternClickerOnOff.Value := " OFF"
+	        SetTimer(SendKey, 0)
+        }
 	} else {
-		TextPatternClickerOnOff.Value := " OFF"
-		SetTimer(SendKey, 0)
+	    if (toggle := !toggle){
+	        TextPatternClickerOnOff.Value := " ON"
+	        ClickInterval := Saved.ClickInterval
+	        RandomOffset := Saved.RandomOffset
+	        CoordMode "Mouse", "Screen"
+	        Count := 0
+	        LoopAmount := Saved.LoopAmount
+
+	        CoordX1 := Saved.CoordX1
+	        CoordY1 := Saved.CoordY1
+	        Coord1Interval := Saved.Coord1Interval
+
+	        CoordX2 := Saved.CoordX2
+	        CoordY2 := Saved.CoordY2
+	        Coord2Interval := Saved.Coord2Interval
+	
+	        CoordX3 := Saved.CoordX3
+	        CoordY3 := Saved.CoordY3
+	        Coord3Interval := Saved.Coord3Interval
+
+	        CoordX4 := Saved.CoordX4
+	        CoordY4 := Saved.CoordY4
+	        Coord4Interval := Saved.Coord4Interval
+
+	        CoordX5 := Saved.CoordX5
+	        CoordY5 := Saved.CoordY5
+	        Coord5Interval := Saved.Coord5Interval
+	
+	        CoordX6 := Saved.CoordX6
+	        CoordY6 := Saved.CoordY6
+	        Coord6Interval := Saved.Coord6Interval
+
+	        CoordX7 := Saved.CoordX7
+	        CoordY7 := Saved.CoordY7
+	        Coord7Interval := Saved.Coord7Interval
+
+	        CoordX8 := Saved.CoordX8
+	        CoordY8 := Saved.CoordY8
+	        Coord8Interval := Saved.Coord8Interval
+
+	        CoordX9 := Saved.CoordX9
+	        CoordY9 := Saved.CoordY9
+	        Coord9Interval := Saved.Coord9Interval
+
+	        CoordX10 := Saved.CoordX10
+	        CoordY10 := Saved.CoordY10
+	        Coord10Interval := Saved.Coord10Interval
+
+	        CoordX11 := Saved.CoordX11
+	        CoordY11 := Saved.CoordY11
+	        Coord11Interval := Saved.Coord11Interval
+
+	        CoordX12 := Saved.CoordX12
+	        CoordY12 := Saved.CoordY12
+	        Coord12Interval := Saved.Coord12Interval
+
+	        CoordX13 := Saved.CoordX13
+	        CoordY13 := Saved.CoordY13
+	        Coord13Interval := Saved.Coord13Interval
+
+	        CoordX14 := Saved.CoordX14
+	        CoordY14 := Saved.CoordY14
+	        Coord14Interval := Saved.Coord14Interval
+
+	        CoordX15 := Saved.CoordX15
+	        CoordY15 := Saved.CoordY15
+	        Coord15Interval := Saved.Coord15Interval
+
+	        CoordX16 := Saved.CoordX16
+	        CoordY16 := Saved.CoordY16
+	        Coord16Interval := Saved.Coord16Interval
+
+	        CoordX17 := Saved.CoordX17
+	        CoordY17 := Saved.CoordY17
+	        Coord17Interval := Saved.Coord17Interval
+
+	        CoordX18 := Saved.CoordX18
+	        CoordY18 := Saved.CoordY18
+	        Coord18Interval := Saved.Coord18Interval
+
+	        CoordX19 := Saved.CoordX19
+	        CoordY19 := Saved.CoordY19
+	        Coord19Interval := Saved.Coord19Interval
+
+	        CoordX20 := Saved.CoordX20
+	        CoordY20 := Saved.CoordY20
+	        Coord20Interval := Saved.Coord20Interval
+
+	        RadioPos1_10AnyYes := false
+	        RadioPos11_22AnyYes := false
+	        if Position1.EditRadioYes.Value == true or Position2.EditRadioYes.Value == true or 
+	           Position3.EditRadioYes.Value == true or Position4.EditRadioYes.Value == true or 
+		       Position5.EditRadioYes.Value == true or Position6.EditRadioYes.Value == true or 
+		       Position7.EditRadioYes.Value == true or Position8.EditRadioYes.Value == true or
+		       Position9.EditRadioYes.Value == true or Position10.EditRadioYes.Value == true {
+		        RadioPos1_10AnyYes := true
+	        }
+	        if Position11.EditRadioYes.Value == true or Position12.EditRadioYes.Value == true or
+		       Position13.EditRadioYes.Value == true or Position14.EditRadioYes.Value == true or
+		       Position15.EditRadioYes.Value == true or Position16.EditRadioYes.Value == true or
+		       Position17.EditRadioYes.Value == true or Position18.EditRadioYes.Value == true or
+		       Position19.EditRadioYes.Value == true or Position20.EditRadioYes.Value == true {
+		        RadioPos11_22AnyYes := true
+	        }
+		
+	        Switch true {
+	        case RadioCountLoopsYes.Value:
+		        if  RadioPos1_10AnyYes == false and RadioPos11_22AnyYes == false {
+			        SB.SetText("Clicker Active. Count: " Count)
+			        sleep StartDelay
+			        Loop LoopAmount {
+				        switch true {
+				        case countParseHK == 1:
+					        if GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true
+					        }
+				        case countParseHK == 2:
+					        if GetKeyState(PatternClickerHotkey1, "P") and 
+						       GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true
+					        }
+				        case countParseHK == 3:
+					        if GetKeyState(PatternClickerHotkey1, "P") and
+						       GetKeyState(PatternClickerHotkey2, "P") and
+						       GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true	
+					        }
+				        }
+				        if KeyPressed == true {
+					        KeyPressed := false
+					        break
+				        } 
+				        SendKey
+				        Count++
+				        SB.SetText("Clicker Active. Count: " Count)
+				        sleep Random(ClickInterval, ClickInterval + RandomOffset) 
+			        }
+		        } 
+		        if RadioPos1_10AnyYes == true or RadioPos11_22AnyYes == true {
+			        SB.SetText("Pattern Clicker Active. Count: " Count)
+			        sleep StartDelay
+			        Loop LoopAmount {
+				        if Position1.EditRadioYes.Value == true {
+					        Position1.RadioNo := false
+					        DllCall("SetCursorPos", "int", CoordX1, "int", CoordY1)
+					        SendKey
+					        sleep Coord1Interval
+				        }
+				        switch true {
+				        case countParseHK == 1:
+					        if GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true
+					        }
+				        case countParseHK == 2:
+					        if GetKeyState(PatternClickerHotkey1, "P") and 
+						        GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true
+					        }
+				        case countParseHK == 3:
+					        if GetKeyState(PatternClickerHotkey1, "P") and
+						        GetKeyState(PatternClickerHotkey2, "P") and
+						        GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true	
+					        }
+				        }
+				        if KeyPressed == true {
+					        KeyPressed := false
+					        break
+				        }
+				        ;------------------------------
+				        if Position2.EditRadioYes.Value == true {
+					        Position2.RadioNo := false
+					        DllCall("SetCursorPos", "int", CoordX2, "int", CoordY2)
+					        SendKey
+					        sleep Coord2Interval
+				        }
+				        switch true {
+				        case countParseHK == 1:
+					        if GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true
+					        }
+				        case countParseHK == 2:
+					        if GetKeyState(PatternClickerHotkey1, "P") and 
+						       GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true
+					        }
+				        case countParseHK == 3:
+					        if GetKeyState(PatternClickerHotkey1, "P") and
+						       GetKeyState(PatternClickerHotkey2, "P") and
+						       GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true	
+					        }
+				        }
+				        if KeyPressed == true {
+					        KeyPressed := false
+					        break
+				        }
+				        ;------------------------------
+				        if Position3.EditRadioYes.Value == true {
+					        Position3.RadioNo := false
+					        DllCall("SetCursorPos", "int", CoordX3, "int", CoordY3)
+					        SendKey
+					        sleep Coord3Interval
+				        }
+				        switch true {
+				        case countParseHK == 1:
+					        if GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true
+					        }
+				        case countParseHK == 2:
+					        if GetKeyState(PatternClickerHotkey1, "P") and 
+						       GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true
+					        }
+				        case countParseHK == 3:
+					        if GetKeyState(PatternClickerHotkey1, "P") and
+						       GetKeyState(PatternClickerHotkey2, "P") and
+						       GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true	
+					        }
+				        }
+				        if KeyPressed == true {
+					        KeyPressed := false
+					        break
+				        }
+				        ;------------------------------
+				        if Position4.EditRadioYes.Value == true {
+					        Position4.RadioNo := false
+					        DllCall("SetCursorPos", "int", CoordX4, "int", CoordY4)
+					        SendKey
+					        sleep Coord4Interval
+				        }
+				        switch true {
+				        case countParseHK == 1:
+					        if GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true
+					        }
+				        case countParseHK == 2:
+					        if GetKeyState(PatternClickerHotkey1, "P") and 
+						       GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true
+					        }
+				        case countParseHK == 3:
+					        if GetKeyState(PatternClickerHotkey1, "P") and
+						       GetKeyState(PatternClickerHotkey2, "P") and
+						       GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true	
+					        }
+				        }
+				        if KeyPressed == true {
+					        KeyPressed := false
+					        break
+				        }
+				        ;------------------------------
+				        if Position5.EditRadioYes.Value == true {
+					        Position5.RadioNo := false
+					        DllCall("SetCursorPos", "int", CoordX5, "int", CoordY5)
+					        SendKey
+					        sleep Coord5Interval
+				        }
+				        switch true {
+				        case countParseHK == 1:
+					        if GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true
+					        }
+				        case countParseHK == 2:
+					        if GetKeyState(PatternClickerHotkey1, "P") and 
+						       GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true
+					        }
+				        case countParseHK == 3:
+					        if GetKeyState(PatternClickerHotkey1, "P") and
+						       GetKeyState(PatternClickerHotkey2, "P") and
+						       GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true	
+					        }
+				        }
+				        if KeyPressed == true {
+					        KeyPressed := false
+					        break
+				        }
+				        ;------------------------------
+				        if Position6.EditRadioYes.Value == true {
+					        Position6.RadioNo := false
+					        DllCall("SetCursorPos", "int", CoordX6, "int", CoordY6)
+					        SendKey
+					        sleep Coord6Interval
+				        }
+				        switch true {
+				        case countParseHK == 1:
+					        if GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true
+					        }
+				        case countParseHK == 2:
+					        if GetKeyState(PatternClickerHotkey1, "P") and 
+						       GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true
+					        }
+				        case countParseHK == 3:
+					        if GetKeyState(PatternClickerHotkey1, "P") and
+						       GetKeyState(PatternClickerHotkey2, "P") and
+						       GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true	
+					        }
+				        }
+				        if KeyPressed == true {
+					        KeyPressed := false
+					        break
+				        }
+				        ;------------------------------
+				        if Position7.EditRadioYes.Value == true {
+					        Position7.RadioNo := false
+					        DllCall("SetCursorPos", "int", CoordX7, "int", CoordY7)
+					        SendKey
+					        sleep Coord7Interval
+				        }
+				        switch true {
+				        case countParseHK == 1:
+					        if GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true
+					        }
+				        case countParseHK == 2:
+					        if GetKeyState(PatternClickerHotkey1, "P") and 
+						       GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true
+					        }
+				        case countParseHK == 3:
+					        if GetKeyState(PatternClickerHotkey1, "P") and
+						       GetKeyState(PatternClickerHotkey2, "P") and
+						       GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true	
+					        }
+				        }
+				        if KeyPressed == true {
+					        KeyPressed := false
+					        break
+				        }
+				        ;------------------------------
+				        if Position8.EditRadioYes.Value == true {
+					        Position8.RadioNo := false
+					        DllCall("SetCursorPos", "int", CoordX8, "int", CoordY8)
+					        SendKey
+					        sleep Coord8Interval
+				        }
+				        switch true {
+				        case countParseHK == 1:
+					        if GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true
+					        }
+				        case countParseHK == 2:
+					        if GetKeyState(PatternClickerHotkey1, "P") and 
+						       GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true
+					        }
+				        case countParseHK == 3:
+					        if GetKeyState(PatternClickerHotkey1, "P") and
+						       GetKeyState(PatternClickerHotkey2, "P") and
+						       GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true	
+					        }
+				        }
+				        if KeyPressed == true {
+					        KeyPressed := false
+					        break
+				        }
+				        ;------------------------------
+				        if Position9.EditRadioYes.Value == true {
+					        Position9.RadioNo := false
+					        DllCall("SetCursorPos", "int", CoordX9, "int", CoordY9)
+					        SendKey
+					        sleep Coord9Interval
+				        }
+				        switch true {
+				        case countParseHK == 1:
+					        if GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true
+					        }
+				        case countParseHK == 2:
+					        if GetKeyState(PatternClickerHotkey1, "P") and 
+						       GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true
+					        }
+				        case countParseHK == 3:
+					        if GetKeyState(PatternClickerHotkey1, "P") and
+						       GetKeyState(PatternClickerHotkey2, "P") and
+						       GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true	
+					        }
+				        }
+				        if KeyPressed == true {
+					        KeyPressed := false
+					        break
+				        }
+				        ;------------------------------
+				        if Position10.EditRadioYes.Value == true {
+					        Position10.RadioNo := false
+					        DllCall("SetCursorPos", "int", CoordX10, "int", CoordY10)
+					        SendKey
+					        sleep Coord10Interval
+				        }
+				        switch true {
+				        case countParseHK == 1:
+					        if GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true
+					        }
+				        case countParseHK == 2:
+					        if GetKeyState(PatternClickerHotkey1, "P") and 
+						        GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true
+					        }
+				        case countParseHK == 3:
+					        if GetKeyState(PatternClickerHotkey1, "P") and
+						       GetKeyState(PatternClickerHotkey2, "P") and
+						       GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true	
+					        }
+				        }
+				        if KeyPressed == true {
+					        KeyPressed := false
+					        break
+				        }
+				        ;------------------------------
+				        if Position11.EditRadioYes.Value == true {
+					        Position11.RadioNo := false
+					        DllCall("SetCursorPos", "int", CoordX11, "int", CoordY11)
+					        SendKey
+					        sleep Coord11Interval
+				        }
+				        switch true {
+				        case countParseHK == 1:
+					        if GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true
+					        }
+				        case countParseHK == 2:
+					        if GetKeyState(PatternClickerHotkey1, "P") and 
+						       GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true
+					        }
+				        case countParseHK == 3:
+					        if GetKeyState(PatternClickerHotkey1, "P") and
+						       GetKeyState(PatternClickerHotkey2, "P") and
+						       GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true	
+					        }
+				        }
+				        if KeyPressed == true {
+					        KeyPressed := false
+					        break
+				        }
+				        ;------------------------------
+				        if Position12.EditRadioYes.Value == true {
+					        Position12.RadioNo := false
+					        DllCall("SetCursorPos", "int", CoordX12, "int", CoordY12)
+					        SendKey
+					        sleep Coord12Interval
+				        }
+				        switch true {
+				        case countParseHK == 1:
+					        if GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true
+					        }
+				        case countParseHK == 2:
+					        if GetKeyState(PatternClickerHotkey1, "P") and 
+						       GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true
+					        }
+				        case countParseHK == 3:
+					        if GetKeyState(PatternClickerHotkey1, "P") and
+						       GetKeyState(PatternClickerHotkey2, "P") and
+						       GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true	
+					        }
+				        }
+				        if KeyPressed == true {
+					        KeyPressed := false
+					        break
+				        }
+				        ;------------------------------
+				        if Position13.EditRadioYes.Value == true {
+					        Position13.RadioNo := false
+					        DllCall("SetCursorPos", "int", CoordX13, "int", CoordY13)
+					        SendKey
+					        sleep Coord13Interval
+				        }
+				        switch true {
+				        case countParseHK == 1:
+					        if GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true
+					        }
+				        case countParseHK == 2:
+					        if GetKeyState(PatternClickerHotkey1, "P") and 
+						        GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true
+					        }
+				        case countParseHK == 3:
+					        if GetKeyState(PatternClickerHotkey1, "P") and
+						       GetKeyState(PatternClickerHotkey2, "P") and
+						       GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true	
+					        }
+				        }
+				        if KeyPressed == true {
+					        KeyPressed := false
+					        break
+				        }
+				        ;------------------------------
+				        if Position14.EditRadioYes.Value == true {
+					        Position14.RadioNo := false
+					        DllCall("SetCursorPos", "int", CoordX14, "int", CoordY14)
+					        SendKey
+					        sleep Coord14Interval
+				        }
+				        switch true {
+				        case countParseHK == 1:
+					        if GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true
+					        }
+				        case countParseHK == 2:
+					        if GetKeyState(PatternClickerHotkey1, "P") and 
+						       GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true
+					        }
+				        case countParseHK == 3:
+					        if GetKeyState(PatternClickerHotkey1, "P") and
+						       GetKeyState(PatternClickerHotkey2, "P") and
+						       GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true	
+					        }
+				        }
+				        if KeyPressed == true {
+					        KeyPressed := false
+					        break
+				        }
+				        ;------------------------------
+				        if Position15.EditRadioYes.Value == true {
+					        Position15.RadioNo := false
+					        DllCall("SetCursorPos", "int", CoordX15, "int", CoordY15)
+					        SendKey
+					        sleep Coord15Interval
+				        }
+				        switch true {
+				        case countParseHK == 1:
+					        if GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true
+					        }
+				        case countParseHK == 2:
+					        if GetKeyState(PatternClickerHotkey1, "P") and 
+						        GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true
+					        }
+				        case countParseHK == 3:
+					        if GetKeyState(PatternClickerHotkey1, "P") and
+						       GetKeyState(PatternClickerHotkey2, "P") and
+						       GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true	
+					        }
+				        }
+				        if KeyPressed == true {
+					        KeyPressed := false
+					        break
+				        }
+				        ;------------------------------
+				        if Position16.EditRadioYes.Value == true {
+					        Position16.RadioNo := false
+					        DllCall("SetCursorPos", "int", CoordX16, "int", CoordY16)
+					        SendKey
+					        sleep Coord16Interval
+				        }
+				        switch true {
+				        case countParseHK == 1:
+					        if GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true
+					        }
+				        case countParseHK == 2:
+					        if GetKeyState(PatternClickerHotkey1, "P") and 
+						       GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true
+					        }
+				        case countParseHK == 3:
+					        if GetKeyState(PatternClickerHotkey1, "P") and
+						        GetKeyState(PatternClickerHotkey2, "P") and
+						        GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true	
+					        }
+				        }
+				        if KeyPressed == true {
+					        KeyPressed := false
+					        break
+				        }
+				        ;------------------------------
+				        if Position17.EditRadioYes.Value == true {
+					        Position17.RadioNo := false
+					        DllCall("SetCursorPos", "int", CoordX17, "int", CoordY17)
+					        SendKey
+					        sleep Coord17Interval
+				        }
+					    switch true {
+				        case countParseHK == 1:
+					        if GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true
+					        }
+				        case countParseHK == 2:
+					        if GetKeyState(PatternClickerHotkey1, "P") and 
+						       GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true
+					        }
+				        case countParseHK == 3:
+					        if GetKeyState(PatternClickerHotkey1, "P") and
+						        GetKeyState(PatternClickerHotkey2, "P") and
+						        GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true	
+					        }
+				        }
+				        if KeyPressed == true {
+					        KeyPressed := false
+					        break
+				        }
+				        ;------------------------------
+				        if Position18.EditRadioYes.Value == true {
+					        Position18.RadioNo := false
+					        DllCall("SetCursorPos", "int", CoordX18, "int", CoordY18)
+					        SendKey
+					        sleep Coord18Interval
+				        }
+					    switch true {
+				        case countParseHK == 1:
+					        if GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true
+					        }
+				        case countParseHK == 2:
+					        if GetKeyState(PatternClickerHotkey1, "P") and 
+						       GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true
+					        }
+				        case countParseHK == 3:
+					        if GetKeyState(PatternClickerHotkey1, "P") and
+						        GetKeyState(PatternClickerHotkey2, "P") and
+						        GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true	
+					        }
+				        }
+				        if KeyPressed == true {
+					        KeyPressed := false
+					        break
+				        }
+				        ;------------------------------
+				        if Position19.EditRadioYes.Value == true {
+					        Position19.RadioNo := false
+					        DllCall("SetCursorPos", "int", CoordX19, "int", CoordY19)
+					        SendKey
+					        sleep Coord19Interval
+				        }
+					    switch true {
+				        case countParseHK == 1:
+					        if GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true
+					        }
+				        case countParseHK == 2:
+					        if GetKeyState(PatternClickerHotkey1, "P") and 
+						       GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true
+					        }
+				        case countParseHK == 3:
+					        if GetKeyState(PatternClickerHotkey1, "P") and
+						        GetKeyState(PatternClickerHotkey2, "P") and
+						        GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true	
+					        }
+				        }
+				        if KeyPressed == true {
+					        KeyPressed := false
+					        break
+				        }
+				        ;------------------------------
+				        if Position20.EditRadioYes.Value == true {
+					        Position20.RadioNo := false
+					        DllCall("SetCursorPos", "int", CoordX20, "int", CoordY20)
+					        SendKey
+					        sleep Coord20Interval
+				        }
+					    switch true {
+				        case countParseHK == 1:
+					        if GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true
+					        }
+				        case countParseHK == 2:
+					        if GetKeyState(PatternClickerHotkey1, "P") and 
+						       GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true
+					        }
+				        case countParseHK == 3:
+					        if GetKeyState(PatternClickerHotkey1, "P") and
+						        GetKeyState(PatternClickerHotkey2, "P") and
+						        GetKeyState(PatternClickerHotkey, "P") {
+						        KeyPressed := true	
+					        }
+				        }
+				        if KeyPressed == true {
+					        KeyPressed := false
+					        break
+				        }
+				        ;------------------------------
+				        Count++
+				        SB.SetText("Pattern Clicker Active. Count: " Count)
+				        sleep Random(ClickInterval, ClickInterval + RandomOffset)
+			        } ; End Loop
+		        }
+		        toggle := !toggle
+		        TextPatternClickerOnOff.Value := " OFF"
+		        SB.SetText("Clicker Stopped. Count: " Count)
+		        sleep StopDelay
+		        return
+	        case RadioPos1_10AnyYes == true or RadioPos11_22AnyYes == true:
+		        SB.SetText("Infinite Pattern Clicker Active. Count: " Count)
+		        sleep StartDelay
+		        Loop {
+			        if Position1.EditRadioYes.Value == true {
+				        Position1.RadioNo := false
+				        DllCall("SetCursorPos", "int", CoordX1, "int", CoordY1)
+				        SendKey
+				        sleep Coord1Interval
+			        }
+			        switch true {
+			        case countParseHK == 1:
+				        if GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true
+				        }
+			        case countParseHK == 2:
+				        if GetKeyState(PatternClickerHotkey1, "P") and 
+					       GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true
+				        }
+			        case countParseHK == 3:
+				        if GetKeyState(PatternClickerHotkey1, "P") and
+					       GetKeyState(PatternClickerHotkey2, "P") and
+					       GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true	
+				        }
+			        }
+			        if KeyPressed == true {
+				        KeyPressed := false
+				        break
+			        }
+			        ;------------------------------
+			        if Position2.EditRadioYes.Value == true {
+				        Position2.RadioNo := false
+				        DllCall("SetCursorPos", "int", CoordX2, "int", CoordY2)
+				        SendKey
+				        sleep Coord2Interval
+			        }
+				    switch true {
+			        case countParseHK == 1:
+				        if GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true
+				        }
+			        case countParseHK == 2:
+				        if GetKeyState(PatternClickerHotkey1, "P") and 
+					       GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true
+				        }
+			        case countParseHK == 3:
+				        if GetKeyState(PatternClickerHotkey1, "P") and
+					       GetKeyState(PatternClickerHotkey2, "P") and
+					       GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true	
+				        }
+			        }
+			        if KeyPressed == true {
+				        KeyPressed := false
+				        break
+			        }
+			        ;------------------------------
+			        if Position3.EditRadioYes.Value == true {
+				        Position3.RadioNo := false
+				        DllCall("SetCursorPos", "int", CoordX3, "int", CoordY3)
+				        SendKey
+				        sleep Coord3Interval
+			        }
+				    switch true {
+			        case countParseHK == 1:
+				        if GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true
+				        }
+			        case countParseHK == 2:
+				        if GetKeyState(PatternClickerHotkey1, "P") and 
+					       GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true
+				        }
+			        case countParseHK == 3:
+				        if GetKeyState(PatternClickerHotkey1, "P") and
+					       GetKeyState(PatternClickerHotkey2, "P") and
+					       GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true	
+				        }
+			        }
+			        if KeyPressed == true {
+				        KeyPressed := false
+				        break
+			        }
+			        ;------------------------------
+			        if Position4.EditRadioYes.Value == true {
+				        Position4.RadioNo := false
+				        DllCall("SetCursorPos", "int", CoordX4, "int", CoordY4)
+				        SendKey
+				        sleep Coord4Interval
+			        }
+				    switch true {
+			        case countParseHK == 1:
+				        if GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true
+				        }
+			        case countParseHK == 2:
+				        if GetKeyState(PatternClickerHotkey1, "P") and 
+					       GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true
+				        }
+			        case countParseHK == 3:
+				        if GetKeyState(PatternClickerHotkey1, "P") and
+					       GetKeyState(PatternClickerHotkey2, "P") and
+					       GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true	
+				        }
+			        }
+			        if KeyPressed == true {
+				        KeyPressed := false
+				        break
+			        }
+			        ;------------------------------
+			        if Position5.EditRadioYes.Value == true {
+				        Position5.RadioNo := false
+				        DllCall("SetCursorPos", "int", CoordX5, "int", CoordY5)
+				        SendKey
+				        sleep Coord5Interval
+			        }
+				    switch true {
+			        case countParseHK == 1:
+				        if GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true
+				        }
+			        case countParseHK == 2:
+				        if GetKeyState(PatternClickerHotkey1, "P") and 
+					       GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true
+				        }
+			        case countParseHK == 3:
+				        if GetKeyState(PatternClickerHotkey1, "P") and
+					       GetKeyState(PatternClickerHotkey2, "P") and
+					       GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true	
+				        }
+			        }
+			        if KeyPressed == true {
+				        KeyPressed := false
+				        break
+			        }
+			        ;------------------------------
+			        if Position6.EditRadioYes.Value == true {
+				        Position6.RadioNo := false
+				        DllCall("SetCursorPos", "int", CoordX6, "int", CoordY6)
+				        SendKey
+				        sleep Coord6Interval
+			        }
+				    switch true {
+			        case countParseHK == 1:
+				        if GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true
+				        }
+			        case countParseHK == 2:
+				        if GetKeyState(PatternClickerHotkey1, "P") and 
+					       GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true
+				        }
+			        case countParseHK == 3:
+				        if GetKeyState(PatternClickerHotkey1, "P") and
+					       GetKeyState(PatternClickerHotkey2, "P") and
+					       GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true	
+				        }
+			        }
+			        if KeyPressed == true {
+				        KeyPressed := false
+				        break
+			        }
+			        ;------------------------------
+			        if Position7.EditRadioYes.Value == true {
+				        Position7.RadioNo := false
+				        DllCall("SetCursorPos", "int", CoordX7, "int", CoordY7)
+				        SendKey
+				        sleep Coord7Interval
+			        }
+				    switch true {
+			        case countParseHK == 1:
+				        if GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true
+				        }
+			        case countParseHK == 2:
+				        if GetKeyState(PatternClickerHotkey1, "P") and 
+					       GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true
+				        }
+			        case countParseHK == 3:
+				        if GetKeyState(PatternClickerHotkey1, "P") and
+					       GetKeyState(PatternClickerHotkey2, "P") and
+					       GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true	
+				        }
+			        }
+			        if KeyPressed == true {
+				        KeyPressed := false
+				        break
+			        }
+			        ;------------------------------
+			        if Position8.EditRadioYes.Value == true {
+				        Position8.RadioNo := false
+				        DllCall("SetCursorPos", "int", CoordX8, "int", CoordY8)
+				        SendKey
+				        sleep Coord8Interval
+			        }
+				    switch true {
+			        case countParseHK == 1:
+				        if GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true
+				        }
+			        case countParseHK == 2:
+				        if GetKeyState(PatternClickerHotkey1, "P") and 
+					       GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true
+				        }
+			        case countParseHK == 3:
+				        if GetKeyState(PatternClickerHotkey1, "P") and
+					       GetKeyState(PatternClickerHotkey2, "P") and
+					       GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true	
+				        }
+			        }
+			        if KeyPressed == true {
+				        KeyPressed := false
+				        break
+			        }
+			        ;------------------------------
+			        if Position9.EditRadioYes.Value == true {
+				        Position9.RadioNo := false
+				        DllCall("SetCursorPos", "int", CoordX9, "int", CoordY9)
+				        SendKey
+				        sleep Coord9Interval
+			        }
+				    switch true {
+			        case countParseHK == 1:
+				        if GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true
+				        }
+			        case countParseHK == 2:
+				        if GetKeyState(PatternClickerHotkey1, "P") and 
+					       GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true
+				        }
+			        case countParseHK == 3:
+				        if GetKeyState(PatternClickerHotkey1, "P") and
+					       GetKeyState(PatternClickerHotkey2, "P") and
+					       GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true	
+				        }
+			        }
+			        if KeyPressed == true {
+				        KeyPressed := false
+				        break
+			        }
+			        ;------------------------------
+			        if Position10.EditRadioYes.Value == true {
+				        Position10.RadioNo := false
+				        DllCall("SetCursorPos", "int", CoordX10, "int", CoordY10)
+				        SendKey
+				        sleep Coord10Interval
+			        }
+				    switch true {
+			        case countParseHK == 1:
+				        if GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true
+				        }
+			        case countParseHK == 2:
+				        if GetKeyState(PatternClickerHotkey1, "P") and 
+					       GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true
+				        }
+			        case countParseHK == 3:
+				        if GetKeyState(PatternClickerHotkey1, "P") and
+					       GetKeyState(PatternClickerHotkey2, "P") and
+					       GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true	
+				        }
+			        }
+			        if KeyPressed == true {
+				        KeyPressed := false
+				        break
+			        }
+			        ;------------------------------
+			        if Position11.EditRadioYes.Value == true {
+				        Position11.RadioNo := false
+				        DllCall("SetCursorPos", "int", CoordX11, "int", CoordY11)
+				        SendKey
+				        sleep Coord11Interval
+			        }
+				    switch true {
+			        case countParseHK == 1:
+				        if GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true
+				        }
+			        case countParseHK == 2:
+				        if GetKeyState(PatternClickerHotkey1, "P") and 
+					       GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true
+				        }
+			        case countParseHK == 3:
+				        if GetKeyState(PatternClickerHotkey1, "P") and
+					       GetKeyState(PatternClickerHotkey2, "P") and
+					       GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true	
+				        }
+			        }
+			        if KeyPressed == true {
+				        KeyPressed := false
+				        break
+			        }
+			        ;------------------------------
+			        if Position12.EditRadioYes.Value == true {
+				        Position12.RadioNo := false
+				        DllCall("SetCursorPos", "int", CoordX12, "int", CoordY12)
+				        SendKey
+				        sleep Coord12Interval
+			        }
+				    switch true {
+			        case countParseHK == 1:
+				        if GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true
+				        }
+			        case countParseHK == 2:
+				        if GetKeyState(PatternClickerHotkey1, "P") and 
+					       GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true
+				        }
+			        case countParseHK == 3:
+				        if GetKeyState(PatternClickerHotkey1, "P") and
+					       GetKeyState(PatternClickerHotkey2, "P") and
+					       GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true	
+				        }
+			        }
+			        if KeyPressed == true {
+				        KeyPressed := false
+				        break
+			        }
+			        ;------------------------------
+			        if Position13.EditRadioYes.Value == true {
+				        Position13.RadioNo := false
+				        DllCall("SetCursorPos", "int", CoordX13, "int", CoordY13)
+				        SendKey
+				        sleep Coord13Interval
+			        }
+				    switch true {
+			        case countParseHK == 1:
+				        if GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true
+				        }
+			        case countParseHK == 2:
+				        if GetKeyState(PatternClickerHotkey1, "P") and 
+					       GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true
+				        }
+			        case countParseHK == 3:
+				        if GetKeyState(PatternClickerHotkey1, "P") and
+					       GetKeyState(PatternClickerHotkey2, "P") and
+					       GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true	
+				        }
+			        }
+			        if KeyPressed == true {
+				        KeyPressed := false
+				        break
+			        }
+			        ;------------------------------
+			        if Position14.EditRadioYes.Value == true {
+				        Position14.RadioNo := false
+				        DllCall("SetCursorPos", "int", CoordX14, "int", CoordY14)
+				        SendKey
+				        sleep Coord14Interval
+			        }
+				    switch true {
+			        case countParseHK == 1:
+				        if GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true
+				        }
+			        case countParseHK == 2:
+				        if GetKeyState(PatternClickerHotkey1, "P") and 
+					       GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true
+				        }
+			        case countParseHK == 3:
+				        if GetKeyState(PatternClickerHotkey1, "P") and
+					       GetKeyState(PatternClickerHotkey2, "P") and
+					       GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true	
+				        }
+			        }
+			        if KeyPressed == true {
+				        KeyPressed := false
+				        break
+			        }
+			        ;------------------------------
+			        if Position15.EditRadioYes.Value == true {
+				        Position15.RadioNo := false
+				        DllCall("SetCursorPos", "int", CoordX15, "int", CoordY15)
+				        SendKey
+				        sleep Coord15Interval
+			        }
+				    switch true {
+			        case countParseHK == 1:
+				        if GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true
+				        }
+			        case countParseHK == 2:
+				        if GetKeyState(PatternClickerHotkey1, "P") and 
+					       GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true
+				        }
+			        case countParseHK == 3:
+				        if GetKeyState(PatternClickerHotkey1, "P") and
+					       GetKeyState(PatternClickerHotkey2, "P") and
+					       GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true	
+				        }
+			        }
+			        if KeyPressed == true {
+				        KeyPressed := false
+				        break
+			        }
+			        ;------------------------------
+			        if Position16.EditRadioYes.Value == true {
+				        Position16.RadioNo := false
+				        DllCall("SetCursorPos", "int", CoordX16, "int", CoordY16)
+				        SendKey
+				        sleep Coord16Interval
+			        }
+				    switch true {
+			        case countParseHK == 1:
+				        if GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true
+				        }
+			        case countParseHK == 2:
+				        if GetKeyState(PatternClickerHotkey1, "P") and 
+					       GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true
+				        }
+			        case countParseHK == 3:
+				        if GetKeyState(PatternClickerHotkey1, "P") and
+					       GetKeyState(PatternClickerHotkey2, "P") and
+					       GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true	
+				        }
+			        }
+			        if KeyPressed == true {
+				        KeyPressed := false
+				        break
+			        }
+			        ;------------------------------
+			        if Position17.EditRadioYes.Value == true {
+				        Position17.RadioNo := false
+				        DllCall("SetCursorPos", "int", CoordX17, "int", CoordY17)
+				        SendKey
+				        sleep Coord17Interval
+			        }
+				    switch true {
+			        case countParseHK == 1:
+				        if GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true
+				        }
+			        case countParseHK == 2:
+				        if GetKeyState(PatternClickerHotkey1, "P") and 
+					       GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true
+				        }
+			        case countParseHK == 3:
+				        if GetKeyState(PatternClickerHotkey1, "P") and
+					       GetKeyState(PatternClickerHotkey2, "P") and
+					       GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true	
+				        }
+			        }
+			        if KeyPressed == true {
+				        KeyPressed := false
+				        break
+			        }
+			        ;------------------------------
+			        if Position18.EditRadioYes.Value == true {
+				        Position18.RadioNo := false
+				        DllCall("SetCursorPos", "int", CoordX18, "int", CoordY18)
+				        SendKey
+				        sleep Coord18Interval
+			        }
+				    switch true {
+			        case countParseHK == 1:
+				        if GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true
+				        }
+			        case countParseHK == 2:
+				        if GetKeyState(PatternClickerHotkey1, "P") and 
+					       GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true
+				        }
+			        case countParseHK == 3:
+				        if GetKeyState(PatternClickerHotkey1, "P") and
+					       GetKeyState(PatternClickerHotkey2, "P") and
+					       GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true	
+				        }
+			        }
+			        if KeyPressed == true {
+				        KeyPressed := false
+				        break
+			        }
+			        ;------------------------------
+			        if Position19.EditRadioYes.Value == true {
+				        Position19.RadioNo := false
+				        DllCall("SetCursorPos", "int", CoordX19, "int", CoordY19)
+				        SendKey
+				        sleep Coord19Interval
+			        }
+				    switch true {
+			        case countParseHK == 1:
+				        if GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true
+				        }
+			        case countParseHK == 2:
+				        if GetKeyState(PatternClickerHotkey1, "P") and 
+					       GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true
+				        }
+			        case countParseHK == 3:
+				        if GetKeyState(PatternClickerHotkey1, "P") and
+					       GetKeyState(PatternClickerHotkey2, "P") and
+					       GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true	
+				        }
+			        }
+			        if KeyPressed == true {
+				        KeyPressed := false
+				        break
+			        }
+			        ;------------------------------
+			        if Position20.EditRadioYes.Value == true {
+				        Position20.RadioNo := false
+				        DllCall("SetCursorPos", "int", CoordX20, "int", CoordY20)
+				        SendKey
+				        sleep Coord20Interval
+			        }
+				    switch true {
+			        case countParseHK == 1:
+				        if GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true
+				        }
+			        case countParseHK == 2:
+				        if GetKeyState(PatternClickerHotkey1, "P") and 
+					       GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true
+				        }
+			        case countParseHK == 3:
+				        if GetKeyState(PatternClickerHotkey1, "P") and
+					       GetKeyState(PatternClickerHotkey2, "P") and
+					       GetKeyState(PatternClickerHotkey, "P") {
+					        KeyPressed := true	
+				        }
+			        }
+			        if KeyPressed == true {
+				        KeyPressed := false
+				        break
+			        }
+			        ;------------------------------
+			        Count++
+			        SB.SetText("Infinite Pattern Clicker Active. Count: " Count)
+		        } ; End Loop
+		        toggle := !toggle
+		        TextPatternClickerOnOff.Value := " OFF"
+		        SB.SetText("Clicker Stopped. Count: " Count)
+		        sleep StopDelay
+		        return
+	        Default:
+		        SB.SetText("Infinite Clicker Active. Count: 0")
+		        sleep StartDelay
+		        SetTimer(SendKey, Random(ClickInterval, ClickInterval + RandomOffset))
+		        return
+	        }
+        } else {
+	        TextPatternClickerOnOff.Value := " OFF"
+	        SetTimer(SendKey, 0)
+        }
 	}
 }
