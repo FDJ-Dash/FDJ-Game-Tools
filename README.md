@@ -1,6 +1,5 @@
 # Game Tools
-### This is an app aimed towards repetitive tasks like holding a button down for extended time, mouse clicks or even click patterns. Each functionality is divided into modules that you can pick from the options bar menu like jumps module for certain games and Quick access module to run any program in your computer or load a web page on your browser easily.
-Keyboard Autorun Module
+### This is a task automation module app mainly aimed toward games. It has an auto-clicker and auto-run functionality. The auto-run feature also includes a module that can be executed from a game controller. Additionally, there are other modules for quick access via hotkeys or buttons within the app.
 
 | KB1 | KB2 |
 | ------ | ------ |
